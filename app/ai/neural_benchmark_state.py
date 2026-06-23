@@ -16,6 +16,7 @@ def evaluate_and_store_checkpoint(
     evaluation_games_count,
     game_adapter,
     print_checkpoints=False,
+    evaluation_seed=None,
 ):
     checkpoint = evaluate_network_checkpoint(
         checkpoint_index=checkpoint_index,
@@ -26,6 +27,7 @@ def evaluate_and_store_checkpoint(
         validation_examples=validation_examples,
         evaluation_games_count=evaluation_games_count,
         game_adapter=game_adapter,
+        evaluation_seed=evaluation_seed,
     )
     benchmark_state["checkpoints"].append(checkpoint)
 
@@ -72,6 +74,7 @@ def create_benchmark_result(
     validation_ratio,
     early_stop_patience,
     stopped_early,
+    evaluation_seed=None,
 ):
     checkpoints = benchmark_state["checkpoints"]
     first_checkpoint = checkpoints[0]
@@ -87,6 +90,7 @@ def create_benchmark_result(
         "simulations_per_move": simulations_per_move,
         "max_examples": max_examples,
         "tactical_repeat_count": tactical_repeat_count,
+        "available_states_count": raw_dataset.get("available_states_count", 0),
         "base_examples_count": _get_base_examples_count(raw_dataset),
         "extra_examples_count": raw_dataset.get("extra_examples_count", 0),
         "examples_count": encoded_dataset["encoded_examples_count"],
@@ -101,6 +105,7 @@ def create_benchmark_result(
         "total_epochs": last_checkpoint["total_epochs"],
         "learning_rate": learning_rate,
         "evaluation_games_count": evaluation_games_count,
+        "evaluation_seed": evaluation_seed,
         "early_stop_patience": early_stop_patience,
         "stopped_early": stopped_early,
         "checkpoints": checkpoints,

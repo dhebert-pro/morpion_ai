@@ -3,6 +3,7 @@ from app.ai.neural_checkpoint import (
     get_checkpoint_table_header,
     get_best_checkpoint_from_benchmark_result,
 )
+from app.ai.neural_benchmark_diagnostics import build_benchmark_diagnostic_lines
 
 
 def format_neural_benchmark_report(benchmark_result):
@@ -12,7 +13,8 @@ def format_neural_benchmark_report(benchmark_result):
     lines.append("Benchmark entraînement neuronal")
     lines.append("Jeu : " + str(benchmark_result["game"]))
     lines.append("Départ depuis modèle existant : " + str(benchmark_result["started_from_existing_model"]))
-    lines.append("Exemples Monte-Carlo : " + str(benchmark_result.get("base_examples_count", 0)))
+    lines.append("États collectés disponibles : " + str(benchmark_result.get("available_states_count", 0)))
+    lines.append("Exemples Monte-Carlo retenus : " + str(benchmark_result.get("base_examples_count", 0)))
     lines.append("Exemples tactiques : " + str(benchmark_result.get("extra_examples_count", 0)))
     lines.append("Exemples totaux : " + str(benchmark_result["examples_count"]))
     lines.append("Exemples apprentissage : " + str(benchmark_result.get("training_examples_count", benchmark_result["examples_count"])))
@@ -21,6 +23,7 @@ def format_neural_benchmark_report(benchmark_result):
     lines.append("Couche cachée : " + str(benchmark_result["hidden_size"]))
     lines.append(_format_checkpoints_configuration(benchmark_result))
     lines.append("Parties d'évaluation par palier : " + str(benchmark_result["evaluation_games_count"]))
+    lines.append("Graine évaluation stable : " + str(benchmark_result.get("evaluation_seed")))
     lines.append("")
     lines.append(get_checkpoint_table_header())
 
@@ -33,6 +36,8 @@ def format_neural_benchmark_report(benchmark_result):
     lines.append("")
     lines += _format_best_checkpoint(best_checkpoint)
     lines += _format_stop_status(benchmark_result)
+    lines.append("")
+    lines += build_benchmark_diagnostic_lines(benchmark_result)
 
     return "\n".join(lines)
 

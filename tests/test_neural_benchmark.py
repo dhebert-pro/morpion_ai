@@ -8,6 +8,7 @@ from app.ai.neural_benchmark import (
     create_model_package_from_benchmark_result,
     format_neural_benchmark_report,
 )
+from tests.test_neural_benchmark_diagnostics import TESTS as BENCHMARK_DIAGNOSTIC_TESTS
 
 
 def assert_contains(text, expected_part):
@@ -223,13 +224,15 @@ def test_format_neural_benchmark_report_contains_key_information():
     assert_contains(text, "Benchmark entraînement neuronal")
     assert_contains(text, "Jeu : morpion")
     assert_contains(text, "Départ depuis modèle existant : True")
-    assert_contains(text, "Exemples Monte-Carlo : 200")
+    assert_contains(text, "Exemples Monte-Carlo retenus : 200")
     assert_contains(text, "Exemples tactiques : 100")
     assert_contains(text, "Exemples totaux : 300")
     assert_contains(text, "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité")
     assert_contains(text, "Gain erreur dataset : 0.05")
     assert_contains(text, "Gain efficacité : 7.5 points")
     assert_contains(text, "Gain tactique : 25.0 points")
+    assert_contains(text, "Lecture diagnostic :")
+
 
 
 TESTS = [
@@ -238,4 +241,4 @@ TESTS = [
     ("Un résumé d'entraînement peut être créé depuis un benchmark", test_training_summary_can_be_created_from_benchmark_result),
     ("Un package de modèle peut être créé depuis un benchmark", test_model_package_can_be_created_from_benchmark_result),
     ("Le rapport de benchmark neuronal contient les informations clés", test_format_neural_benchmark_report_contains_key_information),
-]
+] + BENCHMARK_DIAGNOSTIC_TESTS

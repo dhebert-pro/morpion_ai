@@ -1,3 +1,5 @@
+import random
+
 from app.ai.neural_network import SimpleNeuralNetwork
 from app.utils.progress import print_progress
 
@@ -149,8 +151,13 @@ def train_network_on_encoded_dataset(
         examples,
     )
 
+    training_rng = random.Random(seed + 10)
+
     for epoch in range(epochs):
-        for example in examples:
+        epoch_examples = list(examples)
+        training_rng.shuffle(epoch_examples)
+
+        for example in epoch_examples:
             network.train_one(
                 example["inputs"],
                 example["targets"],

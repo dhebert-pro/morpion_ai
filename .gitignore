@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+ENV/
+
+# Tests / cache
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Fichiers générés par l'application
+data/models/*.json
+data/models/*.tmp
+data/models/*.bak
+
+# Garder le dossier models même s'il est vide
+!data/models/.gitkeep
+
+# Logs / sorties temporaires
+*.log
+logs/
+tmp/
+temp/
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Archives locales
+*.zip
+*.tar
+*.tar.gz
+*.rar

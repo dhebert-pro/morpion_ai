@@ -24,6 +24,7 @@ def build_augmented_move_score_dataset(
     tactical_repeat_count=0,
     show_progress=False,
     game_adapter=MORPION_ADAPTER,
+    seed=0,
 ):
     """Construit le dataset utilisé par le réseau.
 
@@ -42,6 +43,7 @@ def build_augmented_move_score_dataset(
         max_examples=max_examples,
         show_progress=show_progress,
         game_adapter=game_adapter,
+        seed=seed,
     )
 
     if tactical_repeat_count <= 0:
@@ -77,6 +79,7 @@ def train_neural_model_in_memory(
     seed=0,
     game_adapter=MORPION_ADAPTER,
     initial_model_data=None,
+    dataset_seed=0,
 ):
     """Construit et entraîne un modèle neuronal complet en mémoire.
 
@@ -96,6 +99,7 @@ def train_neural_model_in_memory(
         tactical_repeat_count=tactical_repeat_count,
         show_progress=show_progress,
         game_adapter=game_adapter,
+        seed=dataset_seed,
     )
 
     encoded_dataset = encode_move_score_dataset(
@@ -127,6 +131,8 @@ def train_neural_model_in_memory(
             "training_games_count": training_games_count,
             "simulations_per_move": simulations_per_move,
             "max_examples": max_examples,
+            "dataset_seed": dataset_seed,
+            "available_states_count": raw_dataset_summary["available_states_count"],
             "tactical_repeat_count": raw_dataset.get("tactical_repeat_count", 0),
             "base_examples_count": raw_dataset.get(
                 "base_examples_count",

@@ -10,6 +10,7 @@ from app.config import (
     NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT,
     NEURAL_BENCHMARK_LEARNING_RATE,
     NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
+    NEURAL_BENCHMARK_EVALUATION_SEED,
     NEURAL_BENCHMARK_VALIDATION_RATIO,
     NEURAL_BENCHMARK_EARLY_STOP_PATIENCE,
 )
@@ -74,6 +75,7 @@ def print_neural_watch_configuration():
     print("Époques par palier :", NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT)
     print("Taux d'apprentissage :", NEURAL_BENCHMARK_LEARNING_RATE)
     print("Parties d'évaluation par palier :", NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT)
+    print("Graine évaluation stable :", NEURAL_BENCHMARK_EVALUATION_SEED)
     print("Part validation :", NEURAL_BENCHMARK_VALIDATION_RATIO)
     print("Arrêt après paliers sans meilleur modèle :", NEURAL_BENCHMARK_EARLY_STOP_PATIENCE)
 
@@ -114,4 +116,5 @@ def _run_watch_benchmark(initial_model_data):
         initial_model_data=initial_model_data,
         validation_ratio=NEURAL_BENCHMARK_VALIDATION_RATIO,
         early_stop_patience=NEURAL_BENCHMARK_EARLY_STOP_PATIENCE,
+        evaluation_seed=NEURAL_BENCHMARK_EVALUATION_SEED,
     )

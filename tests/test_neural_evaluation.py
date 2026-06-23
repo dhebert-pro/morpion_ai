@@ -62,6 +62,23 @@ def test_evaluate_neural_model_counts_all_games():
     assert_equal(results["X"] + results["O"] + results["draw"], 10)
 
 
+def test_seeded_neural_evaluation_is_repeatable():
+    model_data = create_deterministic_model()
+
+    first_results = evaluate_neural_model(
+        model_data=model_data,
+        games_count=20,
+        seed=123,
+    )
+    second_results = evaluate_neural_model(
+        model_data=model_data,
+        games_count=20,
+        seed=123,
+    )
+
+    assert_equal(first_results, second_results)
+
+
 def test_summarize_neural_evaluation_results_computes_efficiency():
     results = {
         "X": 2,
@@ -108,6 +125,7 @@ def test_format_neural_evaluation_summary_contains_key_information():
 TESTS = [
     ("Une partie neuronale automatique retourne un résultat valide", test_play_neural_automatic_game_returns_valid_result),
     ("L'évaluation neuronale compte toutes les parties", test_evaluate_neural_model_counts_all_games),
+    ("L'évaluation neuronale avec graine est reproductible", test_seeded_neural_evaluation_is_repeatable),
     ("Le résumé d'évaluation neuronale calcule l'efficacité", test_summarize_neural_evaluation_results_computes_efficiency),
     ("Le résumé textuel d'évaluation neuronale contient les informations clés", test_format_neural_evaluation_summary_contains_key_information),
 ]

@@ -25,8 +25,12 @@ def find_winning_move(game, player, game_adapter=MORPION_ADAPTER):
     return None
 
 
-def choose_random_move(game, game_adapter=MORPION_ADAPTER):
+def choose_random_move(game, game_adapter=MORPION_ADAPTER, rng=None):
     legal_moves = game_adapter.get_legal_moves(game)
+
+    if rng is not None:
+        return rng.choice(legal_moves)
+
     return random.choice(legal_moves)
 
 

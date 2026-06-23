@@ -1,4 +1,5 @@
 from time import perf_counter
+import random
 
 from app.ai.neural_pipeline import build_augmented_move_score_dataset
 from app.ai.neural_encoding import encode_move_score_dataset
@@ -44,6 +45,7 @@ def run_neural_training_benchmark(
     initial_model_data=None,
     validation_ratio=0.0,
     early_stop_patience=None,
+    evaluation_seed=None,
 ):
     """Entraîne par paliers et garde le meilleur modèle rencontré."""
 
@@ -54,6 +56,7 @@ def run_neural_training_benchmark(
         tactical_repeat_count=tactical_repeat_count,
         show_progress=show_progress,
         game_adapter=game_adapter,
+        seed=seed,
     )
     encoded_dataset = encode_move_score_dataset(raw_dataset, game_adapter=game_adapter)
     encoded_examples = get_examples_from_encoded_dataset(encoded_dataset)
@@ -74,6 +77,11 @@ def run_neural_training_benchmark(
         initial_model_data=initial_model_data,
     )
 
+    effective_evaluation_seed = _get_effective_evaluation_seed(
+        seed,
+        evaluation_seed,
+    )
+
     benchmark_state = _create_initial_state(print_checkpoints)
     start_time = perf_counter()
 
@@ -88,6 +96,7 @@ def run_neural_training_benchmark(
         evaluation_games_count=evaluation_games_count,
         game_adapter=game_adapter,
         print_checkpoints=print_checkpoints,
+        evaluation_seed=effective_evaluation_seed,
     )
 
     stopped_early = _train_checkpoint_loop(
@@ -103,6 +112,8 @@ def run_neural_training_benchmark(
         benchmark_state=benchmark_state,
         start_time=start_time,
         game_adapter=game_adapter,
+        evaluation_seed=effective_evaluation_seed,
+        seed=seed,
     )
 
     return _create_benchmark_result(
@@ -126,7 +137,15 @@ def run_neural_training_benchmark(
         validation_ratio=validation_ratio,
         early_stop_patience=early_stop_patience,
         stopped_early=stopped_early,
+        evaluation_seed=effective_evaluation_seed,
     )
+
+
+def _get_effective_evaluation_seed(training_seed, evaluation_seed):
+    if evaluation_seed is None:
+        return training_seed
+
+    return evaluation_seed
 
 
 def _create_initial_state(print_checkpoints):
@@ -155,7 +174,11 @@ def _train_checkpoint_loop(
     benchmark_state,
     start_time,
     game_adapter,
+    evaluation_seed,
+    seed=0,
 ):
+    training_rng = random.Random(seed + 10)
+
     for checkpoint_index in range(1, checkpoints_count + 1):
         _train_one_checkpoint(
             network,
@@ -164,6 +187,7 @@ def _train_checkpoint_loop(
             epochs_per_checkpoint,
             checkpoints_count,
             show_progress,
+            training_rng,
         )
         elapsed_seconds = perf_counter() - start_time
         checkpoint_is_best = _evaluate_and_store_checkpoint(
@@ -177,6 +201,7 @@ def _train_checkpoint_loop(
             evaluation_games_count=evaluation_games_count,
             game_adapter=game_adapter,
             print_checkpoints=print_checkpoints,
+            evaluation_seed=evaluation_seed,
         )
 
         if checkpoint_is_best:
@@ -197,9 +222,13 @@ def _train_one_checkpoint(
     epochs_per_checkpoint,
     checkpoints_count,
     show_progress,
+    training_rng,
 ):
     for epoch in range(epochs_per_checkpoint):
-        for example in training_examples:
+        epoch_examples = list(training_examples)
+        training_rng.shuffle(epoch_examples)
+
+        for example in epoch_examples:
             network.train_one(
                 example["inputs"],
                 example["targets"],

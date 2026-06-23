@@ -17,6 +17,7 @@ def create_training_summary_from_benchmark_result(benchmark_result):
         "training_games_count": benchmark_result["training_games_count"],
         "simulations_per_move": benchmark_result["simulations_per_move"],
         "max_examples": benchmark_result["max_examples"],
+        "available_states_count": benchmark_result.get("available_states_count", 0),
         "tactical_repeat_count": benchmark_result["tactical_repeat_count"],
         "base_examples_count": benchmark_result["base_examples_count"],
         "extra_examples_count": benchmark_result["extra_examples_count"],
@@ -81,6 +82,7 @@ def create_model_package_from_benchmark_result(
 
 def create_benchmark_summary(benchmark_result, best_checkpoint):
     return {
+        "available_states_count": benchmark_result.get("available_states_count", 0),
         "checkpoints": benchmark_result.get("checkpoints", []),
         "initial_training_error": benchmark_result.get("initial_training_error", 0.0),
         "final_training_error": benchmark_result.get("final_training_error", best_checkpoint["training_error"]),

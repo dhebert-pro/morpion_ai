@@ -7,6 +7,7 @@ def score_legal_moves(
     player,
     simulations_per_move,
     game_adapter=MORPION_ADAPTER,
+    rng=None,
 ):
     """Attribue un score à chaque coup légal dans un état donné.
 
@@ -23,6 +24,7 @@ def score_legal_moves(
             player,
             simulations_per_move,
             game_adapter,
+            rng=rng,
         )
 
     return move_scores
@@ -47,26 +49,16 @@ def create_move_score_example(
     game,
     simulations_per_move,
     game_adapter=MORPION_ADAPTER,
+    rng=None,
 ):
-    """Crée un exemple exploitable plus tard par un modèle neuronal.
-
-    Exemple produit :
-    {
-        "state_key": "OO.XX....",
-        "player": "O",
-        "move_scores": [
-            {"move": 2, "score": 1.0},
-            {"move": 5, "score": 0.4},
-        ],
-        "best_move": 2,
-    }
-    """
+    """Crée un exemple exploitable plus tard par un modèle neuronal."""
 
     move_scores = score_legal_moves(
         game,
         game_adapter.trained_player,
         simulations_per_move,
         game_adapter,
+        rng=rng,
     )
     best_move = choose_best_scored_move(move_scores)
 

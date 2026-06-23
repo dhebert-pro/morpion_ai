@@ -56,8 +56,33 @@ def test_checkpoint_comparison_uses_validation_after_game_metrics():
     assert_true(is_checkpoint_better(candidate, current_best))
 
 
+def test_split_keeps_duplicate_states_in_same_block():
+    examples = [
+        {"state_key": "same"},
+        {"state_key": "same"},
+        {"state_key": "other_1"},
+        {"state_key": "other_2"},
+    ]
+
+    result = split_encoded_examples(
+        examples,
+        validation_ratio=0.5,
+        seed=0,
+    )
+
+    training_keys = _get_state_keys(result["training_examples"])
+    validation_keys = _get_state_keys(result["validation_examples"])
+
+    assert_true("same" not in training_keys or "same" not in validation_keys)
+
+
+def _get_state_keys(examples):
+    return [example["state_key"] for example in examples]
+
+
 TESTS = [
     ("Le split sans validation garde tous les exemples", test_split_without_validation_keeps_all_examples_for_training),
     ("Le split de validation conserve un entraînement non vide", test_split_with_validation_keeps_at_least_one_training_example),
     ("La comparaison de checkpoints utilise l'erreur de validation", test_checkpoint_comparison_uses_validation_after_game_metrics),
+    ("Le split garde les états dupliqués dans un seul bloc", test_split_keeps_duplicate_states_in_same_block),
 ]

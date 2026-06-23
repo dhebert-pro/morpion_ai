@@ -23,6 +23,7 @@ def evaluate_network_checkpoint(
     validation_examples,
     evaluation_games_count,
     game_adapter=MORPION_ADAPTER,
+    evaluation_seed=None,
 ):
     model_data = network.to_dict()
 
@@ -39,6 +40,7 @@ def evaluate_network_checkpoint(
         model_data=model_data,
         games_count=evaluation_games_count,
         game_adapter=game_adapter,
+        seed=evaluation_seed,
     )
     evaluation_summary = summarize_neural_evaluation_results(
         evaluation_results,
@@ -59,6 +61,7 @@ def evaluate_network_checkpoint(
         "training_error": training_error,
         "validation_error": validation_error,
         "evaluation_results": evaluation_results,
+        "evaluation_seed": evaluation_seed,
         "evaluation_efficiency": evaluation_summary["efficiency"],
         "tactical_passed_count": tactical_summary["passed_count"],
         "tactical_total_count": tactical_summary["total_count"],
