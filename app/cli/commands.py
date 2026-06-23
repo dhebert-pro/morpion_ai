@@ -6,22 +6,33 @@ import app.ai.strategies as strategies
 from app.config import (
     PROJECT_ROOT,
     MODEL_FILE,
+    MOVE_SCORE_DATASET_FILE,
+    MOVE_SCORE_DATASET_MAX_EXAMPLES,
     TEST_FILE,
     TRAINING_GAMES_COUNT,
     SIMULATIONS_PER_MOVE,
     EVALUATION_GAMES_COUNT,
     SHOW_PROGRESS_DURING_TRAINING,
-    MOVE_SCORE_DATASET_FILE,
-    MOVE_SCORE_DATASET_MAX_EXAMPLES,
 )
 
 from app.storage.model_storage import load_model, save_model
+from app.storage.json_storage import save_json
 
 from app.ai.training import train_model
 
 from app.ai.evaluation import (
     evaluate_model,
     print_evaluation_results,
+)
+
+from app.ai.training_dataset import (
+    build_move_score_dataset,
+    summarize_move_score_dataset,
+)
+
+from app.ai.neural_diagnostics import (
+    run_neural_diagnostic,
+    format_neural_diagnostic_report,
 )
 
 from app.games.morpion.engine import play_turn
@@ -31,12 +42,34 @@ from app.games.morpion.rules import (
     parse_human_input,
 )
 
-from app.storage.json_storage import save_json
 
-from app.ai.training_dataset import (
-    build_move_score_dataset,
-    summarize_move_score_dataset,
-)
+def run_training_command():
+    print("Paramètres d'entraînement :")
+    print("Parties simulées pour collecter les états :", TRAINING_GAMES_COUNT)
+    print("Simulations par coup :", SIMULATIONS_PER_MOVE)
+    print("Parties d'évaluation :", EVALUATION_GAMES_COUNT)
+    print()
+
+    print("Entraînement de l'IA...")
+    strategies.TRAINED_MODEL = train_model(
+        training_games_count=TRAINING_GAMES_COUNT,
+        simulations_per_move=SIMULATIONS_PER_MOVE,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+    )
+    save_model(strategies.TRAINED_MODEL)
+
+    print("Entraînement terminé.")
+    print("Nombre d'états appris :", len(strategies.TRAINED_MODEL))
+    print("Modèle sauvegardé dans :", MODEL_FILE)
+    print()
+
+    print("Évaluation rapide du modèle entraîné...")
+    results = evaluate_model(
+        strategies.TRAINED_MODEL,
+        games_count=EVALUATION_GAMES_COUNT,
+    )
+    print_evaluation_results(results)
+
 
 def run_build_dataset_command():
     print("Création du dataset d'apprentissage :")
@@ -66,29 +99,26 @@ def run_build_dataset_command():
     print("Nombre moyen de coups légaux :", summary["average_legal_moves"])
     print("Score moyen du meilleur coup :", summary["average_best_score"])
 
-def run_training_command():
-    print("Paramètres d'entraînement :")
-    print("Parties simulées pour collecter les états :", TRAINING_GAMES_COUNT)
-    print("Simulations par coup :", SIMULATIONS_PER_MOVE)
-    print("Parties d'évaluation :", EVALUATION_GAMES_COUNT)
+
+def run_neural_demo_command():
+    print("Diagnostic rapide du moteur neuronal")
+    print("Aucune sauvegarde ne sera effectuée.")
     print()
 
-    print("Entraînement de l'IA...")
-    strategies.TRAINED_MODEL = train_model(
-        training_games_count=TRAINING_GAMES_COUNT,
-        simulations_per_move=SIMULATIONS_PER_MOVE,
-        show_progress=SHOW_PROGRESS_DURING_TRAINING
+    diagnostic_result = run_neural_diagnostic(
+        training_games_count=60,
+        simulations_per_move=3,
+        max_examples=20,
+        hidden_size=12,
+        epochs=120,
+        learning_rate=0.2,
+        evaluation_games_count=50,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
     )
-    save_model(strategies.TRAINED_MODEL)
 
-    print("Entraînement terminé.")
-    print("Nombre d'états appris :", len(strategies.TRAINED_MODEL))
-    print("Modèle sauvegardé dans :", MODEL_FILE)
     print()
-
-    print("Évaluation rapide du modèle entraîné...")
-    results = evaluate_model(strategies.TRAINED_MODEL, games_count=EVALUATION_GAMES_COUNT)
-    print_evaluation_results(results)
+    print(format_neural_diagnostic_report(diagnostic_result))
 
 
 def run_evaluate_command():
@@ -104,7 +134,10 @@ def run_evaluate_command():
     print("IA O : modèle entraîné")
     print()
 
-    results = evaluate_model(model, games_count=EVALUATION_GAMES_COUNT)
+    results = evaluate_model(
+        model,
+        games_count=EVALUATION_GAMES_COUNT,
+    )
     print_evaluation_results(results)
 
 
@@ -166,11 +199,12 @@ def run_play_command():
 
 def print_help():
     print("Commandes disponibles :")
-    print("  python main.py train      → entraîne l'IA, sauvegarde le modèle et affiche son score")
-    print("  python main.py evaluate   → évalue le modèle entraîné")
-    print("  python main.py play       → lance une partie avec le modèle sauvegardé")
-    print("  python main.py test       → lance tous les tests")
-    print("  python main.py build-dataset    → crée le dataset d'apprentissage Monte-Carlo")
+    print("  python main.py train          → entraîne l'ancien modèle tabulaire")
+    print("  python main.py build-dataset  → crée le dataset d'apprentissage Monte-Carlo")
+    print("  python main.py neural-demo    → teste le moteur neuronal en mémoire")
+    print("  python main.py evaluate       → évalue l'ancien modèle tabulaire")
+    print("  python main.py play           → lance une partie avec l'ancien modèle sauvegardé")
+    print("  python main.py test           → lance tous les tests")
 
 
 def run_cli():
@@ -182,14 +216,16 @@ def run_cli():
 
     if command == "train":
         run_training_command()
+    elif command == "build-dataset":
+        run_build_dataset_command()
+    elif command == "neural-demo":
+        run_neural_demo_command()
     elif command == "evaluate":
         run_evaluate_command()
     elif command == "play":
         run_play_command()
     elif command == "test":
         run_test_command()
-    elif command == "build-dataset":
-      run_build_dataset_command()
     else:
         print("Commande inconnue :", command)
         print_help()
