@@ -5,6 +5,7 @@ from app.games.santorini.display import format_board, format_legal_inputs, forma
 from app.games.santorini.engine import play_input
 from app.games.santorini.rules import create_new_game
 from app.games.santorini.simulation import run_random_matches
+from app.games.santorini.network_report import format_santorini_network_report
 
 
 def print_santorini_help():
@@ -74,3 +75,7 @@ def read_match_count():
         return 100
 
     return max(1, count)
+
+
+def run_inspect_santorini_io_command():
+    print(format_santorini_network_report())

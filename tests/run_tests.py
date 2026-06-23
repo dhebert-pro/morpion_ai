@@ -42,6 +42,9 @@ from tests.test_santorini_action_format import TESTS as SANTORINI_ACTION_FORMAT_
 from tests.test_santorini_engine import TESTS as SANTORINI_ENGINE_TESTS
 from tests.test_santorini_action_index import TESTS as SANTORINI_ACTION_INDEX_TESTS
 from tests.test_santorini_simulation import TESTS as SANTORINI_SIMULATION_TESTS
+from tests.test_santorini_encoding import TESTS as SANTORINI_ENCODING_TESTS
+from tests.test_santorini_adapter import TESTS as SANTORINI_ADAPTER_TESTS
+from tests.test_santorini_network_report import TESTS as SANTORINI_NETWORK_REPORT_TESTS
 
 
 def get_all_tests():
@@ -79,6 +82,9 @@ def get_all_tests():
         + SANTORINI_ENGINE_TESTS
         + SANTORINI_ACTION_INDEX_TESTS
         + SANTORINI_SIMULATION_TESTS
+        + SANTORINI_ENCODING_TESTS
+        + SANTORINI_ADAPTER_TESTS
+        + SANTORINI_NETWORK_REPORT_TESTS
     )
 
 
