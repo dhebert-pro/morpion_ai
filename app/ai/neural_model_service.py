@@ -1,0 +1,136 @@
+from app.ai.neural_pipeline import (
+    train_neural_model_in_memory,
+)
+
+from app.ai.neural_evaluation import (
+    evaluate_neural_model,
+    summarize_neural_evaluation_results,
+)
+
+from app.storage.json_storage import (
+    save_json,
+    load_json,
+)
+
+from app.games.morpion.adapter import MORPION_ADAPTER
+
+
+def create_neural_model_package(
+    training_result,
+    game_adapter=MORPION_ADAPTER,
+):
+    """Prépare les données à sauvegarder dans neural_model.json.
+
+    On ne sauvegarde pas seulement les poids du réseau.
+    On garde aussi un résumé d'entraînement, pour savoir comment le modèle
+    a été produit.
+    """
+
+    return {
+        "type": "neural_model_package",
+        "game": game_adapter.name,
+        "trained_player": game_adapter.trained_player,
+        "opponent_player": game_adapter.opponent_player,
+        "model_data": training_result["model_data"],
+        "training_summary": training_result["summary"],
+    }
+
+
+def train_and_save_neural_model(
+    file_path,
+    training_games_count,
+    simulations_per_move,
+    max_examples,
+    hidden_size,
+    epochs,
+    learning_rate,
+    show_progress=False,
+    seed=0,
+    game_adapter=MORPION_ADAPTER,
+):
+    """Entraîne un modèle neuronal puis le sauvegarde.
+
+    Cette fonction ne fait pas l'évaluation complète.
+    Elle se concentre sur la création du fichier neural_model.json.
+    """
+
+    training_result = train_neural_model_in_memory(
+        training_games_count=training_games_count,
+        simulations_per_move=simulations_per_move,
+        max_examples=max_examples,
+        hidden_size=hidden_size,
+        epochs=epochs,
+        learning_rate=learning_rate,
+        show_progress=show_progress,
+        seed=seed,
+        game_adapter=game_adapter,
+    )
+
+    model_package = create_neural_model_package(
+        training_result,
+        game_adapter,
+    )
+
+    save_json(
+        model_package,
+        file_path,
+    )
+
+    return model_package
+
+
+def load_neural_model_package(file_path):
+    """Charge un modèle neuronal sauvegardé.
+
+    Retourne {} si aucun fichier n'existe.
+    """
+
+    return load_json(file_path)
+
+
+def get_model_data_from_package(model_package):
+    if not model_package:
+        return {}
+
+    return model_package.get("model_data", {})
+
+
+def evaluate_saved_neural_model_package(
+    model_package,
+    games_count,
+    game_adapter=MORPION_ADAPTER,
+):
+    """Évalue un package de modèle neuronal déjà chargé."""
+
+    model_data = get_model_data_from_package(model_package)
+
+    if not model_data:
+        return {
+            "results": {},
+            "summary": {
+                "total_games": 0,
+                "trained_player": game_adapter.trained_player,
+                "opponent_player": game_adapter.opponent_player,
+                "trained_player_wins": 0,
+                "opponent_player_wins": 0,
+                "draws": 0,
+                "efficiency": 0.0,
+            },
+        }
+
+    results = evaluate_neural_model(
+        model_data=model_data,
+        games_count=games_count,
+        game_adapter=game_adapter,
+    )
+
+    summary = summarize_neural_evaluation_results(
+        results,
+        trained_player=game_adapter.trained_player,
+        opponent_player=game_adapter.opponent_player,
+    )
+
+    return {
+        "results": results,
+        "summary": summary,
+    }

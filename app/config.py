@@ -8,21 +8,27 @@ MODELS_DIR = DATA_DIR / "models"
 
 MODEL_FILE = MODELS_DIR / "trained_model.json"
 MOVE_SCORE_DATASET_FILE = MODELS_DIR / "move_score_dataset.json"
+NEURAL_MODEL_FILE = MODELS_DIR / "neural_model.json"
+
 TEST_FILE = PROJECT_ROOT / "tests" / "run_tests.py"
 
-MOVE_SCORE_DATASET_MAX_EXAMPLES = 200
-
-# Nombre de parties aléatoires utilisées pour découvrir des états à apprendre.
+# Ancien modèle tabulaire.
 TRAINING_GAMES_COUNT = 300
-
-# Nombre de simulations pour évaluer chaque coup possible dans un état donné.
 SIMULATIONS_PER_MOVE = 30
-
-# Nombre de parties utilisées pour évaluer le modèle après entraînement.
 EVALUATION_GAMES_COUNT = 200
 
-# Largeur visuelle de la barre de progression.
-PROGRESS_BAR_WIDTH = 30
+# Dataset Monte-Carlo destiné au moteur neuronal.
+MOVE_SCORE_DATASET_MAX_EXAMPLES = 200
 
-# Afficher ou non la progression pendant l'entraînement.
+# Modèle neuronal sauvegardé.
+NEURAL_TRAINING_GAMES_COUNT = 300
+NEURAL_SIMULATIONS_PER_MOVE = 30
+NEURAL_MAX_EXAMPLES = 200
+NEURAL_HIDDEN_SIZE = 18
+NEURAL_EPOCHS = 160
+NEURAL_LEARNING_RATE = 0.12
+NEURAL_EVALUATION_GAMES_COUNT = 200
+
+# Affichage progression.
+PROGRESS_BAR_WIDTH = 30
 SHOW_PROGRESS_DURING_TRAINING = True

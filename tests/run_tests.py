@@ -26,6 +26,7 @@ from tests.test_neural_pipeline import TESTS as NEURAL_PIPELINE_TESTS
 from tests.test_neural_strategy import TESTS as NEURAL_STRATEGY_TESTS
 from tests.test_neural_evaluation import TESTS as NEURAL_EVALUATION_TESTS
 from tests.test_neural_diagnostics import TESTS as NEURAL_DIAGNOSTICS_TESTS
+from tests.test_neural_model_service import TESTS as NEURAL_MODEL_SERVICE_TESTS
 
 
 def get_all_tests():
@@ -47,6 +48,7 @@ def get_all_tests():
         + NEURAL_STRATEGY_TESTS
         + NEURAL_EVALUATION_TESTS
         + NEURAL_DIAGNOSTICS_TESTS
+        + NEURAL_MODEL_SERVICE_TESTS
     )
 
 

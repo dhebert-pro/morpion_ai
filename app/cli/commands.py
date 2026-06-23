@@ -8,11 +8,19 @@ from app.config import (
     MODEL_FILE,
     MOVE_SCORE_DATASET_FILE,
     MOVE_SCORE_DATASET_MAX_EXAMPLES,
+    NEURAL_MODEL_FILE,
     TEST_FILE,
     TRAINING_GAMES_COUNT,
     SIMULATIONS_PER_MOVE,
     EVALUATION_GAMES_COUNT,
     SHOW_PROGRESS_DURING_TRAINING,
+    NEURAL_TRAINING_GAMES_COUNT,
+    NEURAL_SIMULATIONS_PER_MOVE,
+    NEURAL_MAX_EXAMPLES,
+    NEURAL_HIDDEN_SIZE,
+    NEURAL_EPOCHS,
+    NEURAL_LEARNING_RATE,
+    NEURAL_EVALUATION_GAMES_COUNT,
 )
 
 from app.storage.model_storage import load_model, save_model
@@ -33,6 +41,16 @@ from app.ai.training_dataset import (
 from app.ai.neural_diagnostics import (
     run_neural_diagnostic,
     format_neural_diagnostic_report,
+)
+
+from app.ai.neural_model_service import (
+    train_and_save_neural_model,
+    load_neural_model_package,
+    evaluate_saved_neural_model_package,
+)
+
+from app.ai.neural_evaluation import (
+    format_neural_evaluation_summary,
 )
 
 from app.games.morpion.engine import play_turn
@@ -121,6 +139,70 @@ def run_neural_demo_command():
     print(format_neural_diagnostic_report(diagnostic_result))
 
 
+def run_neural_training_command():
+    print("Entraînement du modèle neuronal")
+    print("Parties simulées pour collecter les états :", NEURAL_TRAINING_GAMES_COUNT)
+    print("Simulations par coup :", NEURAL_SIMULATIONS_PER_MOVE)
+    print("Nombre maximal d'exemples :", NEURAL_MAX_EXAMPLES)
+    print("Taille couche cachée :", NEURAL_HIDDEN_SIZE)
+    print("Époques :", NEURAL_EPOCHS)
+    print("Taux d'apprentissage :", NEURAL_LEARNING_RATE)
+    print()
+
+    model_package = train_and_save_neural_model(
+        file_path=NEURAL_MODEL_FILE,
+        training_games_count=NEURAL_TRAINING_GAMES_COUNT,
+        simulations_per_move=NEURAL_SIMULATIONS_PER_MOVE,
+        max_examples=NEURAL_MAX_EXAMPLES,
+        hidden_size=NEURAL_HIDDEN_SIZE,
+        epochs=NEURAL_EPOCHS,
+        learning_rate=NEURAL_LEARNING_RATE,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
+    )
+
+    training_summary = model_package["training_summary"]
+
+    print()
+    print("Modèle neuronal sauvegardé dans :", NEURAL_MODEL_FILE)
+    print("Exemples utilisés :", training_summary["examples_count"])
+    print("Erreur initiale :", round(training_summary["initial_error"], 6))
+    print("Erreur finale :", round(training_summary["final_error"], 6))
+    print("Amélioration erreur :", round(training_summary["error_improvement"], 6))
+    print()
+
+    print("Évaluation rapide du modèle neuronal sauvegardé...")
+    evaluation = evaluate_saved_neural_model_package(
+        model_package,
+        games_count=NEURAL_EVALUATION_GAMES_COUNT,
+    )
+
+    print(format_neural_evaluation_summary(evaluation["summary"]))
+
+
+def run_neural_evaluate_command():
+    model_package = load_neural_model_package(
+        NEURAL_MODEL_FILE,
+    )
+
+    if not model_package:
+        print("Aucun modèle neuronal sauvegardé trouvé.")
+        print("Lance d'abord : python main.py train-neural")
+        return
+
+    print("Évaluation du modèle neuronal sauvegardé")
+    print("Fichier :", NEURAL_MODEL_FILE)
+    print("Parties d'évaluation :", NEURAL_EVALUATION_GAMES_COUNT)
+    print()
+
+    evaluation = evaluate_saved_neural_model_package(
+        model_package,
+        games_count=NEURAL_EVALUATION_GAMES_COUNT,
+    )
+
+    print(format_neural_evaluation_summary(evaluation["summary"]))
+
+
 def run_evaluate_command():
     model = load_model()
 
@@ -199,12 +281,14 @@ def run_play_command():
 
 def print_help():
     print("Commandes disponibles :")
-    print("  python main.py train          → entraîne l'ancien modèle tabulaire")
-    print("  python main.py build-dataset  → crée le dataset d'apprentissage Monte-Carlo")
-    print("  python main.py neural-demo    → teste le moteur neuronal en mémoire")
-    print("  python main.py evaluate       → évalue l'ancien modèle tabulaire")
-    print("  python main.py play           → lance une partie avec l'ancien modèle sauvegardé")
-    print("  python main.py test           → lance tous les tests")
+    print("  python main.py train            → entraîne l'ancien modèle tabulaire")
+    print("  python main.py build-dataset    → crée le dataset d'apprentissage Monte-Carlo")
+    print("  python main.py neural-demo      → teste le moteur neuronal en mémoire")
+    print("  python main.py train-neural     → entraîne et sauvegarde le modèle neuronal")
+    print("  python main.py evaluate-neural  → évalue le modèle neuronal sauvegardé")
+    print("  python main.py evaluate         → évalue l'ancien modèle tabulaire")
+    print("  python main.py play             → lance une partie avec l'ancien modèle sauvegardé")
+    print("  python main.py test             → lance tous les tests")
 
 
 def run_cli():
@@ -220,6 +304,10 @@ def run_cli():
         run_build_dataset_command()
     elif command == "neural-demo":
         run_neural_demo_command()
+    elif command == "train-neural":
+        run_neural_training_command()
+    elif command == "evaluate-neural":
+        run_neural_evaluate_command()
     elif command == "evaluate":
         run_evaluate_command()
     elif command == "play":
