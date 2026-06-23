@@ -8,6 +8,8 @@ from app.ai.tactical_training import (
     merge_move_score_datasets,
 )
 
+from app.ai.reference_training_dataset import build_reference_move_score_dataset
+
 from app.ai.neural_encoding import encode_move_score_dataset
 
 from app.ai.neural_training_session import (
@@ -25,18 +27,10 @@ def build_augmented_move_score_dataset(
     show_progress=False,
     game_adapter=MORPION_ADAPTER,
     seed=0,
+    reference_training_games_count=0,
+    reference_training_max_examples=0,
+    reference_training_names=None,
 ):
-    """Construit le dataset utilisé par le réseau.
-
-    Il contient :
-    - des exemples générés par Monte-Carlo ;
-    - éventuellement des exemples tactiques forcés.
-
-    tactical_repeat_count :
-    - 0 : aucun exemple tactique ajouté ;
-    - > 0 : les positions tactiques de base sont répétées pour peser davantage.
-    """
-
     base_dataset = build_move_score_dataset(
         training_games_count=training_games_count,
         simulations_per_move=simulations_per_move,
@@ -45,26 +39,54 @@ def build_augmented_move_score_dataset(
         game_adapter=game_adapter,
         seed=seed,
     )
-
-    if tactical_repeat_count <= 0:
-        base_dataset["base_examples_count"] = base_dataset["examples_count"]
-        base_dataset["extra_examples_count"] = 0
-        base_dataset["tactical_repeat_count"] = 0
-        return base_dataset
-
-    tactical_dataset = create_default_morpion_tactical_dataset(
-        repeat_count=tactical_repeat_count,
-        game_adapter=game_adapter,
+    augmented_dataset = base_dataset
+    augmented_dataset["base_examples_count"] = base_dataset.get(
+        "examples_count",
+        0,
     )
+    augmented_dataset["extra_examples_count"] = 0
+    augmented_dataset["tactical_examples_count"] = 0
+    augmented_dataset["reference_examples_count"] = 0
 
-    augmented_dataset = merge_move_score_datasets(
-        base_dataset,
-        tactical_dataset,
-    )
+    if tactical_repeat_count > 0:
+        tactical_dataset = create_default_morpion_tactical_dataset(
+            repeat_count=tactical_repeat_count,
+            game_adapter=game_adapter,
+        )
+        augmented_dataset = merge_move_score_datasets(
+            augmented_dataset,
+            tactical_dataset,
+        )
+
+    if _should_add_reference_training(reference_training_games_count, reference_training_names):
+        reference_dataset = build_reference_move_score_dataset(
+            training_games_count=reference_training_games_count,
+            simulations_per_move=simulations_per_move,
+            max_examples=reference_training_max_examples,
+            reference_names=reference_training_names,
+            show_progress=show_progress,
+            game_adapter=game_adapter,
+            seed=seed + 100,
+        )
+        augmented_dataset = merge_move_score_datasets(
+            augmented_dataset,
+            reference_dataset,
+        )
 
     augmented_dataset["tactical_repeat_count"] = tactical_repeat_count
+    augmented_dataset["reference_training_games_count"] = reference_training_games_count
+    augmented_dataset["reference_training_max_examples"] = reference_training_max_examples
+    augmented_dataset["reference_training_names"] = reference_training_names or []
 
     return augmented_dataset
+
+
+def _should_add_reference_training(reference_training_games_count, reference_training_names):
+    return (
+        reference_training_games_count > 0
+        and reference_training_names is not None
+        and len(reference_training_names) > 0
+    )
 
 
 def train_neural_model_in_memory(
@@ -81,16 +103,7 @@ def train_neural_model_in_memory(
     initial_model_data=None,
     dataset_seed=0,
 ):
-    """Construit et entraîne un modèle neuronal complet en mémoire.
-
-    Cette fonction ne sauvegarde rien.
-
-    Si initial_model_data est fourni, l'entraînement continue depuis les poids
-    existants. Sinon, un nouveau réseau est créé.
-
-    Si tactical_repeat_count est supérieur à 0, on ajoute des exemples
-    tactiques forcés au dataset avant l'encodage.
-    """
+    """Construit et entraîne un modèle neuronal complet en mémoire."""
 
     raw_dataset = build_augmented_move_score_dataset(
         training_games_count=training_games_count,
@@ -126,65 +139,70 @@ def train_neural_model_in_memory(
         "raw_dataset": raw_dataset,
         "encoded_dataset": encoded_dataset,
         "model_data": training_result["model_data"],
-        "summary": {
-            "game": game_adapter.name,
-            "training_games_count": training_games_count,
-            "simulations_per_move": simulations_per_move,
-            "max_examples": max_examples,
-            "dataset_seed": dataset_seed,
-            "available_states_count": raw_dataset_summary["available_states_count"],
-            "tactical_repeat_count": raw_dataset.get("tactical_repeat_count", 0),
-            "base_examples_count": raw_dataset.get(
-                "base_examples_count",
-                raw_dataset.get("examples_count", 0),
-            ),
-            "extra_examples_count": raw_dataset.get("extra_examples_count", 0),
-            "examples_count": training_result["examples_count"],
-            "scored_moves_count": raw_dataset_summary["scored_moves_count"],
-            "average_legal_moves": raw_dataset_summary["average_legal_moves"],
-            "average_best_score": raw_dataset_summary["average_best_score"],
-            "input_size": training_result["input_size"],
-            "hidden_size": training_result["hidden_size"],
-            "output_size": training_result["output_size"],
-            "epochs": training_result["epochs"],
-            "learning_rate": training_result["learning_rate"],
-            "started_from_existing_model": training_result["started_from_existing_model"],
-            "initial_error": training_result["initial_error"],
-            "final_error": training_result["final_error"],
-            "error_improvement": training_result["initial_error"] - training_result["final_error"],
-        },
+        "summary": _build_training_summary(
+            game_adapter,
+            raw_dataset,
+            raw_dataset_summary,
+            training_result,
+            training_games_count,
+            simulations_per_move,
+            max_examples,
+            dataset_seed,
+            hidden_size,
+            epochs,
+            learning_rate,
+        ),
+    }
+
+
+def _build_training_summary(
+    game_adapter,
+    raw_dataset,
+    raw_dataset_summary,
+    training_result,
+    training_games_count,
+    simulations_per_move,
+    max_examples,
+    dataset_seed,
+    hidden_size,
+    epochs,
+    learning_rate,
+):
+    return {
+        "game": game_adapter.name,
+        "training_games_count": training_games_count,
+        "simulations_per_move": simulations_per_move,
+        "max_examples": max_examples,
+        "dataset_seed": dataset_seed,
+        "available_states_count": raw_dataset_summary["available_states_count"],
+        "tactical_repeat_count": raw_dataset.get("tactical_repeat_count", 0),
+        "base_examples_count": raw_dataset.get("base_examples_count", 0),
+        "extra_examples_count": raw_dataset.get("extra_examples_count", 0),
+        "examples_count": training_result["examples_count"],
+        "scored_moves_count": raw_dataset_summary["scored_moves_count"],
+        "average_legal_moves": raw_dataset_summary["average_legal_moves"],
+        "average_best_score": raw_dataset_summary["average_best_score"],
+        "input_size": training_result["input_size"],
+        "hidden_size": hidden_size,
+        "output_size": training_result["output_size"],
+        "epochs": epochs,
+        "learning_rate": learning_rate,
+        "started_from_existing_model": training_result["started_from_existing_model"],
+        "initial_error": training_result["initial_error"],
+        "final_error": training_result["final_error"],
+        "error_improvement": training_result["initial_error"] - training_result["final_error"],
     }
 
 
 def format_neural_training_summary(summary):
-    """Prépare un résumé lisible d'un entraînement neuronal en mémoire."""
-
-    started_from_existing_model = summary.get(
-        "started_from_existing_model",
-        False,
-    )
-    tactical_repeat_count = summary.get(
-        "tactical_repeat_count",
-        0,
-    )
-    base_examples_count = summary.get(
-        "base_examples_count",
-        summary.get("examples_count", 0),
-    )
-    extra_examples_count = summary.get(
-        "extra_examples_count",
-        0,
-    )
-
     lines = []
-
     lines.append("Résumé entraînement neuronal")
     lines.append("Jeu : " + str(summary["game"]))
     lines.append("Parties simulées : " + str(summary["training_games_count"]))
     lines.append("Simulations par coup : " + str(summary["simulations_per_move"]))
-    lines.append("Exemples Monte-Carlo : " + str(base_examples_count))
-    lines.append("Répétitions tactiques : " + str(tactical_repeat_count))
-    lines.append("Exemples tactiques ajoutés : " + str(extra_examples_count))
+    lines.append("Exemples Monte-Carlo : " + str(summary.get("base_examples_count", 0)))
+    lines.append("Répétitions tactiques : " + str(summary.get("tactical_repeat_count", 0)))
+    lines.append("Exemples tactiques ajoutés : " + str(summary.get("extra_examples_count", 0)))
     lines.append("Exemples totaux : " + str(summary["examples_count"]))
     lines.append("Coups scorés : " + str(summary["scored_moves_count"]))
     lines.append("Coups légaux moyens : " + str(summary["average_legal_moves"]))
@@ -194,9 +212,8 @@ def format_neural_training_summary(summary):
     lines.append("Taille sortie : " + str(summary["output_size"]))
     lines.append("Époques : " + str(summary["epochs"]))
     lines.append("Taux d'apprentissage : " + str(summary["learning_rate"]))
-    lines.append("Reprise d'un modèle existant : " + str(started_from_existing_model))
+    lines.append("Reprise d'un modèle existant : " + str(summary.get("started_from_existing_model", False)))
     lines.append("Erreur initiale : " + str(round(summary["initial_error"], 6)))
     lines.append("Erreur finale : " + str(round(summary["final_error"], 6)))
     lines.append("Amélioration erreur : " + str(round(summary["error_improvement"], 6)))
-
     return "\n".join(lines)

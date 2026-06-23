@@ -21,6 +21,10 @@ def create_training_summary_from_benchmark_result(benchmark_result):
         "tactical_repeat_count": benchmark_result["tactical_repeat_count"],
         "base_examples_count": benchmark_result["base_examples_count"],
         "extra_examples_count": benchmark_result["extra_examples_count"],
+        "tactical_examples_count": benchmark_result.get("tactical_examples_count", 0),
+        "reference_examples_count": benchmark_result.get("reference_examples_count", 0),
+        "reference_training_games_count": benchmark_result.get("reference_training_games_count", 0),
+        "reference_training_names": benchmark_result.get("reference_training_names", []),
         "examples_count": benchmark_result["examples_count"],
         "training_examples_count": benchmark_result.get("training_examples_count"),
         "validation_examples_count": benchmark_result.get("validation_examples_count"),
@@ -49,6 +53,8 @@ def create_training_summary_from_benchmark_result(benchmark_result):
             best_checkpoint["evaluation_efficiency"]
             - benchmark_result.get("initial_evaluation_efficiency", 0.0)
         ),
+        "final_reference_worst_efficiency": best_checkpoint.get("reference_worst_efficiency"),
+        "final_reference_worst_name": best_checkpoint.get("reference_worst_name"),
         "initial_tactical_success_rate": benchmark_result.get("initial_tactical_success_rate", 0.0),
         "final_tactical_success_rate": best_checkpoint["tactical_success_rate"],
         "tactical_success_rate_improvement": (

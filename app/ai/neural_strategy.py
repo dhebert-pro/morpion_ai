@@ -4,7 +4,10 @@ from app.ai.neural_encoding import (
 )
 
 from app.ai.neural_network import SimpleNeuralNetwork
-from app.ai.tactical_guard import find_tactical_guard_move
+from app.ai.tactical_guard import (
+    filter_move_scores_to_safe_moves,
+    find_tactical_guard_move,
+)
 
 from app.games.morpion.adapter import MORPION_ADAPTER
 
@@ -99,5 +102,12 @@ def choose_neural_move(
         model_data=model_data,
         game_adapter=game_adapter,
     )
+
+    if use_tactical_guard:
+        move_scores = filter_move_scores_to_safe_moves(
+            game=game,
+            move_scores=move_scores,
+            game_adapter=game_adapter,
+        )
 
     return choose_best_predicted_move(move_scores)

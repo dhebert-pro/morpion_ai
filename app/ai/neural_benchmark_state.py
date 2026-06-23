@@ -17,6 +17,11 @@ def evaluate_and_store_checkpoint(
     game_adapter,
     print_checkpoints=False,
     evaluation_seed=None,
+    reference_evaluation_games_count=0,
+    reference_evaluation_names=None,
+    reference_training_games_count=0,
+    reference_training_max_examples=0,
+    reference_training_names=None,
 ):
     checkpoint = evaluate_network_checkpoint(
         checkpoint_index=checkpoint_index,
@@ -28,6 +33,8 @@ def evaluate_and_store_checkpoint(
         evaluation_games_count=evaluation_games_count,
         game_adapter=game_adapter,
         evaluation_seed=evaluation_seed,
+        reference_evaluation_games_count=reference_evaluation_games_count,
+        reference_evaluation_names=reference_evaluation_names,
     )
     benchmark_state["checkpoints"].append(checkpoint)
 
@@ -76,6 +83,11 @@ def create_benchmark_result(
     early_stop_patience,
     stopped_early,
     evaluation_seed=None,
+    reference_evaluation_games_count=0,
+    reference_evaluation_names=None,
+    reference_training_games_count=0,
+    reference_training_max_examples=0,
+    reference_training_names=None,
 ):
     checkpoints = benchmark_state["checkpoints"]
     first_checkpoint = checkpoints[0]
@@ -108,6 +120,13 @@ def create_benchmark_result(
         "learning_rate": learning_rate,
         "evaluation_games_count": evaluation_games_count,
         "evaluation_seed": evaluation_seed,
+        "reference_evaluation_games_count": reference_evaluation_games_count,
+        "reference_evaluation_names": reference_evaluation_names or [],
+        "reference_training_games_count": reference_training_games_count,
+        "reference_training_max_examples": reference_training_max_examples,
+        "reference_training_names": reference_training_names or [],
+        "reference_examples_count": raw_dataset.get("reference_examples_count", 0),
+        "tactical_examples_count": raw_dataset.get("tactical_examples_count", 0),
         "early_stop_patience": early_stop_patience,
         "stopped_early": stopped_early,
         "checkpoints": checkpoints,
@@ -129,6 +148,9 @@ def create_benchmark_result(
         "best_training_error": best_checkpoint["training_error"],
         "best_validation_error": best_checkpoint.get("validation_error", 0.0),
         "best_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
+        "best_reference_worst_efficiency": best_checkpoint.get("reference_worst_efficiency"),
+        "best_reference_worst_name": best_checkpoint.get("reference_worst_name"),
+        "best_reference_evaluations": best_checkpoint.get("reference_evaluations", []),
         "best_tactical_success_rate": best_checkpoint["tactical_success_rate"],
         "best_model_data": benchmark_state["best_model_data"],
         "final_model_data": final_model_data,

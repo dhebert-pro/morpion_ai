@@ -1,6 +1,4 @@
 from time import perf_counter
-import random
-
 from app.ai.neural_pipeline import build_augmented_move_score_dataset
 from app.ai.neural_encoding import encode_move_score_dataset
 from app.ai.neural_training_session import (
@@ -8,12 +6,7 @@ from app.ai.neural_training_session import (
     create_or_load_neural_network_for_training,
 )
 from app.ai.neural_dataset_split import split_encoded_examples
-from app.ai.neural_checkpoint import (
-    is_checkpoint_better,
-    format_checkpoint_line,
-    get_checkpoint_table_header,
-    get_best_checkpoint_from_benchmark_result,
-)
+from app.ai.neural_checkpoint import get_checkpoint_table_header, is_checkpoint_better
 from app.ai.neural_benchmark_state import (
     evaluate_and_store_checkpoint as _evaluate_and_store_checkpoint,
     should_stop_early as _should_stop_early,
@@ -24,7 +17,7 @@ from app.ai.neural_benchmark_package import (
     create_model_package_from_benchmark_result,
 )
 from app.ai.neural_benchmark_report import format_neural_benchmark_report
-from app.utils.progress import print_progress
+from app.ai.neural_benchmark_loop import train_checkpoint_loop
 from app.games.morpion.adapter import MORPION_ADAPTER
 
 
@@ -46,9 +39,12 @@ def run_neural_training_benchmark(
     validation_ratio=0.0,
     early_stop_patience=None,
     evaluation_seed=None,
+    reference_evaluation_games_count=0,
+    reference_evaluation_names=None,
+    reference_training_games_count=0,
+    reference_training_max_examples=0,
+    reference_training_names=None,
 ):
-    """Entraîne par paliers et garde le meilleur modèle rencontré."""
-
     raw_dataset = build_augmented_move_score_dataset(
         training_games_count=training_games_count,
         simulations_per_move=simulations_per_move,
@@ -57,6 +53,9 @@ def run_neural_training_benchmark(
         show_progress=show_progress,
         game_adapter=game_adapter,
         seed=seed,
+        reference_training_games_count=reference_training_games_count,
+        reference_training_max_examples=reference_training_max_examples,
+        reference_training_names=reference_training_names,
     )
     encoded_dataset = encode_move_score_dataset(raw_dataset, game_adapter=game_adapter)
     encoded_examples = get_examples_from_encoded_dataset(encoded_dataset)
@@ -65,7 +64,7 @@ def run_neural_training_benchmark(
         encoded_examples,
         validation_ratio=validation_ratio,
         seed=seed,
-        always_train_sources=["tactical_probe"],
+        always_train_sources=_get_always_train_sources(reference_training_names),
     )
     training_examples = split_result["training_examples"]
     validation_examples = split_result["validation_examples"]
@@ -98,9 +97,11 @@ def run_neural_training_benchmark(
         game_adapter=game_adapter,
         print_checkpoints=print_checkpoints,
         evaluation_seed=effective_evaluation_seed,
+        reference_evaluation_games_count=reference_evaluation_games_count,
+        reference_evaluation_names=reference_evaluation_names,
     )
 
-    stopped_early = _train_checkpoint_loop(
+    stopped_early = train_checkpoint_loop(
         network=network,
         training_examples=training_examples,
         validation_examples=validation_examples,
@@ -114,7 +115,11 @@ def run_neural_training_benchmark(
         start_time=start_time,
         game_adapter=game_adapter,
         evaluation_seed=effective_evaluation_seed,
+        reference_evaluation_games_count=reference_evaluation_games_count,
+        reference_evaluation_names=reference_evaluation_names,
         seed=seed,
+        evaluate_and_store_checkpoint=_evaluate_and_store_checkpoint,
+        should_stop_early=_should_stop_early,
     )
 
     return _create_benchmark_result(
@@ -140,7 +145,24 @@ def run_neural_training_benchmark(
         early_stop_patience=early_stop_patience,
         stopped_early=stopped_early,
         evaluation_seed=effective_evaluation_seed,
+        reference_evaluation_games_count=reference_evaluation_games_count,
+        reference_evaluation_names=reference_evaluation_names,
+        reference_training_games_count=reference_training_games_count,
+        reference_training_max_examples=reference_training_max_examples,
+        reference_training_names=reference_training_names,
     )
+
+
+def _get_always_train_sources(reference_training_names):
+    sources = ["tactical_probe"]
+
+    if reference_training_names is None:
+        return sources
+
+    for reference_name in reference_training_names:
+        sources.append("reference_" + str(reference_name))
+
+    return sources
 
 
 def _get_effective_evaluation_seed(training_seed, evaluation_seed):
@@ -163,84 +185,3 @@ def _create_initial_state(print_checkpoints):
     }
 
 
-def _train_checkpoint_loop(
-    network,
-    training_examples,
-    validation_examples,
-    checkpoints_count,
-    epochs_per_checkpoint,
-    evaluation_games_count,
-    show_progress,
-    print_checkpoints,
-    early_stop_patience,
-    benchmark_state,
-    start_time,
-    game_adapter,
-    evaluation_seed,
-    seed=0,
-):
-    training_rng = random.Random(seed + 10)
-
-    for checkpoint_index in range(1, checkpoints_count + 1):
-        _train_one_checkpoint(
-            network,
-            training_examples,
-            checkpoint_index,
-            epochs_per_checkpoint,
-            checkpoints_count,
-            show_progress,
-            training_rng,
-        )
-        elapsed_seconds = perf_counter() - start_time
-        checkpoint_is_best = _evaluate_and_store_checkpoint(
-            benchmark_state=benchmark_state,
-            checkpoint_index=checkpoint_index,
-            total_epochs=checkpoint_index * epochs_per_checkpoint,
-            elapsed_seconds=elapsed_seconds,
-            network=network,
-            training_examples=training_examples,
-            validation_examples=validation_examples,
-            evaluation_games_count=evaluation_games_count,
-            game_adapter=game_adapter,
-            print_checkpoints=print_checkpoints,
-            evaluation_seed=evaluation_seed,
-        )
-
-        if checkpoint_is_best:
-            benchmark_state["checkpoints_without_improvement"] = 0
-        else:
-            benchmark_state["checkpoints_without_improvement"] += 1
-
-        if _should_stop_early(benchmark_state, early_stop_patience):
-            return True
-
-    return False
-
-
-def _train_one_checkpoint(
-    network,
-    training_examples,
-    checkpoint_index,
-    epochs_per_checkpoint,
-    checkpoints_count,
-    show_progress,
-    training_rng,
-):
-    for epoch in range(epochs_per_checkpoint):
-        epoch_examples = list(training_examples)
-        training_rng.shuffle(epoch_examples)
-
-        for example in epoch_examples:
-            network.train_one(
-                example["inputs"],
-                example["targets"],
-                example["legal_moves_mask"],
-            )
-
-        if show_progress:
-            completed_epochs = (checkpoint_index - 1) * epochs_per_checkpoint + epoch + 1
-            print_progress(
-                "Benchmark entraînement",
-                completed_epochs,
-                checkpoints_count * epochs_per_checkpoint,
-            )

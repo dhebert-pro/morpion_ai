@@ -89,6 +89,7 @@ def create_tactical_move_score_dataset(
         "trained_player": game_adapter.trained_player,
         "opponent_player": game_adapter.opponent_player,
         "examples_count": len(examples),
+        "tactical_examples_count": len(examples),
         "source": "tactical_probes",
         "repeat_count": repeat_count,
         "examples": examples,
@@ -112,15 +113,10 @@ def merge_move_score_datasets(
     base_dataset,
     extra_dataset,
 ):
-    """Fusionne deux datasets de scoring.
-
-    Les métadonnées principales viennent du dataset de base.
-    Les exemples sont simplement concaténés.
-    """
+    """Fusionne deux datasets de scoring."""
 
     base_examples = base_dataset.get("examples", [])
     extra_examples = extra_dataset.get("examples", [])
-
     merged_examples = []
 
     for example in base_examples:
@@ -137,9 +133,46 @@ def merge_move_score_datasets(
         "simulations_per_move": base_dataset.get("simulations_per_move"),
         "max_examples": base_dataset.get("max_examples"),
         "dataset_seed": base_dataset.get("dataset_seed"),
-        "available_states_count": base_dataset.get("available_states_count", len(base_examples)),
-        "base_examples_count": len(base_examples),
-        "extra_examples_count": len(extra_examples),
+        "available_states_count": _sum_dataset_count(
+            base_dataset,
+            extra_dataset,
+            "available_states_count",
+            len(base_examples),
+        ),
+        "base_examples_count": base_dataset.get(
+            "base_examples_count",
+            len(base_examples),
+        ),
+        "extra_examples_count": _sum_dataset_count(
+            base_dataset,
+            extra_dataset,
+            "extra_examples_count",
+            0,
+            len(extra_examples),
+        ),
+        "tactical_examples_count": _sum_dataset_count(
+            base_dataset,
+            extra_dataset,
+            "tactical_examples_count",
+        ),
+        "reference_examples_count": _sum_dataset_count(
+            base_dataset,
+            extra_dataset,
+            "reference_examples_count",
+        ),
         "examples_count": len(merged_examples),
         "examples": merged_examples,
     }
+
+
+def _sum_dataset_count(
+    base_dataset,
+    extra_dataset,
+    key,
+    base_default=0,
+    extra_default=0,
+):
+    return (
+        base_dataset.get(key, base_default)
+        + extra_dataset.get(key, extra_default)
+    )

@@ -15,15 +15,22 @@ def format_neural_benchmark_report(benchmark_result):
     lines.append("Départ depuis modèle existant : " + str(benchmark_result["started_from_existing_model"]))
     lines.append("États collectés disponibles : " + str(benchmark_result.get("available_states_count", 0)))
     lines.append("Exemples Monte-Carlo retenus : " + str(benchmark_result.get("base_examples_count", 0)))
-    lines.append("Exemples tactiques : " + str(benchmark_result.get("extra_examples_count", 0)))
+    lines.append("Exemples tactiques : " + str(benchmark_result.get("tactical_examples_count", benchmark_result.get("extra_examples_count", 0))))
+    reference_count = benchmark_result.get("reference_examples_count", 0)
+
+    if reference_count > 0:
+        lines.append("Exemples contre références : " + str(reference_count))
+
     lines.append("Exemples totaux : " + str(benchmark_result["examples_count"]))
     lines.append("Exemples apprentissage : " + str(benchmark_result.get("training_examples_count", benchmark_result["examples_count"])))
     lines.append("Exemples validation Monte-Carlo : " + str(benchmark_result.get("validation_examples_count", 0)))
-    lines.append("Exemples tactiques forcés en apprentissage : " + str(benchmark_result.get("always_train_examples_count", 0)))
+    lines.append("Exemples tactiques/référence forcés en apprentissage : " + str(benchmark_result.get("always_train_examples_count", 0)))
     lines.append("Répétitions tactiques : " + str(benchmark_result["tactical_repeat_count"]))
     lines.append("Couche cachée : " + str(benchmark_result["hidden_size"]))
     lines.append(_format_checkpoints_configuration(benchmark_result))
     lines.append("Parties d'évaluation par palier : " + str(benchmark_result["evaluation_games_count"]))
+    lines += _format_reference_training_configuration(benchmark_result)
+    lines += _format_reference_configuration(benchmark_result)
     lines.append("Graine évaluation stable : " + str(benchmark_result.get("evaluation_seed")))
     lines.append("")
     lines.append(get_checkpoint_table_header())
@@ -42,6 +49,37 @@ def format_neural_benchmark_report(benchmark_result):
     lines += build_benchmark_diagnostic_lines(benchmark_result)
 
     return "\n".join(lines)
+
+
+def _format_reference_training_configuration(benchmark_result):
+    games_count = benchmark_result.get("reference_training_games_count", 0)
+
+    if games_count is None or games_count <= 0:
+        return []
+
+    names = benchmark_result.get("reference_training_names", [])
+
+    return [
+        "Parties de référence pour dataset : " + str(games_count),
+        "Exemples max contre références : "
+        + str(benchmark_result.get("reference_training_max_examples", 0)),
+        "Adversaires du dataset référence : "
+        + ", ".join(str(name) for name in names),
+    ]
+
+
+def _format_reference_configuration(benchmark_result):
+    games_count = benchmark_result.get("reference_evaluation_games_count", 0)
+
+    if games_count is None or games_count <= 0:
+        return []
+
+    names = benchmark_result.get("reference_evaluation_names", [])
+
+    return [
+        "Parties référence par palier : " + str(games_count),
+        "Adversaires référence : " + ", ".join(str(name) for name in names),
+    ]
 
 
 def _format_checkpoints_configuration(benchmark_result):
@@ -70,7 +108,7 @@ def _format_gains(benchmark_result):
 
 
 def _format_best_checkpoint(best_checkpoint):
-    return [
+    lines = [
         "Meilleur palier : "
         + str(best_checkpoint["checkpoint_index"])
         + " ("
@@ -87,7 +125,24 @@ def _format_best_checkpoint(best_checkpoint):
         + str(round(best_checkpoint["tactical_success_rate"], 2))
         + " %",
     ]
+    lines += _format_best_reference(best_checkpoint)
+    return lines
 
+
+def _format_best_reference(best_checkpoint):
+    efficiency = best_checkpoint.get("reference_worst_efficiency")
+
+    if efficiency is None:
+        return []
+
+    name = best_checkpoint.get("reference_worst_name", "?")
+
+    return [
+        "Référence du meilleur modèle : "
+        + str(round(efficiency, 2))
+        + " % au pire contre "
+        + str(name)
+    ]
 
 
 def _format_best_tactical_failures(best_checkpoint):

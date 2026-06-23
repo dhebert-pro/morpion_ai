@@ -34,6 +34,8 @@ from tests.test_tactical_evaluation import TESTS as TACTICAL_EVALUATION_TESTS
 from tests.test_tactical_training import TESTS as TACTICAL_TRAINING_TESTS
 from tests.test_tactical_guard import TESTS as TACTICAL_GUARD_TESTS
 from tests.test_neural_reference_evaluation import TESTS as NEURAL_REFERENCE_EVALUATION_TESTS
+from tests.test_reference_training_dataset import TESTS as REFERENCE_TRAINING_DATASET_TESTS
+from tests.test_neural_reference_diagnostics import TESTS as NEURAL_REFERENCE_DIAGNOSTICS_TESTS
 
 
 def get_all_tests():
@@ -63,6 +65,8 @@ def get_all_tests():
         + TACTICAL_TRAINING_TESTS
         + TACTICAL_GUARD_TESTS
         + NEURAL_REFERENCE_EVALUATION_TESTS
+        + REFERENCE_TRAINING_DATASET_TESTS
+        + NEURAL_REFERENCE_DIAGNOSTICS_TESTS
     )
 
 

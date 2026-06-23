@@ -227,7 +227,7 @@ def test_format_neural_benchmark_report_contains_key_information():
     assert_contains(text, "Exemples Monte-Carlo retenus : 200")
     assert_contains(text, "Exemples tactiques : 100")
     assert_contains(text, "Exemples totaux : 300")
-    assert_contains(text, "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité")
+    assert_contains(text, "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Référence | Efficacité")
     assert_contains(text, "Gain erreur dataset : 0.05")
     assert_contains(text, "Gain efficacité : 7.5 points")
     assert_contains(text, "Gain tactique : 25.0 points")

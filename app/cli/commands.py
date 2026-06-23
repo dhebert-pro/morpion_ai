@@ -13,6 +13,7 @@ from app.cli.evaluation_commands import (
     run_neural_evaluate_command,
     run_neural_tactical_evaluate_command,
     run_neural_reference_evaluate_command,
+    run_neural_reference_diagnose_command,
 )
 from app.cli.play_commands import run_play_command
 from app.cli.test_command import run_test_command
@@ -33,6 +34,7 @@ def run_cli():
         "evaluate-neural": run_neural_evaluate_command,
         "evaluate-neural-tactical": run_neural_tactical_evaluate_command,
         "evaluate-neural-reference": run_neural_reference_evaluate_command,
+        "diagnose-neural-reference": run_neural_reference_diagnose_command,
         "evaluate": run_evaluate_command,
         "play": run_play_command,
         "test": run_test_command,

@@ -10,6 +10,11 @@ from app.config import (
     NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT,
     NEURAL_BENCHMARK_LEARNING_RATE,
     NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
+    NEURAL_BENCHMARK_REFERENCE_EVALUATION_GAMES_COUNT,
+    NEURAL_BENCHMARK_REFERENCE_EVALUATION_OPPONENTS,
+    NEURAL_BENCHMARK_REFERENCE_TRAINING_GAMES_COUNT,
+    NEURAL_BENCHMARK_REFERENCE_TRAINING_MAX_EXAMPLES,
+    NEURAL_BENCHMARK_REFERENCE_TRAINING_OPPONENTS,
     NEURAL_BENCHMARK_EVALUATION_SEED,
     NEURAL_BENCHMARK_VALIDATION_RATIO,
     NEURAL_BENCHMARK_EARLY_STOP_PATIENCE,
@@ -77,9 +82,14 @@ def print_neural_watch_configuration():
     print("Époques par palier :", NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT)
     print("Taux d'apprentissage :", NEURAL_BENCHMARK_LEARNING_RATE)
     print("Parties d'évaluation par palier :", NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT)
+    print("Parties de référence pour dataset :", NEURAL_BENCHMARK_REFERENCE_TRAINING_GAMES_COUNT)
+    print("Exemples max contre références :", NEURAL_BENCHMARK_REFERENCE_TRAINING_MAX_EXAMPLES)
+    print("Adversaires du dataset référence :", ", ".join(NEURAL_BENCHMARK_REFERENCE_TRAINING_OPPONENTS))
+    print("Parties de référence par palier :", NEURAL_BENCHMARK_REFERENCE_EVALUATION_GAMES_COUNT)
+    print("Adversaires de référence :", ", ".join(NEURAL_BENCHMARK_REFERENCE_EVALUATION_OPPONENTS))
     print("Graine évaluation stable :", NEURAL_BENCHMARK_EVALUATION_SEED)
     print("Part validation Monte-Carlo :", NEURAL_BENCHMARK_VALIDATION_RATIO)
-    print("Exemples tactiques forcés en apprentissage : oui")
+    print("Exemples tactiques/référence forcés en apprentissage : oui")
     print("Arrêt après paliers sans meilleur modèle :", NEURAL_BENCHMARK_EARLY_STOP_PATIENCE)
 
 
@@ -126,6 +136,11 @@ def _run_watch_benchmark(initial_model_data):
         validation_ratio=NEURAL_BENCHMARK_VALIDATION_RATIO,
         early_stop_patience=NEURAL_BENCHMARK_EARLY_STOP_PATIENCE,
         evaluation_seed=NEURAL_BENCHMARK_EVALUATION_SEED,
+        reference_evaluation_games_count=NEURAL_BENCHMARK_REFERENCE_EVALUATION_GAMES_COUNT,
+        reference_evaluation_names=NEURAL_BENCHMARK_REFERENCE_EVALUATION_OPPONENTS,
+        reference_training_games_count=NEURAL_BENCHMARK_REFERENCE_TRAINING_GAMES_COUNT,
+        reference_training_max_examples=NEURAL_BENCHMARK_REFERENCE_TRAINING_MAX_EXAMPLES,
+        reference_training_names=NEURAL_BENCHMARK_REFERENCE_TRAINING_OPPONENTS,
     )
 
 
