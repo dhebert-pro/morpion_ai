@@ -272,7 +272,7 @@ def run_neural_reset_command():
 def run_neural_training_with_watch_command(start_from_saved_model):
     print("Entraînement surveillé du modèle neuronal")
     print("Mode : affichage de l'amélioration par paliers")
-    print("Le modèle final sera sauvegardé.")
+    print("Le meilleur modèle rencontré sera sauvegardé.")
     print()
 
     initial_model_data = None
@@ -296,6 +296,11 @@ def run_neural_training_with_watch_command(start_from_saved_model):
         print("L'entraînement surveillé repart de zéro.")
 
     print()
+    print("Configuration du suivi :")
+    print("Paliers :", NEURAL_BENCHMARK_CHECKPOINTS_COUNT)
+    print("Époques par palier :", NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT)
+    print("Parties d'évaluation par palier :", NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT)
+    print()
 
     benchmark_result = run_neural_training_benchmark(
         training_games_count=NEURAL_BENCHMARK_TRAINING_GAMES_COUNT,
@@ -308,6 +313,7 @@ def run_neural_training_with_watch_command(start_from_saved_model):
         learning_rate=NEURAL_BENCHMARK_LEARNING_RATE,
         evaluation_games_count=NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
         show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        print_checkpoints=True,
         seed=0,
         initial_model_data=initial_model_data,
     )
@@ -324,7 +330,10 @@ def run_neural_training_with_watch_command(start_from_saved_model):
     print()
     print(format_neural_benchmark_report(benchmark_result))
     print()
-    print("Modèle neuronal final sauvegardé dans :", NEURAL_MODEL_FILE)
+    print("Modèle neuronal sauvegardé dans :", NEURAL_MODEL_FILE)
+    print("Palier sauvegardé :", benchmark_result["best_checkpoint_index"])
+    print("Époques du modèle sauvegardé :", benchmark_result["best_total_epochs"])
+    print("Efficacité du modèle sauvegardé :", round(benchmark_result["best_evaluation_efficiency"], 2), "%")
 
 
 def run_neural_benchmark_command(start_from_saved_model):
@@ -374,6 +383,7 @@ def run_neural_benchmark_command(start_from_saved_model):
         learning_rate=NEURAL_BENCHMARK_LEARNING_RATE,
         evaluation_games_count=NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
         show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        print_checkpoints=True,
         seed=0,
         initial_model_data=initial_model_data,
     )
@@ -487,9 +497,9 @@ def print_help():
     print("  python main.py build-dataset           → crée le dataset d'apprentissage Monte-Carlo")
     print("  python main.py neural-demo             → teste le moteur neuronal en mémoire")
     print("  python main.py train-neural            → continue l'entraînement neuronal si possible")
-    print("  python main.py train-neural --watch    → continue et affiche l'amélioration par paliers")
+    print("  python main.py train-neural --watch    → continue, suit les paliers et sauvegarde le meilleur")
     print("  python main.py reset-neural            → réinitialise et réentraîne le modèle neuronal")
-    print("  python main.py reset-neural --watch    → réinitialise avec suivi par paliers")
+    print("  python main.py reset-neural --watch    → réinitialise, suit les paliers et sauvegarde le meilleur")
     print("  python main.py neural-benchmark        → mesure l'amélioration sans sauvegarder")
     print("  python main.py neural-benchmark-reset  → mesure l'amélioration depuis zéro sans sauvegarder")
     print("  python main.py evaluate-neural         → évalue le modèle neuronal sauvegardé")

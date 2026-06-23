@@ -2,180 +2,335 @@ from tests.test_helpers import assert_equal, assert_true
 
 from app.ai.neural_network import SimpleNeuralNetwork
 
-from app.ai.neural_pipeline import (
-    build_augmented_move_score_dataset,
-    train_neural_model_in_memory,
-    format_neural_training_summary,
+from app.ai.neural_benchmark import (
+    is_checkpoint_better,
+    run_neural_training_benchmark,
+    create_training_summary_from_benchmark_result,
+    create_model_package_from_benchmark_result,
+    format_neural_benchmark_report,
 )
 
 
-def test_build_augmented_dataset_without_tactics_keeps_base_count():
-    dataset = build_augmented_move_score_dataset(
-        training_games_count=20,
-        simulations_per_move=1,
-        max_examples=5,
-        tactical_repeat_count=0,
-        show_progress=False,
-    )
-
-    assert_equal(dataset["game"], "morpion")
-    assert_true(dataset["examples_count"] > 0)
-    assert_true(dataset["examples_count"] <= 5)
-    assert_equal(dataset["base_examples_count"], dataset["examples_count"])
-    assert_equal(dataset["extra_examples_count"], 0)
-    assert_equal(dataset["tactical_repeat_count"], 0)
+def assert_contains(text, expected_part):
+    if expected_part not in text:
+        raise AssertionError(
+            "Texte attendu introuvable : "
+            + expected_part
+            + "\nTexte obtenu :\n"
+            + text
+        )
 
 
-def test_build_augmented_dataset_with_tactics_adds_tactical_examples():
-    dataset = build_augmented_move_score_dataset(
-        training_games_count=20,
-        simulations_per_move=1,
-        max_examples=5,
-        tactical_repeat_count=2,
-        show_progress=False,
-    )
+def test_checkpoint_comparison_prefers_tactical_success_first():
+    current_best = {
+        "tactical_success_rate": 75.0,
+        "evaluation_efficiency": 90.0,
+        "training_error": 0.01,
+    }
 
-    assert_equal(dataset["game"], "morpion")
-    assert_true(dataset["base_examples_count"] > 0)
-    assert_true(dataset["base_examples_count"] <= 5)
-    assert_equal(dataset["extra_examples_count"], 8)
-    assert_equal(dataset["tactical_repeat_count"], 2)
+    candidate = {
+        "tactical_success_rate": 100.0,
+        "evaluation_efficiency": 60.0,
+        "training_error": 0.02,
+    }
+
     assert_equal(
-        dataset["examples_count"],
-        dataset["base_examples_count"] + dataset["extra_examples_count"],
+        is_checkpoint_better(candidate, current_best),
+        True,
     )
 
 
-def test_train_neural_model_in_memory_runs_complete_pipeline():
-    result = train_neural_model_in_memory(
-        training_games_count=20,
+def test_checkpoint_comparison_uses_efficiency_when_tactical_is_equal():
+    current_best = {
+        "tactical_success_rate": 100.0,
+        "evaluation_efficiency": 60.0,
+        "training_error": 0.01,
+    }
+
+    candidate = {
+        "tactical_success_rate": 100.0,
+        "evaluation_efficiency": 70.0,
+        "training_error": 0.02,
+    }
+
+    assert_equal(
+        is_checkpoint_better(candidate, current_best),
+        True,
+    )
+
+
+def test_neural_benchmark_returns_checkpoints_and_best_model():
+    result = run_neural_training_benchmark(
+        training_games_count=10,
         simulations_per_move=1,
-        max_examples=5,
-        hidden_size=8,
-        epochs=80,
-        learning_rate=0.2,
+        max_examples=3,
         tactical_repeat_count=0,
+        hidden_size=8,
+        checkpoints_count=2,
+        epochs_per_checkpoint=5,
+        learning_rate=0.2,
+        evaluation_games_count=3,
         show_progress=False,
+        print_checkpoints=False,
         seed=0,
     )
-
-    summary = result["summary"]
 
     assert_equal(result["game"], "morpion")
-    assert_equal(result["trained_player"], "O")
-    assert_equal(result["opponent_player"], "X")
+    assert_equal(result["started_from_existing_model"], False)
+    assert_true(result["examples_count"] > 0)
+    assert_equal(result["hidden_size"], 8)
+    assert_equal(result["checkpoints_count"], 2)
+    assert_equal(result["epochs_per_checkpoint"], 5)
+    assert_equal(result["total_epochs"], 10)
 
-    assert_true("raw_dataset" in result)
-    assert_true("encoded_dataset" in result)
-    assert_true("model_data" in result)
-    assert_true("summary" in result)
+    assert_equal(len(result["checkpoints"]), 3)
+    assert_equal(result["checkpoints"][0]["total_epochs"], 0)
+    assert_equal(result["checkpoints"][1]["total_epochs"], 5)
+    assert_equal(result["checkpoints"][2]["total_epochs"], 10)
 
-    assert_true(summary["examples_count"] > 0)
-    assert_true(summary["examples_count"] <= 5)
-    assert_equal(summary["tactical_repeat_count"], 0)
-    assert_equal(summary["extra_examples_count"], 0)
-    assert_equal(summary["input_size"], 18)
-    assert_equal(summary["hidden_size"], 8)
-    assert_equal(summary["output_size"], 9)
-    assert_equal(summary["epochs"], 80)
-    assert_equal(summary["learning_rate"], 0.2)
+    assert_true("best_checkpoint" in result)
+    assert_true("best_model_data" in result)
+    assert_true("final_model_data" in result)
+    assert_true("best_checkpoint_index" in result)
 
-    assert_true(summary["final_error"] < summary["initial_error"])
-    assert_true(summary["error_improvement"] > 0.0)
+    for checkpoint in result["checkpoints"]:
+        assert_true("training_error" in checkpoint)
+        assert_true("evaluation_efficiency" in checkpoint)
+        assert_true("tactical_success_rate" in checkpoint)
+        assert_true(0.0 <= checkpoint["evaluation_efficiency"] <= 100.0)
+        assert_true(0.0 <= checkpoint["tactical_success_rate"] <= 100.0)
 
 
-def test_train_neural_model_in_memory_can_use_tactical_examples():
-    result = train_neural_model_in_memory(
-        training_games_count=20,
-        simulations_per_move=1,
-        max_examples=5,
+def test_neural_benchmark_can_start_from_existing_model():
+    network = SimpleNeuralNetwork(
+        input_size=18,
         hidden_size=8,
-        epochs=80,
+        output_size=9,
         learning_rate=0.2,
-        tactical_repeat_count=2,
-        show_progress=False,
         seed=0,
     )
 
-    summary = result["summary"]
-
-    assert_equal(summary["tactical_repeat_count"], 2)
-    assert_equal(summary["extra_examples_count"], 8)
-    assert_equal(
-        summary["examples_count"],
-        summary["base_examples_count"] + summary["extra_examples_count"],
-    )
-    assert_true(summary["final_error"] < summary["initial_error"])
-
-
-def test_train_neural_model_in_memory_returns_usable_model_data():
-    result = train_neural_model_in_memory(
-        training_games_count=20,
+    result = run_neural_training_benchmark(
+        training_games_count=10,
         simulations_per_move=1,
-        max_examples=5,
-        hidden_size=8,
-        epochs=40,
-        learning_rate=0.2,
+        max_examples=3,
         tactical_repeat_count=0,
+        hidden_size=8,
+        checkpoints_count=1,
+        epochs_per_checkpoint=5,
+        learning_rate=0.2,
+        evaluation_games_count=3,
         show_progress=False,
-        seed=1,
+        print_checkpoints=False,
+        seed=999,
+        initial_model_data=network.to_dict(),
     )
 
-    model_data = result["model_data"]
-
-    network = SimpleNeuralNetwork.from_dict(model_data)
-    first_example = result["encoded_dataset"]["examples"][0]
-
-    predictions = network.predict(first_example["inputs"])
-
-    assert_equal(len(predictions), 9)
-
-    for prediction in predictions:
-        assert_true(0.0 <= prediction <= 1.0)
+    assert_equal(result["started_from_existing_model"], True)
+    assert_equal(len(result["checkpoints"]), 2)
 
 
-def test_format_neural_training_summary_contains_key_information():
-    summary = {
+def test_training_summary_can_be_created_from_best_benchmark_checkpoint():
+    result = {
         "game": "morpion",
-        "training_games_count": 20,
+        "training_games_count": 10,
         "simulations_per_move": 1,
-        "max_examples": 5,
+        "max_examples": 3,
         "tactical_repeat_count": 2,
-        "base_examples_count": 5,
+        "base_examples_count": 3,
         "extra_examples_count": 8,
-        "examples_count": 13,
-        "scored_moves_count": 25,
-        "average_legal_moves": 5.0,
-        "average_best_score": 0.75,
+        "examples_count": 11,
         "input_size": 18,
         "hidden_size": 8,
         "output_size": 9,
-        "epochs": 40,
+        "total_epochs": 20,
         "learning_rate": 0.2,
-        "started_from_existing_model": False,
-        "initial_error": 0.25,
-        "final_error": 0.10,
-        "error_improvement": 0.15,
+        "started_from_existing_model": True,
+        "checkpoints_count": 2,
+        "epochs_per_checkpoint": 10,
+        "evaluation_games_count": 3,
+        "initial_training_error": 0.5,
+        "initial_evaluation_efficiency": 40.0,
+        "initial_tactical_success_rate": 25.0,
+        "final_checkpoint_is_best": False,
+        "checkpoints": [],
+        "best_checkpoint": {
+            "checkpoint_index": 1,
+            "total_epochs": 10,
+            "training_error": 0.2,
+            "evaluation_efficiency": 60.0,
+            "tactical_success_rate": 75.0,
+        },
     }
 
-    text = format_neural_training_summary(summary)
+    summary = create_training_summary_from_benchmark_result(result)
 
-    assert_true("Résumé entraînement neuronal" in text)
-    assert_true("Jeu : morpion" in text)
-    assert_true("Exemples Monte-Carlo : 5" in text)
-    assert_true("Répétitions tactiques : 2" in text)
-    assert_true("Exemples tactiques ajoutés : 8" in text)
-    assert_true("Exemples totaux : 13" in text)
-    assert_true("Erreur initiale : 0.25" in text)
-    assert_true("Erreur finale : 0.1" in text)
-    assert_true("Amélioration erreur : 0.15" in text)
+    assert_equal(summary["game"], "morpion")
+    assert_equal(summary["examples_count"], 11)
+    assert_equal(summary["epochs"], 10)
+    assert_equal(summary["started_from_existing_model"], True)
+    assert_equal(summary["initial_error"], 0.5)
+    assert_equal(summary["final_error"], 0.2)
+    assert_equal(summary["error_improvement"], 0.3)
+    assert_equal(summary["best_checkpoint_index"], 1)
+    assert_equal(summary["best_total_epochs"], 10)
+
+
+def test_model_package_uses_best_model_from_benchmark_result():
+    final_network = SimpleNeuralNetwork(
+        input_size=18,
+        hidden_size=8,
+        output_size=9,
+        learning_rate=0.2,
+        seed=0,
+    )
+
+    best_network = SimpleNeuralNetwork(
+        input_size=18,
+        hidden_size=8,
+        output_size=9,
+        learning_rate=0.2,
+        seed=1,
+    )
+
+    best_model_data = best_network.to_dict()
+    best_model_data["output_biases"][0] = 9.0
+
+    result = {
+        "game": "morpion",
+        "trained_player": "O",
+        "opponent_player": "X",
+        "training_games_count": 10,
+        "simulations_per_move": 1,
+        "max_examples": 3,
+        "tactical_repeat_count": 2,
+        "base_examples_count": 3,
+        "extra_examples_count": 8,
+        "examples_count": 11,
+        "input_size": 18,
+        "hidden_size": 8,
+        "output_size": 9,
+        "total_epochs": 20,
+        "learning_rate": 0.2,
+        "started_from_existing_model": True,
+        "checkpoints_count": 2,
+        "epochs_per_checkpoint": 10,
+        "evaluation_games_count": 3,
+        "initial_training_error": 0.5,
+        "final_training_error": 0.25,
+        "training_error_improvement": 0.25,
+        "initial_evaluation_efficiency": 40.0,
+        "final_evaluation_efficiency": 50.0,
+        "evaluation_efficiency_improvement": 10.0,
+        "initial_tactical_success_rate": 25.0,
+        "final_tactical_success_rate": 50.0,
+        "tactical_success_rate_improvement": 25.0,
+        "best_checkpoint": {
+            "checkpoint_index": 1,
+            "total_epochs": 10,
+            "training_error": 0.2,
+            "evaluation_efficiency": 60.0,
+            "tactical_success_rate": 75.0,
+        },
+        "best_checkpoint_index": 1,
+        "best_total_epochs": 10,
+        "best_training_error": 0.2,
+        "best_evaluation_efficiency": 60.0,
+        "best_tactical_success_rate": 75.0,
+        "final_checkpoint_is_best": False,
+        "best_model_data": best_model_data,
+        "final_model_data": final_network.to_dict(),
+        "checkpoints": [],
+    }
+
+    package = create_model_package_from_benchmark_result(result)
+
+    assert_equal(package["type"], "neural_model_package")
+    assert_equal(package["game"], "morpion")
+    assert_equal(package["trained_player"], "O")
+    assert_equal(package["opponent_player"], "X")
+    assert_equal(package["model_data"]["output_biases"][0], 9.0)
+    assert_true("training_summary" in package)
+    assert_true("benchmark_summary" in package)
+    assert_equal(package["training_summary"]["epochs"], 10)
+    assert_equal(package["benchmark_summary"]["best_checkpoint_index"], 1)
+
+
+def test_format_neural_benchmark_report_contains_best_checkpoint_information():
+    result = {
+        "game": "morpion",
+        "started_from_existing_model": True,
+        "base_examples_count": 200,
+        "extra_examples_count": 100,
+        "examples_count": 300,
+        "tactical_repeat_count": 25,
+        "hidden_size": 18,
+        "checkpoints_count": 2,
+        "epochs_per_checkpoint": 40,
+        "evaluation_games_count": 100,
+        "training_error_improvement": 0.05,
+        "evaluation_efficiency_improvement": 7.5,
+        "tactical_success_rate_improvement": 25.0,
+        "best_checkpoint_index": 1,
+        "best_total_epochs": 40,
+        "best_training_error": 0.03,
+        "best_evaluation_efficiency": 62.5,
+        "best_tactical_success_rate": 50.0,
+        "final_checkpoint_is_best": False,
+        "checkpoints": [
+            {
+                "checkpoint_index": 0,
+                "total_epochs": 0,
+                "elapsed_seconds": 0.0,
+                "training_error": 0.08,
+                "tactical_passed_count": 1,
+                "tactical_total_count": 4,
+                "tactical_success_rate": 25.0,
+                "evaluation_efficiency": 55.0,
+            },
+            {
+                "checkpoint_index": 1,
+                "total_epochs": 40,
+                "elapsed_seconds": 1.25,
+                "training_error": 0.03,
+                "tactical_passed_count": 2,
+                "tactical_total_count": 4,
+                "tactical_success_rate": 50.0,
+                "evaluation_efficiency": 62.5,
+            },
+            {
+                "checkpoint_index": 2,
+                "total_epochs": 80,
+                "elapsed_seconds": 2.5,
+                "training_error": 0.02,
+                "tactical_passed_count": 2,
+                "tactical_total_count": 4,
+                "tactical_success_rate": 50.0,
+                "evaluation_efficiency": 58.0,
+            },
+        ],
+    }
+
+    text = format_neural_benchmark_report(result)
+
+    assert_contains(text, "Benchmark entraînement neuronal")
+    assert_contains(text, "Jeu : morpion")
+    assert_contains(text, "Départ depuis modèle existant : True")
+    assert_contains(text, "Exemples Monte-Carlo : 200")
+    assert_contains(text, "Exemples tactiques : 100")
+    assert_contains(text, "Exemples totaux : 300")
+    assert_contains(text, "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité")
+    assert_contains(text, "<- meilleur")
+    assert_contains(text, "Meilleur palier : 1 (40 époques)")
+    assert_contains(text, "Modèle retenu : meilleur palier, pas le dernier.")
 
 
 TESTS = [
-    ("Le dataset augmenté sans tactique garde seulement les exemples de base", test_build_augmented_dataset_without_tactics_keeps_base_count),
-    ("Le dataset augmenté avec tactique ajoute les exemples tactiques", test_build_augmented_dataset_with_tactics_adds_tactical_examples),
-    ("Le pipeline neuronal complet s'exécute en mémoire", test_train_neural_model_in_memory_runs_complete_pipeline),
-    ("Le pipeline neuronal peut utiliser des exemples tactiques", test_train_neural_model_in_memory_can_use_tactical_examples),
-    ("Le pipeline retourne un modèle neuronal utilisable", test_train_neural_model_in_memory_returns_usable_model_data),
-    ("Le résumé d'entraînement neuronal contient les informations clés", test_format_neural_training_summary_contains_key_information),
+    ("La comparaison de checkpoints privilégie d'abord la tactique", test_checkpoint_comparison_prefers_tactical_success_first),
+    ("La comparaison de checkpoints utilise l'efficacité si la tactique est égale", test_checkpoint_comparison_uses_efficiency_when_tactical_is_equal),
+    ("Le benchmark neuronal retourne des checkpoints et le meilleur modèle", test_neural_benchmark_returns_checkpoints_and_best_model),
+    ("Le benchmark neuronal peut partir d'un modèle existant", test_neural_benchmark_can_start_from_existing_model),
+    ("Un résumé d'entraînement utilise le meilleur checkpoint du benchmark", test_training_summary_can_be_created_from_best_benchmark_checkpoint),
+    ("Un package de modèle utilise le meilleur modèle du benchmark", test_model_package_uses_best_model_from_benchmark_result),
+    ("Le rapport de benchmark indique le meilleur checkpoint", test_format_neural_benchmark_report_contains_best_checkpoint_information),
 ]

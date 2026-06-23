@@ -74,6 +74,130 @@ def evaluate_network_checkpoint(
     }
 
 
+def is_checkpoint_better(candidate_checkpoint, current_best_checkpoint):
+    """Détermine si un checkpoint est meilleur qu'un autre.
+
+    Priorité :
+    1. meilleur taux tactique ;
+    2. meilleure efficacité contre l'adversaire aléatoire ;
+    3. plus faible erreur sur le dataset.
+    """
+
+    if current_best_checkpoint is None:
+        return True
+
+    if candidate_checkpoint["tactical_success_rate"] != current_best_checkpoint["tactical_success_rate"]:
+        return (
+            candidate_checkpoint["tactical_success_rate"]
+            > current_best_checkpoint["tactical_success_rate"]
+        )
+
+    if candidate_checkpoint["evaluation_efficiency"] != current_best_checkpoint["evaluation_efficiency"]:
+        return (
+            candidate_checkpoint["evaluation_efficiency"]
+            > current_best_checkpoint["evaluation_efficiency"]
+        )
+
+    return candidate_checkpoint["training_error"] < current_best_checkpoint["training_error"]
+
+
+def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
+    tactical_text = (
+        str(checkpoint["tactical_passed_count"])
+        + "/"
+        + str(checkpoint["tactical_total_count"])
+        + " ("
+        + str(round(checkpoint["tactical_success_rate"], 2))
+        + " %)"
+    )
+
+    line = (
+        str(checkpoint["checkpoint_index"])
+        + " | "
+        + str(checkpoint["total_epochs"])
+        + " | "
+        + str(round(checkpoint["elapsed_seconds"], 2))
+        + " | "
+        + str(round(checkpoint["training_error"], 6))
+        + " | "
+        + tactical_text
+        + " | "
+        + str(round(checkpoint["evaluation_efficiency"], 2))
+        + " %"
+    )
+
+    if is_best_checkpoint:
+        line += "  <- meilleur"
+
+    return line
+
+
+def get_checkpoint_table_header():
+    return "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité"
+
+
+def get_best_checkpoint_from_benchmark_result(benchmark_result):
+    """Récupère ou reconstruit le meilleur checkpoint.
+
+    Cette fonction accepte :
+    - un résultat complet récent avec best_checkpoint ;
+    - un résultat avec une liste checkpoints ;
+    - un résultat simplifié utilisé par certains tests.
+    """
+
+    best_checkpoint = benchmark_result.get("best_checkpoint")
+
+    if best_checkpoint:
+        return best_checkpoint
+
+    checkpoints = benchmark_result.get("checkpoints", [])
+
+    if checkpoints:
+        best_checkpoint_index = benchmark_result.get("best_checkpoint_index")
+
+        if best_checkpoint_index is not None:
+            for checkpoint in checkpoints:
+                if checkpoint["checkpoint_index"] == best_checkpoint_index:
+                    return checkpoint
+
+        best_checkpoint = None
+
+        for checkpoint in checkpoints:
+            if is_checkpoint_better(checkpoint, best_checkpoint):
+                best_checkpoint = checkpoint
+
+        return best_checkpoint
+
+    return {
+        "checkpoint_index": benchmark_result.get(
+            "best_checkpoint_index",
+            benchmark_result.get("checkpoints_count", 0),
+        ),
+        "total_epochs": benchmark_result.get(
+            "best_total_epochs",
+            benchmark_result.get("total_epochs", 0),
+        ),
+        "elapsed_seconds": benchmark_result.get("elapsed_seconds", 0.0),
+        "training_error": benchmark_result.get(
+            "best_training_error",
+            benchmark_result.get(
+                "final_training_error",
+                benchmark_result.get("final_error", 0.0),
+            ),
+        ),
+        "evaluation_efficiency": benchmark_result.get(
+            "best_evaluation_efficiency",
+            benchmark_result.get("final_evaluation_efficiency", 0.0),
+        ),
+        "tactical_passed_count": benchmark_result.get("tactical_passed_count", 0),
+        "tactical_total_count": benchmark_result.get("tactical_total_count", 0),
+        "tactical_success_rate": benchmark_result.get(
+            "best_tactical_success_rate",
+            benchmark_result.get("final_tactical_success_rate", 0.0),
+        ),
+    }
+
+
 def run_neural_training_benchmark(
     training_games_count,
     simulations_per_move,
@@ -85,6 +209,7 @@ def run_neural_training_benchmark(
     learning_rate,
     evaluation_games_count,
     show_progress=False,
+    print_checkpoints=False,
     seed=0,
     game_adapter=MORPION_ADAPTER,
     initial_model_data=None,
@@ -99,6 +224,8 @@ def run_neural_training_benchmark(
     - le score contre un adversaire aléatoire ;
     - la réussite sur les tests tactiques ;
     - le temps écoulé.
+
+    Elle conserve aussi le meilleur modèle rencontré.
     """
 
     raw_dataset = build_augmented_move_score_dataset(
@@ -130,6 +257,13 @@ def run_neural_training_benchmark(
     start_time = perf_counter()
     checkpoints = []
 
+    best_checkpoint = None
+    best_model_data = None
+
+    if print_checkpoints:
+        print()
+        print(get_checkpoint_table_header())
+
     initial_checkpoint = evaluate_network_checkpoint(
         checkpoint_index=0,
         total_epochs=0,
@@ -139,7 +273,15 @@ def run_neural_training_benchmark(
         evaluation_games_count=evaluation_games_count,
         game_adapter=game_adapter,
     )
+
     checkpoints.append(initial_checkpoint)
+
+    if is_checkpoint_better(initial_checkpoint, best_checkpoint):
+        best_checkpoint = initial_checkpoint
+        best_model_data = network.to_dict()
+
+    if print_checkpoints:
+        print(format_checkpoint_line(initial_checkpoint, is_best_checkpoint=True))
 
     for checkpoint_index in range(1, checkpoints_count + 1):
         for epoch in range(epochs_per_checkpoint):
@@ -174,7 +316,20 @@ def run_neural_training_benchmark(
             evaluation_games_count=evaluation_games_count,
             game_adapter=game_adapter,
         )
+
         checkpoints.append(checkpoint)
+
+        checkpoint_is_best = is_checkpoint_better(
+            checkpoint,
+            best_checkpoint,
+        )
+
+        if checkpoint_is_best:
+            best_checkpoint = checkpoint
+            best_model_data = network.to_dict()
+
+        if print_checkpoints:
+            print(format_checkpoint_line(checkpoint, checkpoint_is_best))
 
     first_checkpoint = checkpoints[0]
     last_checkpoint = checkpoints[-1]
@@ -227,11 +382,30 @@ def run_neural_training_benchmark(
             last_checkpoint["tactical_success_rate"]
             - first_checkpoint["tactical_success_rate"]
         ),
+        "best_checkpoint": best_checkpoint,
+        "best_checkpoint_index": best_checkpoint["checkpoint_index"],
+        "best_total_epochs": best_checkpoint["total_epochs"],
+        "best_training_error": best_checkpoint["training_error"],
+        "best_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
+        "best_tactical_success_rate": best_checkpoint["tactical_success_rate"],
+        "best_model_data": best_model_data,
         "final_model_data": network.to_dict(),
+        "final_checkpoint_is_best": (
+            best_checkpoint["checkpoint_index"] == last_checkpoint["checkpoint_index"]
+        ),
     }
 
 
 def create_training_summary_from_benchmark_result(benchmark_result):
+    best_checkpoint = get_best_checkpoint_from_benchmark_result(
+        benchmark_result,
+    )
+
+    initial_error = benchmark_result.get(
+        "initial_training_error",
+        benchmark_result.get("initial_error", 0.0),
+    )
+
     return {
         "game": benchmark_result["game"],
         "training_games_count": benchmark_result["training_games_count"],
@@ -247,21 +421,30 @@ def create_training_summary_from_benchmark_result(benchmark_result):
         "input_size": benchmark_result["input_size"],
         "hidden_size": benchmark_result["hidden_size"],
         "output_size": benchmark_result["output_size"],
-        "epochs": benchmark_result["total_epochs"],
+        "epochs": best_checkpoint["total_epochs"],
         "learning_rate": benchmark_result["learning_rate"],
         "started_from_existing_model": benchmark_result["started_from_existing_model"],
-        "initial_error": benchmark_result["initial_training_error"],
-        "final_error": benchmark_result["final_training_error"],
-        "error_improvement": benchmark_result["training_error_improvement"],
-        "benchmark_checkpoints_count": benchmark_result["checkpoints_count"],
-        "benchmark_epochs_per_checkpoint": benchmark_result["epochs_per_checkpoint"],
-        "benchmark_evaluation_games_count": benchmark_result["evaluation_games_count"],
-        "initial_evaluation_efficiency": benchmark_result["initial_evaluation_efficiency"],
-        "final_evaluation_efficiency": benchmark_result["final_evaluation_efficiency"],
-        "evaluation_efficiency_improvement": benchmark_result["evaluation_efficiency_improvement"],
-        "initial_tactical_success_rate": benchmark_result["initial_tactical_success_rate"],
-        "final_tactical_success_rate": benchmark_result["final_tactical_success_rate"],
-        "tactical_success_rate_improvement": benchmark_result["tactical_success_rate_improvement"],
+        "initial_error": initial_error,
+        "final_error": best_checkpoint["training_error"],
+        "error_improvement": initial_error - best_checkpoint["training_error"],
+        "benchmark_checkpoints_count": benchmark_result.get("checkpoints_count", 0),
+        "benchmark_epochs_per_checkpoint": benchmark_result.get("epochs_per_checkpoint", 0),
+        "benchmark_evaluation_games_count": benchmark_result.get("evaluation_games_count", 0),
+        "initial_evaluation_efficiency": benchmark_result.get("initial_evaluation_efficiency", 0.0),
+        "final_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
+        "evaluation_efficiency_improvement": (
+            best_checkpoint["evaluation_efficiency"]
+            - benchmark_result.get("initial_evaluation_efficiency", 0.0)
+        ),
+        "initial_tactical_success_rate": benchmark_result.get("initial_tactical_success_rate", 0.0),
+        "final_tactical_success_rate": best_checkpoint["tactical_success_rate"],
+        "tactical_success_rate_improvement": (
+            best_checkpoint["tactical_success_rate"]
+            - benchmark_result.get("initial_tactical_success_rate", 0.0)
+        ),
+        "best_checkpoint_index": best_checkpoint["checkpoint_index"],
+        "best_total_epochs": best_checkpoint["total_epochs"],
+        "final_checkpoint_is_best": benchmark_result.get("final_checkpoint_is_best", True),
     }
 
 
@@ -269,26 +452,42 @@ def create_model_package_from_benchmark_result(
     benchmark_result,
     game_adapter=MORPION_ADAPTER,
 ):
+    best_checkpoint = get_best_checkpoint_from_benchmark_result(
+        benchmark_result,
+    )
+
+    model_data = benchmark_result.get(
+        "best_model_data",
+        benchmark_result["final_model_data"],
+    )
+
     return {
         "type": "neural_model_package",
         "game": game_adapter.name,
         "trained_player": game_adapter.trained_player,
         "opponent_player": game_adapter.opponent_player,
-        "model_data": benchmark_result["final_model_data"],
+        "model_data": model_data,
         "training_summary": create_training_summary_from_benchmark_result(
             benchmark_result,
         ),
         "benchmark_summary": {
-            "checkpoints": benchmark_result["checkpoints"],
-            "initial_training_error": benchmark_result["initial_training_error"],
-            "final_training_error": benchmark_result["final_training_error"],
-            "training_error_improvement": benchmark_result["training_error_improvement"],
-            "initial_evaluation_efficiency": benchmark_result["initial_evaluation_efficiency"],
-            "final_evaluation_efficiency": benchmark_result["final_evaluation_efficiency"],
-            "evaluation_efficiency_improvement": benchmark_result["evaluation_efficiency_improvement"],
-            "initial_tactical_success_rate": benchmark_result["initial_tactical_success_rate"],
-            "final_tactical_success_rate": benchmark_result["final_tactical_success_rate"],
-            "tactical_success_rate_improvement": benchmark_result["tactical_success_rate_improvement"],
+            "checkpoints": benchmark_result.get("checkpoints", []),
+            "initial_training_error": benchmark_result.get("initial_training_error", 0.0),
+            "final_training_error": benchmark_result.get("final_training_error", best_checkpoint["training_error"]),
+            "training_error_improvement": benchmark_result.get("training_error_improvement", 0.0),
+            "initial_evaluation_efficiency": benchmark_result.get("initial_evaluation_efficiency", 0.0),
+            "final_evaluation_efficiency": benchmark_result.get("final_evaluation_efficiency", best_checkpoint["evaluation_efficiency"]),
+            "evaluation_efficiency_improvement": benchmark_result.get("evaluation_efficiency_improvement", 0.0),
+            "initial_tactical_success_rate": benchmark_result.get("initial_tactical_success_rate", 0.0),
+            "final_tactical_success_rate": benchmark_result.get("final_tactical_success_rate", best_checkpoint["tactical_success_rate"]),
+            "tactical_success_rate_improvement": benchmark_result.get("tactical_success_rate_improvement", 0.0),
+            "best_checkpoint": best_checkpoint,
+            "best_checkpoint_index": best_checkpoint["checkpoint_index"],
+            "best_total_epochs": best_checkpoint["total_epochs"],
+            "best_training_error": best_checkpoint["training_error"],
+            "best_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
+            "best_tactical_success_rate": best_checkpoint["tactical_success_rate"],
+            "final_checkpoint_is_best": benchmark_result.get("final_checkpoint_is_best", True),
         },
     }
 
@@ -296,14 +495,29 @@ def create_model_package_from_benchmark_result(
 def format_neural_benchmark_report(benchmark_result):
     lines = []
 
+    best_checkpoint = get_best_checkpoint_from_benchmark_result(
+        benchmark_result,
+    )
+
+    best_checkpoint_index = best_checkpoint["checkpoint_index"]
+    best_total_epochs = best_checkpoint["total_epochs"]
+    best_training_error = best_checkpoint["training_error"]
+    best_evaluation_efficiency = best_checkpoint["evaluation_efficiency"]
+    best_tactical_success_rate = best_checkpoint["tactical_success_rate"]
+
+    final_checkpoint_is_best = benchmark_result.get(
+        "final_checkpoint_is_best",
+        True,
+    )
+
     lines.append("Benchmark entraînement neuronal")
     lines.append("Jeu : " + str(benchmark_result["game"]))
     lines.append(
         "Départ depuis modèle existant : "
         + str(benchmark_result["started_from_existing_model"])
     )
-    lines.append("Exemples Monte-Carlo : " + str(benchmark_result["base_examples_count"]))
-    lines.append("Exemples tactiques : " + str(benchmark_result["extra_examples_count"]))
+    lines.append("Exemples Monte-Carlo : " + str(benchmark_result.get("base_examples_count", benchmark_result.get("examples_count", 0))))
+    lines.append("Exemples tactiques : " + str(benchmark_result.get("extra_examples_count", 0)))
     lines.append("Exemples totaux : " + str(benchmark_result["examples_count"]))
     lines.append(
         "Répétitions tactiques : "
@@ -323,50 +537,71 @@ def format_neural_benchmark_report(benchmark_result):
     )
     lines.append("")
 
-    lines.append(
-        "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité"
-    )
+    lines.append(get_checkpoint_table_header())
 
-    for checkpoint in benchmark_result["checkpoints"]:
-        tactical_text = (
-            str(checkpoint["tactical_passed_count"])
-            + "/"
-            + str(checkpoint["tactical_total_count"])
-            + " ("
-            + str(round(checkpoint["tactical_success_rate"], 2))
-            + " %)"
-        )
-
-        line = (
-            str(checkpoint["checkpoint_index"])
-            + " | "
-            + str(checkpoint["total_epochs"])
-            + " | "
-            + str(round(checkpoint["elapsed_seconds"], 2))
-            + " | "
-            + str(round(checkpoint["training_error"], 6))
-            + " | "
-            + tactical_text
-            + " | "
-            + str(round(checkpoint["evaluation_efficiency"], 2))
-            + " %"
-        )
-        lines.append(line)
+    for checkpoint in benchmark_result.get("checkpoints", []):
+        is_best = checkpoint["checkpoint_index"] == best_checkpoint_index
+        lines.append(format_checkpoint_line(checkpoint, is_best))
 
     lines.append("")
+
     lines.append(
         "Gain erreur dataset : "
-        + str(round(benchmark_result["training_error_improvement"], 6))
+        + str(round(benchmark_result.get("training_error_improvement", 0.0), 6))
     )
     lines.append(
         "Gain efficacité : "
-        + str(round(benchmark_result["evaluation_efficiency_improvement"], 2))
+        + str(round(benchmark_result.get("evaluation_efficiency_improvement", 0.0), 2))
         + " points"
     )
     lines.append(
         "Gain tactique : "
-        + str(round(benchmark_result["tactical_success_rate_improvement"], 2))
+        + str(round(benchmark_result.get("tactical_success_rate_improvement", 0.0), 2))
         + " points"
     )
+
+    lines.append("")
+    lines.append(
+        "Gain erreur dataset du dernier palier : "
+        + str(round(benchmark_result.get("training_error_improvement", 0.0), 6))
+    )
+    lines.append(
+        "Gain efficacité du dernier palier : "
+        + str(round(benchmark_result.get("evaluation_efficiency_improvement", 0.0), 2))
+        + " points"
+    )
+    lines.append(
+        "Gain tactique du dernier palier : "
+        + str(round(benchmark_result.get("tactical_success_rate_improvement", 0.0), 2))
+        + " points"
+    )
+
+    lines.append("")
+    lines.append(
+        "Meilleur palier : "
+        + str(best_checkpoint_index)
+        + " ("
+        + str(best_total_epochs)
+        + " époques)"
+    )
+    lines.append(
+        "Erreur du meilleur modèle : "
+        + str(round(best_training_error, 6))
+    )
+    lines.append(
+        "Efficacité du meilleur modèle : "
+        + str(round(best_evaluation_efficiency, 2))
+        + " %"
+    )
+    lines.append(
+        "Tactique du meilleur modèle : "
+        + str(round(best_tactical_success_rate, 2))
+        + " %"
+    )
+
+    if final_checkpoint_is_best:
+        lines.append("Modèle retenu : dernier palier, car c'est aussi le meilleur.")
+    else:
+        lines.append("Modèle retenu : meilleur palier, pas le dernier.")
 
     return "\n".join(lines)
