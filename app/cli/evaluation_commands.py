@@ -2,6 +2,10 @@ from app.config import EVALUATION_GAMES_COUNT, NEURAL_EVALUATION_GAMES_COUNT, NE
 from app.storage.model_storage import load_model
 from app.ai.evaluation import evaluate_model, print_evaluation_results
 from app.ai.neural_evaluation import format_neural_evaluation_summary
+from app.ai.neural_reference_evaluation import (
+    evaluate_neural_model_against_references,
+    format_neural_reference_evaluation_report,
+)
 from app.ai.neural_model_service import (
     load_neural_model_package,
     evaluate_saved_neural_model_package,
@@ -71,3 +75,31 @@ def run_neural_tactical_evaluate_command():
     print("Fichier :", NEURAL_MODEL_FILE)
     print()
     print(format_tactical_evaluation_report(results))
+
+
+def run_neural_reference_evaluate_command():
+    model_package = load_neural_model_package(NEURAL_MODEL_FILE)
+
+    if not model_package:
+        print("Aucun modèle neuronal sauvegardé trouvé.")
+        print("Lance d'abord : python main.py train-neural --watch")
+        return
+
+    model_data = get_model_data_from_package(model_package)
+
+    if not model_data:
+        print("Le fichier neuronal existe, mais ne contient pas de modèle exploitable.")
+        print("Relance : python main.py reset-neural --watch")
+        return
+
+    evaluations = evaluate_neural_model_against_references(
+        model_data=model_data,
+        games_count=NEURAL_EVALUATION_GAMES_COUNT,
+        seed=0,
+    )
+
+    print("Évaluation du modèle neuronal contre adversaires de référence")
+    print("Fichier :", NEURAL_MODEL_FILE)
+    print("Parties par adversaire :", NEURAL_EVALUATION_GAMES_COUNT)
+    print()
+    print(format_neural_reference_evaluation_report(evaluations))

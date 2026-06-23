@@ -12,6 +12,7 @@ def print_help():
     print("  python main.py neural-benchmark-reset  → mesure depuis zéro sans sauvegarder")
     print("  python main.py evaluate-neural         → évalue le modèle neuronal sauvegardé")
     print("  python main.py evaluate-neural-tactical → détaille les tests tactiques neuronaux")
+    print("  python main.py evaluate-neural-reference → teste contre des adversaires réutilisables")
     print("  python main.py evaluate                → évalue l'ancien modèle tabulaire")
     print("  python main.py play                    → lance une partie avec l'ancien modèle")
     print("  python main.py test                    → lance tous les tests")
