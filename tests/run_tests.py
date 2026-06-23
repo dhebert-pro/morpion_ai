@@ -46,6 +46,8 @@ from tests.test_santorini_encoding import TESTS as SANTORINI_ENCODING_TESTS
 from tests.test_santorini_adapter import TESTS as SANTORINI_ADAPTER_TESTS
 from tests.test_santorini_network_report import TESTS as SANTORINI_NETWORK_REPORT_TESTS
 from tests.test_santorini_dataset import TESTS as SANTORINI_DATASET_TESTS
+from tests.test_santorini_neural_dataset import TESTS as SANTORINI_NEURAL_DATASET_TESTS
+from tests.test_santorini_neural_training import TESTS as SANTORINI_NEURAL_TRAINING_TESTS
 
 
 def get_all_tests():
@@ -87,6 +89,8 @@ def get_all_tests():
         + SANTORINI_ADAPTER_TESTS
         + SANTORINI_NETWORK_REPORT_TESTS
         + SANTORINI_DATASET_TESTS
+        + SANTORINI_NEURAL_DATASET_TESTS
+        + SANTORINI_NEURAL_TRAINING_TESTS
     )
 
 

@@ -1,6 +1,6 @@
 from app.games.santorini.action_format import format_action
 from app.games.santorini.agents import choose_random_action
-from app.games.santorini.encoding import encode_santorini_state_key
+from app.games.santorini.encoding import encode_santorini_state, encode_santorini_state_key
 from app.games.santorini.indexed_actions import get_indexed_legal_actions
 from app.games.santorini.rules import apply_action, copy_game, get_game_result, switch_player
 
@@ -19,6 +19,7 @@ def create_santorini_move_score_example(game, simulations_per_move, rng):
 
     return {
         "state_key": encode_santorini_state_key(game),
+        "inputs": encode_santorini_state(game, TRAINED_PLAYER),
         "player": TRAINED_PLAYER,
         "legal_moves_count": len(move_scores),
         "move_scores": move_scores,

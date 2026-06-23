@@ -21,6 +21,8 @@ from app.cli.santorini_commands import (
     run_simulate_santorini_random_command,
     run_inspect_santorini_io_command,
     run_build_santorini_dataset_command,
+    run_train_santorini_neural_command,
+    run_evaluate_santorini_neural_command,
 )
 from app.cli.test_command import run_test_command
 
@@ -47,6 +49,8 @@ def run_cli():
         "simulate-santorini-random": run_simulate_santorini_random_command,
         "inspect-santorini-io": run_inspect_santorini_io_command,
         "build-santorini-dataset": run_build_santorini_dataset_command,
+        "train-santorini-neural": run_train_santorini_neural_command,
+        "evaluate-santorini-neural": run_evaluate_santorini_neural_command,
         "test": run_test_command,
     }
 
