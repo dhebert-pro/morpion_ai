@@ -198,12 +198,10 @@ def test_game_result_draw():
 
     assert_equal(get_game_result(game), "draw")
 
-
 def test_encode_empty_game_state():
     game = create_new_game()
 
     assert_equal(encode_game_state(game), ".........")
-
 
 def test_encode_partial_game_state():
     game = create_new_game()
@@ -213,11 +211,9 @@ def test_encode_partial_game_state():
 
     assert_equal(encode_game_state(game), "X...O...X")
 
-
 def test_switch_player():
     assert_equal(switch_player("X"), "O")
     assert_equal(switch_player("O"), "X")
-
 
 def test_get_score_for_o():
     assert_equal(get_score_for_o("O"), 1.0)

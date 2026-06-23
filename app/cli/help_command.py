@@ -1,0 +1,16 @@
+
+def print_help():
+    print("Commandes disponibles :")
+    print("  python main.py train                   → entraîne l'ancien modèle tabulaire")
+    print("  python main.py build-dataset           → crée le dataset Monte-Carlo")
+    print("  python main.py neural-demo             → teste le moteur neuronal en mémoire")
+    print("  python main.py train-neural            → continue l'entraînement neuronal")
+    print("  python main.py train-neural --watch    → suit les paliers et sauvegarde le meilleur")
+    print("  python main.py reset-neural            → réinitialise et réentraîne le modèle neuronal")
+    print("  python main.py reset-neural --watch    → réinitialise, suit les paliers et sauvegarde")
+    print("  python main.py neural-benchmark        → mesure l'amélioration sans sauvegarder")
+    print("  python main.py neural-benchmark-reset  → mesure depuis zéro sans sauvegarder")
+    print("  python main.py evaluate-neural         → évalue le modèle neuronal sauvegardé")
+    print("  python main.py evaluate                → évalue l'ancien modèle tabulaire")
+    print("  python main.py play                    → lance une partie avec l'ancien modèle")
+    print("  python main.py test                    → lance tous les tests")
