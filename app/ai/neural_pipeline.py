@@ -1,0 +1,112 @@
+from app.ai.training_dataset import (
+    build_move_score_dataset,
+    summarize_move_score_dataset,
+)
+
+from app.ai.neural_encoding import encode_move_score_dataset
+
+from app.ai.neural_training_session import (
+    train_network_on_encoded_dataset,
+)
+
+from app.games.morpion.adapter import MORPION_ADAPTER
+
+
+def train_neural_model_in_memory(
+    training_games_count,
+    simulations_per_move,
+    max_examples,
+    hidden_size,
+    epochs,
+    learning_rate,
+    show_progress=False,
+    seed=0,
+    game_adapter=MORPION_ADAPTER,
+):
+    """Construit et entraîne un modèle neuronal complet en mémoire.
+
+    Cette fonction ne sauvegarde rien.
+    Elle sert à valider toute la chaîne IA :
+
+    1. collecter des états ;
+    2. scorer les coups par Monte-Carlo ;
+    3. encoder les exemples ;
+    4. entraîner le réseau ;
+    5. retourner un résumé exploitable.
+    """
+
+    raw_dataset = build_move_score_dataset(
+        training_games_count=training_games_count,
+        simulations_per_move=simulations_per_move,
+        max_examples=max_examples,
+        show_progress=show_progress,
+        game_adapter=game_adapter,
+    )
+
+    encoded_dataset = encode_move_score_dataset(
+        raw_dataset,
+        game_adapter=game_adapter,
+    )
+
+    training_result = train_network_on_encoded_dataset(
+        encoded_dataset=encoded_dataset,
+        hidden_size=hidden_size,
+        epochs=epochs,
+        learning_rate=learning_rate,
+        show_progress=show_progress,
+        seed=seed,
+    )
+
+    raw_dataset_summary = summarize_move_score_dataset(raw_dataset)
+
+    return {
+        "game": game_adapter.name,
+        "trained_player": game_adapter.trained_player,
+        "opponent_player": game_adapter.opponent_player,
+        "raw_dataset": raw_dataset,
+        "encoded_dataset": encoded_dataset,
+        "model_data": training_result["model_data"],
+        "summary": {
+            "game": game_adapter.name,
+            "training_games_count": training_games_count,
+            "simulations_per_move": simulations_per_move,
+            "max_examples": max_examples,
+            "examples_count": training_result["examples_count"],
+            "scored_moves_count": raw_dataset_summary["scored_moves_count"],
+            "average_legal_moves": raw_dataset_summary["average_legal_moves"],
+            "average_best_score": raw_dataset_summary["average_best_score"],
+            "input_size": training_result["input_size"],
+            "hidden_size": training_result["hidden_size"],
+            "output_size": training_result["output_size"],
+            "epochs": training_result["epochs"],
+            "learning_rate": training_result["learning_rate"],
+            "initial_error": training_result["initial_error"],
+            "final_error": training_result["final_error"],
+            "error_improvement": training_result["initial_error"] - training_result["final_error"],
+        },
+    }
+
+
+def format_neural_training_summary(summary):
+    """Prépare un résumé lisible d'un entraînement neuronal en mémoire."""
+
+    lines = []
+
+    lines.append("Résumé entraînement neuronal")
+    lines.append("Jeu : " + str(summary["game"]))
+    lines.append("Parties simulées : " + str(summary["training_games_count"]))
+    lines.append("Simulations par coup : " + str(summary["simulations_per_move"]))
+    lines.append("Exemples : " + str(summary["examples_count"]))
+    lines.append("Coups scorés : " + str(summary["scored_moves_count"]))
+    lines.append("Coups légaux moyens : " + str(summary["average_legal_moves"]))
+    lines.append("Score moyen du meilleur coup : " + str(summary["average_best_score"]))
+    lines.append("Taille entrée : " + str(summary["input_size"]))
+    lines.append("Taille couche cachée : " + str(summary["hidden_size"]))
+    lines.append("Taille sortie : " + str(summary["output_size"]))
+    lines.append("Époques : " + str(summary["epochs"]))
+    lines.append("Taux d'apprentissage : " + str(summary["learning_rate"]))
+    lines.append("Erreur initiale : " + str(round(summary["initial_error"], 6)))
+    lines.append("Erreur finale : " + str(round(summary["final_error"], 6)))
+    lines.append("Amélioration erreur : " + str(round(summary["error_improvement"], 6)))
+
+    return "\n".join(lines)

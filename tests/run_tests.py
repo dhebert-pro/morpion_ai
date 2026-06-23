@@ -22,6 +22,7 @@ from tests.test_training_dataset import TESTS as TRAINING_DATASET_TESTS
 from tests.test_neural_encoding import TESTS as NEURAL_ENCODING_TESTS
 from tests.test_neural_network import TESTS as NEURAL_NETWORK_TESTS
 from tests.test_neural_training_session import TESTS as NEURAL_TRAINING_SESSION_TESTS
+from tests.test_neural_pipeline import TESTS as NEURAL_PIPELINE_TESTS
 
 
 def get_all_tests():
@@ -39,6 +40,7 @@ def get_all_tests():
         + NEURAL_ENCODING_TESTS
         + NEURAL_NETWORK_TESTS
         + NEURAL_TRAINING_SESSION_TESTS
+        + NEURAL_PIPELINE_TESTS
     )
 
 
