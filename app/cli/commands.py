@@ -17,6 +17,7 @@ from app.config import (
     NEURAL_TRAINING_GAMES_COUNT,
     NEURAL_SIMULATIONS_PER_MOVE,
     NEURAL_MAX_EXAMPLES,
+    NEURAL_TACTICAL_REPEAT_COUNT,
     NEURAL_HIDDEN_SIZE,
     NEURAL_EPOCHS,
     NEURAL_LEARNING_RATE,
@@ -143,7 +144,8 @@ def run_neural_demo_command():
 def print_neural_training_parameters():
     print("Parties simulées pour collecter les états :", NEURAL_TRAINING_GAMES_COUNT)
     print("Simulations par coup :", NEURAL_SIMULATIONS_PER_MOVE)
-    print("Nombre maximal d'exemples :", NEURAL_MAX_EXAMPLES)
+    print("Nombre maximal d'exemples Monte-Carlo :", NEURAL_MAX_EXAMPLES)
+    print("Répétitions des exemples tactiques :", NEURAL_TACTICAL_REPEAT_COUNT)
     print("Taille couche cachée :", NEURAL_HIDDEN_SIZE)
     print("Époques :", NEURAL_EPOCHS)
     print("Taux d'apprentissage :", NEURAL_LEARNING_RATE)
@@ -155,7 +157,9 @@ def print_neural_training_result(model_package):
     print()
     print("Modèle neuronal sauvegardé dans :", NEURAL_MODEL_FILE)
     print("Reprise d'un modèle existant :", training_summary["started_from_existing_model"])
-    print("Exemples utilisés :", training_summary["examples_count"])
+    print("Exemples Monte-Carlo :", training_summary["base_examples_count"])
+    print("Exemples tactiques ajoutés :", training_summary["extra_examples_count"])
+    print("Exemples totaux :", training_summary["examples_count"])
     print("Erreur initiale :", round(training_summary["initial_error"], 6))
     print("Erreur finale :", round(training_summary["final_error"], 6))
     print("Amélioration erreur :", round(training_summary["error_improvement"], 6))
@@ -198,6 +202,7 @@ def run_neural_training_command():
         hidden_size=NEURAL_HIDDEN_SIZE,
         epochs=NEURAL_EPOCHS,
         learning_rate=NEURAL_LEARNING_RATE,
+        tactical_repeat_count=NEURAL_TACTICAL_REPEAT_COUNT,
         show_progress=SHOW_PROGRESS_DURING_TRAINING,
         seed=0,
     )
@@ -219,6 +224,7 @@ def run_neural_reset_command():
         hidden_size=NEURAL_HIDDEN_SIZE,
         epochs=NEURAL_EPOCHS,
         learning_rate=NEURAL_LEARNING_RATE,
+        tactical_repeat_count=NEURAL_TACTICAL_REPEAT_COUNT,
         show_progress=SHOW_PROGRESS_DURING_TRAINING,
         seed=0,
         initial_model_data=None,

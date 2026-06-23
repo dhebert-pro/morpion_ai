@@ -44,6 +44,7 @@ def train_and_save_neural_model(
     hidden_size,
     epochs,
     learning_rate,
+    tactical_repeat_count=0,
     show_progress=False,
     seed=0,
     game_adapter=MORPION_ADAPTER,
@@ -56,6 +57,8 @@ def train_and_save_neural_model(
 
     Si initial_model_data vaut None :
     - l'entraînement repart de zéro.
+
+    tactical_repeat_count permet d'ajouter des exemples tactiques forcés.
     """
 
     training_result = train_neural_model_in_memory(
@@ -65,6 +68,7 @@ def train_and_save_neural_model(
         hidden_size=hidden_size,
         epochs=epochs,
         learning_rate=learning_rate,
+        tactical_repeat_count=tactical_repeat_count,
         show_progress=show_progress,
         seed=seed,
         game_adapter=game_adapter,
@@ -109,6 +113,7 @@ def train_and_save_neural_model_from_package(
     hidden_size,
     epochs,
     learning_rate,
+    tactical_repeat_count=0,
     show_progress=False,
     seed=0,
     game_adapter=MORPION_ADAPTER,
@@ -133,6 +138,7 @@ def train_and_save_neural_model_from_package(
         hidden_size=hidden_size,
         epochs=epochs,
         learning_rate=learning_rate,
+        tactical_repeat_count=tactical_repeat_count,
         show_progress=show_progress,
         seed=seed,
         game_adapter=game_adapter,

@@ -1,105 +1,181 @@
 from tests.test_helpers import assert_equal, assert_true
 
-from app.ai.neural_network import (
-    SimpleNeuralNetwork,
-    compute_masked_mean_squared_error,
+from app.ai.neural_network import SimpleNeuralNetwork
+
+from app.ai.neural_pipeline import (
+    build_augmented_move_score_dataset,
+    train_neural_model_in_memory,
+    format_neural_training_summary,
 )
 
 
-def test_network_predicts_one_score_per_output():
-    network = SimpleNeuralNetwork(
-        input_size=4,
-        hidden_size=5,
-        output_size=3,
+def test_build_augmented_dataset_without_tactics_keeps_base_count():
+    dataset = build_augmented_move_score_dataset(
+        training_games_count=20,
+        simulations_per_move=1,
+        max_examples=5,
+        tactical_repeat_count=0,
+        show_progress=False,
+    )
+
+    assert_equal(dataset["game"], "morpion")
+    assert_true(dataset["examples_count"] > 0)
+    assert_true(dataset["examples_count"] <= 5)
+    assert_equal(dataset["base_examples_count"], dataset["examples_count"])
+    assert_equal(dataset["extra_examples_count"], 0)
+    assert_equal(dataset["tactical_repeat_count"], 0)
+
+
+def test_build_augmented_dataset_with_tactics_adds_tactical_examples():
+    dataset = build_augmented_move_score_dataset(
+        training_games_count=20,
+        simulations_per_move=1,
+        max_examples=5,
+        tactical_repeat_count=2,
+        show_progress=False,
+    )
+
+    assert_equal(dataset["game"], "morpion")
+    assert_true(dataset["base_examples_count"] > 0)
+    assert_true(dataset["base_examples_count"] <= 5)
+    assert_equal(dataset["extra_examples_count"], 8)
+    assert_equal(dataset["tactical_repeat_count"], 2)
+    assert_equal(
+        dataset["examples_count"],
+        dataset["base_examples_count"] + dataset["extra_examples_count"],
+    )
+
+
+def test_train_neural_model_in_memory_runs_complete_pipeline():
+    result = train_neural_model_in_memory(
+        training_games_count=20,
+        simulations_per_move=1,
+        max_examples=5,
+        hidden_size=8,
+        epochs=80,
+        learning_rate=0.2,
+        tactical_repeat_count=0,
+        show_progress=False,
         seed=0,
     )
 
-    predictions = network.predict([1.0, 0.0, 1.0, 0.0])
+    summary = result["summary"]
 
-    assert_equal(len(predictions), 3)
+    assert_equal(result["game"], "morpion")
+    assert_equal(result["trained_player"], "O")
+    assert_equal(result["opponent_player"], "X")
+
+    assert_true("raw_dataset" in result)
+    assert_true("encoded_dataset" in result)
+    assert_true("model_data" in result)
+    assert_true("summary" in result)
+
+    assert_true(summary["examples_count"] > 0)
+    assert_true(summary["examples_count"] <= 5)
+    assert_equal(summary["tactical_repeat_count"], 0)
+    assert_equal(summary["extra_examples_count"], 0)
+    assert_equal(summary["input_size"], 18)
+    assert_equal(summary["hidden_size"], 8)
+    assert_equal(summary["output_size"], 9)
+    assert_equal(summary["epochs"], 80)
+    assert_equal(summary["learning_rate"], 0.2)
+
+    assert_true(summary["final_error"] < summary["initial_error"])
+    assert_true(summary["error_improvement"] > 0.0)
+
+
+def test_train_neural_model_in_memory_can_use_tactical_examples():
+    result = train_neural_model_in_memory(
+        training_games_count=20,
+        simulations_per_move=1,
+        max_examples=5,
+        hidden_size=8,
+        epochs=80,
+        learning_rate=0.2,
+        tactical_repeat_count=2,
+        show_progress=False,
+        seed=0,
+    )
+
+    summary = result["summary"]
+
+    assert_equal(summary["tactical_repeat_count"], 2)
+    assert_equal(summary["extra_examples_count"], 8)
+    assert_equal(
+        summary["examples_count"],
+        summary["base_examples_count"] + summary["extra_examples_count"],
+    )
+    assert_true(summary["final_error"] < summary["initial_error"])
+
+
+def test_train_neural_model_in_memory_returns_usable_model_data():
+    result = train_neural_model_in_memory(
+        training_games_count=20,
+        simulations_per_move=1,
+        max_examples=5,
+        hidden_size=8,
+        epochs=40,
+        learning_rate=0.2,
+        tactical_repeat_count=0,
+        show_progress=False,
+        seed=1,
+    )
+
+    model_data = result["model_data"]
+
+    network = SimpleNeuralNetwork.from_dict(model_data)
+    first_example = result["encoded_dataset"]["examples"][0]
+
+    predictions = network.predict(first_example["inputs"])
+
+    assert_equal(len(predictions), 9)
 
     for prediction in predictions:
         assert_true(0.0 <= prediction <= 1.0)
 
 
-def test_masked_error_ignores_illegal_outputs():
-    predictions = [0.9, 0.1, 0.8]
-    targets = [0.0, 0.0, 0.0]
-    legal_moves_mask = [0.0, 1.0, 0.0]
+def test_format_neural_training_summary_contains_key_information():
+    summary = {
+        "game": "morpion",
+        "training_games_count": 20,
+        "simulations_per_move": 1,
+        "max_examples": 5,
+        "tactical_repeat_count": 2,
+        "base_examples_count": 5,
+        "extra_examples_count": 8,
+        "examples_count": 13,
+        "scored_moves_count": 25,
+        "average_legal_moves": 5.0,
+        "average_best_score": 0.75,
+        "input_size": 18,
+        "hidden_size": 8,
+        "output_size": 9,
+        "epochs": 40,
+        "learning_rate": 0.2,
+        "started_from_existing_model": False,
+        "initial_error": 0.25,
+        "final_error": 0.10,
+        "error_improvement": 0.15,
+    }
 
-    error = compute_masked_mean_squared_error(
-        predictions,
-        targets,
-        legal_moves_mask,
-    )
+    text = format_neural_training_summary(summary)
 
-    assert_true(abs(error - 0.01) < 0.000000001)
-
-
-def test_network_training_reduces_error_on_one_example():
-    network = SimpleNeuralNetwork(
-        input_size=4,
-        hidden_size=6,
-        output_size=3,
-        learning_rate=0.2,
-        seed=1,
-    )
-
-    inputs = [1.0, 0.0, 1.0, 0.0]
-    targets = [0.0, 0.0, 1.0]
-    legal_moves_mask = [0.0, 0.0, 1.0]
-
-    initial_error = network.compute_error(
-        inputs,
-        targets,
-        legal_moves_mask,
-    )
-
-    for _ in range(300):
-        network.train_one(
-            inputs,
-            targets,
-            legal_moves_mask,
-        )
-
-    final_error = network.compute_error(
-        inputs,
-        targets,
-        legal_moves_mask,
-    )
-    final_predictions = network.predict(inputs)
-
-    assert_true(final_error < initial_error)
-    assert_true(final_predictions[2] > 0.8)
-
-
-def test_network_serialization_preserves_predictions():
-    network = SimpleNeuralNetwork(
-        input_size=4,
-        hidden_size=5,
-        output_size=3,
-        learning_rate=0.1,
-        seed=2,
-    )
-
-    inputs = [0.0, 1.0, 0.0, 1.0]
-    predictions_before = network.predict(inputs)
-
-    data = network.to_dict()
-    loaded_network = SimpleNeuralNetwork.from_dict(data)
-
-    predictions_after = loaded_network.predict(inputs)
-
-    assert_equal(len(predictions_before), len(predictions_after))
-
-    for index in range(len(predictions_before)):
-        difference = abs(predictions_before[index] - predictions_after[index])
-        assert_true(difference < 0.000000001)
+    assert_true("Résumé entraînement neuronal" in text)
+    assert_true("Jeu : morpion" in text)
+    assert_true("Exemples Monte-Carlo : 5" in text)
+    assert_true("Répétitions tactiques : 2" in text)
+    assert_true("Exemples tactiques ajoutés : 8" in text)
+    assert_true("Exemples totaux : 13" in text)
+    assert_true("Erreur initiale : 0.25" in text)
+    assert_true("Erreur finale : 0.1" in text)
+    assert_true("Amélioration erreur : 0.15" in text)
 
 
 TESTS = [
-    ("Le réseau prédit un score par sortie", test_network_predicts_one_score_per_output),
-    ("L'erreur masquée ignore les coups illégaux", test_masked_error_ignores_illegal_outputs),
-    ("L'entraînement réduit l'erreur sur un exemple", test_network_training_reduces_error_on_one_example),
-    ("La sérialisation conserve les prédictions", test_network_serialization_preserves_predictions),
+    ("Le dataset augmenté sans tactique garde seulement les exemples de base", test_build_augmented_dataset_without_tactics_keeps_base_count),
+    ("Le dataset augmenté avec tactique ajoute les exemples tactiques", test_build_augmented_dataset_with_tactics_adds_tactical_examples),
+    ("Le pipeline neuronal complet s'exécute en mémoire", test_train_neural_model_in_memory_runs_complete_pipeline),
+    ("Le pipeline neuronal peut utiliser des exemples tactiques", test_train_neural_model_in_memory_can_use_tactical_examples),
+    ("Le pipeline retourne un modèle neuronal utilisable", test_train_neural_model_in_memory_returns_usable_model_data),
+    ("Le résumé d'entraînement neuronal contient les informations clés", test_format_neural_training_summary_contains_key_information),
 ]
