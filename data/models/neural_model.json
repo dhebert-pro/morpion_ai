@@ -1031,7 +1031,7 @@
       {
         "checkpoint_index": 1,
         "total_epochs": 20,
-        "elapsed_seconds": 12.399972999934107,
+        "elapsed_seconds": 12.267138099996373,
         "training_error": 0.02298980700937233,
         "validation_error": 0.04528947000369051,
         "evaluation_results": {
@@ -1083,7 +1083,7 @@
       {
         "checkpoint_index": 2,
         "total_epochs": 40,
-        "elapsed_seconds": 24.736250899964944,
+        "elapsed_seconds": 24.728837500093505,
         "training_error": 0.01827479740281265,
         "validation_error": 0.039002404382122,
         "evaluation_results": {
@@ -1135,7 +1135,7 @@
       {
         "checkpoint_index": 3,
         "total_epochs": 60,
-        "elapsed_seconds": 37.03863239986822,
+        "elapsed_seconds": 37.69129400001839,
         "training_error": 0.016183014525158117,
         "validation_error": 0.03689087480214363,
         "evaluation_results": {
@@ -1187,7 +1187,7 @@
       {
         "checkpoint_index": 4,
         "total_epochs": 80,
-        "elapsed_seconds": 49.3654777999036,
+        "elapsed_seconds": 50.153469500131905,
         "training_error": 0.01488427900133578,
         "validation_error": 0.03573260660626667,
         "evaluation_results": {
@@ -1239,7 +1239,7 @@
       {
         "checkpoint_index": 5,
         "total_epochs": 100,
-        "elapsed_seconds": 61.670993600040674,
+        "elapsed_seconds": 62.98355020000599,
         "training_error": 0.013914731730542296,
         "validation_error": 0.035044504249596015,
         "evaluation_results": {
@@ -1291,7 +1291,7 @@
       {
         "checkpoint_index": 6,
         "total_epochs": 120,
-        "elapsed_seconds": 73.94730590004474,
+        "elapsed_seconds": 75.343504199991,
         "training_error": 0.013446849454628146,
         "validation_error": 0.03493362678244517,
         "evaluation_results": {
@@ -1343,7 +1343,7 @@
       {
         "checkpoint_index": 7,
         "total_epochs": 140,
-        "elapsed_seconds": 86.29053439991549,
+        "elapsed_seconds": 88.0493707000278,
         "training_error": 0.012783468932737485,
         "validation_error": 0.0340453777520504,
         "evaluation_results": {
@@ -1395,7 +1395,7 @@
       {
         "checkpoint_index": 8,
         "total_epochs": 160,
-        "elapsed_seconds": 98.57382079982199,
+        "elapsed_seconds": 101.04413160006516,
         "training_error": 0.012358100515628682,
         "validation_error": 0.03301524771127813,
         "evaluation_results": {
@@ -1447,7 +1447,7 @@
       {
         "checkpoint_index": 9,
         "total_epochs": 180,
-        "elapsed_seconds": 110.8292045998387,
+        "elapsed_seconds": 113.61445540003479,
         "training_error": 0.012220561002435577,
         "validation_error": 0.03290473780889351,
         "evaluation_results": {
@@ -1499,7 +1499,7 @@
       {
         "checkpoint_index": 10,
         "total_epochs": 200,
-        "elapsed_seconds": 123.30378600000404,
+        "elapsed_seconds": 126.11833750014193,
         "training_error": 0.011866849105686804,
         "validation_error": 0.031501275477633844,
         "evaluation_results": {
@@ -1551,7 +1551,7 @@
       {
         "checkpoint_index": 11,
         "total_epochs": 220,
-        "elapsed_seconds": 135.5811515999958,
+        "elapsed_seconds": 138.8994684999343,
         "training_error": 0.011865320148885678,
         "validation_error": 0.03169097322235845,
         "evaluation_results": {
@@ -1603,7 +1603,7 @@
       {
         "checkpoint_index": 12,
         "total_epochs": 240,
-        "elapsed_seconds": 147.9009139998816,
+        "elapsed_seconds": 151.5843166001141,
         "training_error": 0.011699226886232109,
         "validation_error": 0.030758473737494015,
         "evaluation_results": {
@@ -1668,7 +1668,7 @@
     "best_checkpoint": {
       "checkpoint_index": 2,
       "total_epochs": 40,
-      "elapsed_seconds": 24.736250899964944,
+      "elapsed_seconds": 24.728837500093505,
       "training_error": 0.01827479740281265,
       "validation_error": 0.039002404382122,
       "evaluation_results": {
