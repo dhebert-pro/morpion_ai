@@ -53,6 +53,7 @@ def evaluate_network_checkpoint(
         game_adapter,
     )
     tactical_summary = summarize_tactical_evaluation(tactical_results)
+    tactical_failed_results = _get_failed_tactical_results(tactical_results)
 
     return {
         "checkpoint_index": checkpoint_index,
@@ -66,7 +67,26 @@ def evaluate_network_checkpoint(
         "tactical_passed_count": tactical_summary["passed_count"],
         "tactical_total_count": tactical_summary["total_count"],
         "tactical_success_rate": tactical_summary["success_rate"],
+        "tactical_failed_results": tactical_failed_results,
     }
+
+
+
+def _get_failed_tactical_results(tactical_results):
+    failed_results = []
+
+    for result in tactical_results:
+        if result["passed"]:
+            continue
+
+        failed_results.append({
+            "name": result["name"],
+            "expected_moves": result["expected_moves"],
+            "chosen_move": result["chosen_move"],
+            "description": result["description"],
+        })
+
+    return failed_results
 
 
 def is_checkpoint_better(candidate_checkpoint, current_best_checkpoint):

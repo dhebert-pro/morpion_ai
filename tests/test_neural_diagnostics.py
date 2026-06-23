@@ -28,7 +28,7 @@ def test_run_neural_diagnostic_returns_training_and_evaluation():
 
     assert_true(training_summary["examples_count"] > 0)
     assert_true(training_summary["examples_count"] <= 5)
-    assert_equal(training_summary["input_size"], 18)
+    assert_equal(training_summary["input_size"], 34)
     assert_equal(training_summary["output_size"], 9)
     assert_true(training_summary["final_error"] < training_summary["initial_error"])
 
@@ -49,7 +49,7 @@ def test_format_neural_diagnostic_report_contains_training_and_evaluation():
             "scored_moves_count": 25,
             "average_legal_moves": 5.0,
             "average_best_score": 0.75,
-            "input_size": 18,
+            "input_size": 34,
             "hidden_size": 8,
             "output_size": 9,
             "epochs": 40,

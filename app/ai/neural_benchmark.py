@@ -65,6 +65,7 @@ def run_neural_training_benchmark(
         encoded_examples,
         validation_ratio=validation_ratio,
         seed=seed,
+        always_train_sources=["tactical_probe"],
     )
     training_examples = split_result["training_examples"]
     validation_examples = split_result["validation_examples"]
@@ -121,6 +122,7 @@ def run_neural_training_benchmark(
         encoded_dataset=encoded_dataset,
         training_examples=training_examples,
         validation_examples=validation_examples,
+        always_train_examples_count=split_result.get("always_train_examples_count", 0),
         checkpoints_count=checkpoints_count,
         epochs_per_checkpoint=epochs_per_checkpoint,
         learning_rate=learning_rate,

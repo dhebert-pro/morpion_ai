@@ -49,7 +49,7 @@ def test_neural_benchmark_returns_checkpoints_and_best_model():
 
 def test_neural_benchmark_can_start_from_existing_model():
     network = SimpleNeuralNetwork(
-        input_size=18,
+        input_size=34,
         hidden_size=8,
         output_size=9,
         learning_rate=0.2,
@@ -136,7 +136,7 @@ def create_benchmark_result_fixture():
         "base_examples_count": 3,
         "extra_examples_count": 8,
         "examples_count": 11,
-        "input_size": 18,
+        "input_size": 34,
         "hidden_size": 8,
         "output_size": 9,
         "total_epochs": 20,

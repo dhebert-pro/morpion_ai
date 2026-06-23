@@ -19,6 +19,8 @@ from app.ai.neural_model_service import (
     load_neural_model_package,
     get_model_data_from_package,
 )
+from app.ai.neural_encoding import encode_state_key_as_neural_input
+from app.games.morpion.adapter import MORPION_ADAPTER
 from app.ai.neural_benchmark import (
     run_neural_training_benchmark,
     format_neural_benchmark_report,
@@ -76,7 +78,8 @@ def print_neural_watch_configuration():
     print("Taux d'apprentissage :", NEURAL_BENCHMARK_LEARNING_RATE)
     print("Parties d'évaluation par palier :", NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT)
     print("Graine évaluation stable :", NEURAL_BENCHMARK_EVALUATION_SEED)
-    print("Part validation :", NEURAL_BENCHMARK_VALIDATION_RATIO)
+    print("Part validation Monte-Carlo :", NEURAL_BENCHMARK_VALIDATION_RATIO)
+    print("Exemples tactiques forcés en apprentissage : oui")
     print("Arrêt après paliers sans meilleur modèle :", NEURAL_BENCHMARK_EARLY_STOP_PATIENCE)
 
 
@@ -91,6 +94,12 @@ def _load_initial_model_data(start_from_saved_model):
 
     if initial_model_data:
         print("Modèle existant trouvé :", NEURAL_MODEL_FILE)
+
+        if not _model_matches_current_neural_shape(initial_model_data):
+            print("Le modèle existant utilise un ancien encodage.")
+            print("L'entraînement surveillé redémarre donc de zéro.")
+            return None
+
         print("L'entraînement surveillé va continuer depuis ce modèle.")
     else:
         print("Aucun modèle existant trouvé.")
@@ -118,3 +127,26 @@ def _run_watch_benchmark(initial_model_data):
         early_stop_patience=NEURAL_BENCHMARK_EARLY_STOP_PATIENCE,
         evaluation_seed=NEURAL_BENCHMARK_EVALUATION_SEED,
     )
+
+
+def _model_matches_current_neural_shape(model_data):
+    empty_game = MORPION_ADAPTER.create_new_game()
+    empty_state_key = MORPION_ADAPTER.encode_game_state(empty_game)
+    expected_input_size = len(
+        encode_state_key_as_neural_input(
+            empty_state_key,
+            MORPION_ADAPTER.trained_player,
+            MORPION_ADAPTER.opponent_player,
+        )
+    )
+
+    if model_data.get("input_size") != expected_input_size:
+        return False
+
+    if model_data.get("hidden_size") != NEURAL_BENCHMARK_HIDDEN_SIZE:
+        return False
+
+    if model_data.get("output_size") != MORPION_ADAPTER.output_size:
+        return False
+
+    return True

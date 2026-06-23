@@ -18,7 +18,8 @@ def format_neural_benchmark_report(benchmark_result):
     lines.append("Exemples tactiques : " + str(benchmark_result.get("extra_examples_count", 0)))
     lines.append("Exemples totaux : " + str(benchmark_result["examples_count"]))
     lines.append("Exemples apprentissage : " + str(benchmark_result.get("training_examples_count", benchmark_result["examples_count"])))
-    lines.append("Exemples validation : " + str(benchmark_result.get("validation_examples_count", 0)))
+    lines.append("Exemples validation Monte-Carlo : " + str(benchmark_result.get("validation_examples_count", 0)))
+    lines.append("Exemples tactiques forcés en apprentissage : " + str(benchmark_result.get("always_train_examples_count", 0)))
     lines.append("Répétitions tactiques : " + str(benchmark_result["tactical_repeat_count"]))
     lines.append("Couche cachée : " + str(benchmark_result["hidden_size"]))
     lines.append(_format_checkpoints_configuration(benchmark_result))
@@ -35,6 +36,7 @@ def format_neural_benchmark_report(benchmark_result):
     lines += _format_gains(benchmark_result)
     lines.append("")
     lines += _format_best_checkpoint(best_checkpoint)
+    lines += _format_best_tactical_failures(best_checkpoint)
     lines += _format_stop_status(benchmark_result)
     lines.append("")
     lines += build_benchmark_diagnostic_lines(benchmark_result)
@@ -85,6 +87,35 @@ def _format_best_checkpoint(best_checkpoint):
         + str(round(best_checkpoint["tactical_success_rate"], 2))
         + " %",
     ]
+
+
+
+def _format_best_tactical_failures(best_checkpoint):
+    failed_results = best_checkpoint.get("tactical_failed_results", [])
+
+    if len(failed_results) == 0:
+        return ["Échecs tactiques du meilleur modèle : aucun."]
+
+    lines = ["Échecs tactiques du meilleur modèle :"]
+
+    for result in failed_results:
+        lines.append(
+            "- "
+            + result["name"]
+            + " | attendu : "
+            + _format_expected_moves(result.get("expected_moves", []))
+            + " | choisi : "
+            + str(result.get("chosen_move"))
+        )
+
+    return lines
+
+
+def _format_expected_moves(expected_moves):
+    if len(expected_moves) == 0:
+        return "?"
+
+    return ", ".join(str(move) for move in expected_moves)
 
 
 def _format_stop_status(benchmark_result):

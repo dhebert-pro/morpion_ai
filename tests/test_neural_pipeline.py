@@ -87,7 +87,7 @@ def test_train_neural_model_in_memory_runs_complete_pipeline():
     assert_true(summary["examples_count"] <= 5)
     assert_equal(summary["tactical_repeat_count"], 0)
     assert_equal(summary["extra_examples_count"], 0)
-    assert_equal(summary["input_size"], 18)
+    assert_equal(summary["input_size"], 34)
     assert_equal(summary["hidden_size"], 8)
     assert_equal(summary["output_size"], 9)
     assert_equal(summary["epochs"], 80)
@@ -162,7 +162,7 @@ def test_format_neural_training_summary_contains_key_information():
         "scored_moves_count": 25,
         "average_legal_moves": 5.0,
         "average_best_score": 0.75,
-        "input_size": 18,
+        "input_size": 34,
         "hidden_size": 8,
         "output_size": 9,
         "epochs": 40,

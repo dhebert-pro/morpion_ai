@@ -13,6 +13,7 @@ from app.storage.json_storage import (
 )
 
 from app.games.morpion.adapter import MORPION_ADAPTER
+from app.ai.neural_encoding import encode_state_key_as_neural_input
 
 
 def create_neural_model_package(
@@ -129,6 +130,12 @@ def train_and_save_neural_model_from_package(
 
     if not initial_model_data:
         initial_model_data = None
+    elif not is_model_data_compatible_with_training(
+        initial_model_data,
+        hidden_size,
+        game_adapter,
+    ):
+        initial_model_data = None
 
     return train_and_save_neural_model(
         file_path=file_path,
@@ -185,3 +192,37 @@ def evaluate_saved_neural_model_package(
         "results": results,
         "summary": summary,
     }
+
+def is_model_data_compatible_with_training(
+    model_data,
+    hidden_size,
+    game_adapter=MORPION_ADAPTER,
+):
+    if not model_data:
+        return False
+
+    expected_input_size = get_current_neural_input_size(game_adapter)
+
+    if model_data.get("input_size") != expected_input_size:
+        return False
+
+    if model_data.get("hidden_size") != hidden_size:
+        return False
+
+    if model_data.get("output_size") != game_adapter.output_size:
+        return False
+
+    return True
+
+
+def get_current_neural_input_size(game_adapter=MORPION_ADAPTER):
+    empty_game = game_adapter.create_new_game()
+    empty_state_key = game_adapter.encode_game_state(empty_game)
+
+    return len(
+        encode_state_key_as_neural_input(
+            empty_state_key,
+            game_adapter.trained_player,
+            game_adapter.opponent_player,
+        )
+    )

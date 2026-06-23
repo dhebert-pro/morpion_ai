@@ -1,4 +1,5 @@
 from app.games.morpion.adapter import MORPION_ADAPTER
+from app.ai.morpion_line_features import encode_line_threats_as_neural_input
 
 
 def encode_state_key_as_neural_input(
@@ -8,9 +9,10 @@ def encode_state_key_as_neural_input(
 ):
     """Encode une clé d'état en vecteur numérique.
 
-    Pour l'instant, on utilise deux plans :
+    On utilise :
     - un plan pour les cases occupées par le joueur entraîné ;
-    - un plan pour les cases occupées par l'adversaire.
+    - un plan pour les cases occupées par l'adversaire ;
+    - des indicateurs de menaces immédiates sur les lignes du morpion.
 
     Exemple morpion :
     state_key = "OO.XX...."
@@ -33,6 +35,15 @@ def encode_state_key_as_neural_input(
             vector.append(1.0)
         else:
             vector.append(0.0)
+
+    vector += encode_line_threats_as_neural_input(
+        state_key,
+        trained_player,
+    )
+    vector += encode_line_threats_as_neural_input(
+        state_key,
+        opponent_player,
+    )
 
     return vector
 
@@ -151,7 +162,7 @@ def encode_move_score_example(
         best_move_index = game_adapter.move_to_index(best_move)
         validate_output_index(best_move_index, output_size)
 
-    return {
+    encoded_example = {
         "state_key": state_key,
         "inputs": inputs,
         "targets": targets,
@@ -161,6 +172,23 @@ def encode_move_score_example(
         "best_move": best_move,
         "best_move_index": best_move_index,
     }
+
+    _copy_optional_debug_fields(example, encoded_example)
+
+    return encoded_example
+
+
+def _copy_optional_debug_fields(source_example, encoded_example):
+    optional_keys = [
+        "source",
+        "probe_name",
+        "description",
+        "best_moves",
+    ]
+
+    for key in optional_keys:
+        if key in source_example:
+            encoded_example[key] = source_example[key]
 
 
 def encode_move_score_dataset(

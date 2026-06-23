@@ -111,14 +111,14 @@ def test_get_model_data_from_package_extracts_model_data():
         "type": "neural_model_package",
         "model_data": {
             "type": "simple_neural_network",
-            "input_size": 18,
+            "input_size": 34,
         },
     }
 
     model_data = get_model_data_from_package(package)
 
     assert_equal(model_data["type"], "simple_neural_network")
-    assert_equal(model_data["input_size"], 18)
+    assert_equal(model_data["input_size"], 34)
 
 
 def test_train_and_save_neural_model_from_package_continues_existing_model():
@@ -187,6 +187,7 @@ def test_train_and_save_neural_model_from_empty_package_starts_from_zero():
             model_package["training_summary"]["started_from_existing_model"],
             False,
         )
+
 
 
 def test_evaluate_saved_neural_model_package_counts_games():

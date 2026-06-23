@@ -76,6 +76,31 @@ def test_split_keeps_duplicate_states_in_same_block():
     assert_true("same" not in training_keys or "same" not in validation_keys)
 
 
+
+def test_split_keeps_configured_sources_in_training():
+    examples = [
+        {"state_key": "normal_1", "source": "monte_carlo"},
+        {"state_key": "normal_2", "source": "monte_carlo"},
+        {"state_key": "normal_3", "source": "monte_carlo"},
+        {"state_key": "normal_4", "source": "monte_carlo"},
+        {"state_key": "tactical", "source": "tactical_probe"},
+    ]
+
+    result = split_encoded_examples(
+        examples,
+        validation_ratio=0.5,
+        seed=0,
+        always_train_sources=["tactical_probe"],
+    )
+
+    training_sources = [example.get("source") for example in result["training_examples"]]
+    validation_sources = [example.get("source") for example in result["validation_examples"]]
+
+    assert_true("tactical_probe" in training_sources)
+    assert_true("tactical_probe" not in validation_sources)
+    assert_equal(result["always_train_examples_count"], 1)
+
+
 def _get_state_keys(examples):
     return [example["state_key"] for example in examples]
 
@@ -85,4 +110,5 @@ TESTS = [
     ("Le split de validation conserve un entraînement non vide", test_split_with_validation_keeps_at_least_one_training_example),
     ("La comparaison de checkpoints utilise l'erreur de validation", test_checkpoint_comparison_uses_validation_after_game_metrics),
     ("Le split garde les états dupliqués dans un seul bloc", test_split_keeps_duplicate_states_in_same_block),
+    ("Le split garde certaines sources en apprentissage", test_split_keeps_configured_sources_in_training),
 ]

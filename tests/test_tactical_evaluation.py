@@ -15,7 +15,7 @@ from app.ai.tactical_evaluation import (
 
 def create_deterministic_model(output_biases):
     network = SimpleNeuralNetwork(
-        input_size=18,
+        input_size=34,
         hidden_size=3,
         output_size=9,
         learning_rate=0.1,
