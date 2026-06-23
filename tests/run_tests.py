@@ -50,6 +50,10 @@ from tests.test_santorini_neural_dataset import TESTS as SANTORINI_NEURAL_DATASE
 from tests.test_santorini_neural_training import TESTS as SANTORINI_NEURAL_TRAINING_TESTS
 from tests.test_santorini_neural_evaluation_comparison import TESTS as SANTORINI_NEURAL_EVALUATION_COMPARISON_TESTS
 from tests.test_santorini_neural_watch import TESTS as SANTORINI_NEURAL_WATCH_TESTS
+from tests.test_santorini_paired_evaluation import TESTS as SANTORINI_PAIRED_EVALUATION_TESTS
+from tests.test_santorini_reference_agents import TESTS as SANTORINI_REFERENCE_AGENTS_TESTS
+from tests.test_santorini_reference_evaluation import TESTS as SANTORINI_REFERENCE_EVALUATION_TESTS
+from tests.test_santorini_tactical_guard import TESTS as SANTORINI_TACTICAL_GUARD_TESTS
 
 
 def get_all_tests():
@@ -95,6 +99,10 @@ def get_all_tests():
         + SANTORINI_NEURAL_TRAINING_TESTS
         + SANTORINI_NEURAL_EVALUATION_COMPARISON_TESTS
         + SANTORINI_NEURAL_WATCH_TESTS
+        + SANTORINI_PAIRED_EVALUATION_TESTS
+        + SANTORINI_REFERENCE_AGENTS_TESTS
+        + SANTORINI_REFERENCE_EVALUATION_TESTS
+        + SANTORINI_TACTICAL_GUARD_TESTS
     )
 
 

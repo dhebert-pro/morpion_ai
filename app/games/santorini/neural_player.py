@@ -2,6 +2,7 @@ from app.ai.neural_network import SimpleNeuralNetwork
 from app.games.santorini.agents import choose_random_action, choose_random_placement
 from app.games.santorini.encoding import encode_santorini_state
 from app.games.santorini.indexed_actions import get_indexed_legal_actions
+from app.games.santorini.tactical_guard import filter_santorini_tactical_actions
 from app.games.santorini.evaluation_summary import summarize_o_results, format_o_evaluation_summary
 from app.games.santorini.rules import (
     apply_action,
@@ -38,7 +39,9 @@ def choose_santorini_neural_action_from_network(game, network, rng=None):
     best_action = None
     best_score = None
 
-    for action in legal_actions:
+    tactical_actions = filter_santorini_tactical_actions(game, legal_actions)
+
+    for action in tactical_actions:
         score = predictions[action["output_index"]]
 
         if best_score is None or score > best_score:

@@ -26,6 +26,7 @@ from app.cli.santorini_neural_commands import (
     run_train_santorini_neural_command,
     run_evaluate_santorini_neural_command,
 )
+from app.cli.santorini_reference_commands import run_evaluate_santorini_reference_command
 from app.cli.test_command import run_test_command
 
 
@@ -53,6 +54,7 @@ def run_cli():
         "build-santorini-dataset": run_build_santorini_dataset_command,
         "train-santorini-neural": run_train_santorini_neural_command,
         "evaluate-santorini-neural": run_evaluate_santorini_neural_command,
+        "evaluate-santorini-reference": run_evaluate_santorini_reference_command,
         "test": run_test_command,
     }
 

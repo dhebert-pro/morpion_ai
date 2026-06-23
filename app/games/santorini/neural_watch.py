@@ -7,9 +7,8 @@ from app.ai.neural_training_session import (
 from app.games.santorini.dataset import build_santorini_move_score_dataset
 from app.games.santorini.evaluation_summary import summarize_o_results
 from app.games.santorini.neural_dataset import encode_santorini_move_score_dataset
-from app.games.santorini.neural_player import evaluate_santorini_neural_network_vs_random
+from app.games.santorini.paired_evaluation import evaluate_santorini_neural_vs_random_paired
 from app.games.santorini.neural_training import create_santorini_model_package
-from app.games.santorini.random_baseline import evaluate_santorini_random_o_vs_random
 from app.storage.json_storage import save_json
 from app.utils.progress import print_progress
 
@@ -44,7 +43,6 @@ def train_santorini_neural_with_watch(
         learning_rate=learning_rate,
         seed=seed,
     )
-    baseline_summary = _evaluate_random_baseline(evaluation_games_count, seed)
     examples = encoded_dataset["examples"]
     training_rng = random.Random(seed + 50)
     rows = []
@@ -58,7 +56,6 @@ def train_santorini_neural_with_watch(
             checkpoint=checkpoint,
             epochs=checkpoint * epochs_per_checkpoint,
             evaluation_games_count=evaluation_games_count,
-            baseline_summary=baseline_summary,
             seed=seed,
         )
         rows.append(row)
@@ -91,7 +88,6 @@ def train_santorini_neural_with_watch(
         checkpoints_count=checkpoints_count,
         epochs_per_checkpoint=epochs_per_checkpoint,
         evaluation_games_count=evaluation_games_count,
-        baseline_summary=baseline_summary,
         rows=rows,
         best_row=best_row,
     )
@@ -118,16 +114,16 @@ def _evaluate_checkpoint(
     checkpoint,
     epochs,
     evaluation_games_count,
-    baseline_summary,
     seed,
 ):
     error = compute_average_error_on_encoded_examples(network, examples)
-    results = evaluate_santorini_neural_network_vs_random(
+    paired = evaluate_santorini_neural_vs_random_paired(
         network,
         games_count=evaluation_games_count,
         seed=seed,
     )
-    summary = summarize_o_results(results)
+    summary = summarize_o_results(paired["neural_results"])
+    baseline_summary = summarize_o_results(paired["baseline_results"])
     delta = summary["efficiency"] - baseline_summary["efficiency"]
 
     return {
@@ -139,13 +135,11 @@ def _evaluate_checkpoint(
         "draws": summary["draws"],
         "efficiency": summary["efficiency"],
         "baseline_efficiency": baseline_summary["efficiency"],
+        "baseline_wins_x": baseline_summary["wins_x"],
+        "baseline_wins_o": baseline_summary["wins_o"],
+        "baseline_draws": baseline_summary["draws"],
         "delta_vs_random": delta,
     }
-
-
-def _evaluate_random_baseline(games_count, seed):
-    results = evaluate_santorini_random_o_vs_random(games_count, seed=seed)
-    return summarize_o_results(results)
 
 
 def _is_better_santorini_checkpoint(candidate, current_best):
@@ -168,7 +162,6 @@ def _create_watch_package(
     checkpoints_count,
     epochs_per_checkpoint,
     evaluation_games_count,
-    baseline_summary,
     rows,
     best_row,
 ):
@@ -192,7 +185,6 @@ def _create_watch_package(
         checkpoints_count,
         epochs_per_checkpoint,
         evaluation_games_count,
-        baseline_summary,
         best_row,
     ))
     package["watch_rows"] = rows
@@ -200,16 +192,17 @@ def _create_watch_package(
 
 
 def _create_watch_summary_fields(
-    checkpoints_count, epochs_per_checkpoint, evaluation_games_count, baseline_summary, best_row
+    checkpoints_count, epochs_per_checkpoint, evaluation_games_count, best_row
 ):
     return {
         "mode": "watch",
         "checkpoints_count": checkpoints_count,
         "epochs_per_checkpoint": epochs_per_checkpoint,
         "evaluation_games_count": evaluation_games_count,
-        "baseline_efficiency": baseline_summary["efficiency"],
         "best_checkpoint": best_row["checkpoint"],
         "best_delta_vs_random": best_row["delta_vs_random"],
+        "best_baseline_efficiency": best_row["baseline_efficiency"],
+        "paired_evaluation": True,
         "best_efficiency": best_row["efficiency"],
         "best_wins_x": best_row["wins_x"],
         "best_wins_o": best_row["wins_o"],
@@ -219,6 +212,7 @@ def _create_watch_summary_fields(
 
 def format_santorini_watch_table(package):
     lines = []
+    lines.append("Comparaison appairée : mêmes placements de départ pour modèle et random.")
     lines.append("Palier | Époques | Erreur | Modèle O | Random O | Écart | Résultat")
     best_checkpoint = package["training_summary"].get("best_checkpoint")
 

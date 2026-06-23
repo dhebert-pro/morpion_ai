@@ -19,7 +19,8 @@ from app.games.santorini.evaluation_summary import (
     format_o_evaluation_comparison,
     summarize_o_results,
 )
-from app.games.santorini.neural_player import evaluate_santorini_neural_vs_random
+from app.ai.neural_network import SimpleNeuralNetwork
+from app.games.santorini.paired_evaluation import evaluate_santorini_neural_vs_random_paired
 from app.games.santorini.neural_training import (
     build_train_and_save_santorini_neural_model,
     format_santorini_training_summary,
@@ -30,7 +31,6 @@ from app.games.santorini.neural_watch import (
     format_santorini_watch_table,
     train_santorini_neural_with_watch,
 )
-from app.games.santorini.random_baseline import evaluate_santorini_random_o_vs_random
 
 
 def run_train_santorini_neural_command():
@@ -81,6 +81,7 @@ def run_train_santorini_neural_watch_command():
     print("Paliers :", SANTORINI_NEURAL_WATCH_CHECKPOINTS_COUNT)
     print("Époques par palier :", SANTORINI_NEURAL_WATCH_EPOCHS_PER_CHECKPOINT)
     print("Parties d'évaluation par palier :", SANTORINI_NEURAL_WATCH_EVALUATION_GAMES_COUNT)
+    print("Comparaison appairée : mêmes placements de départ pour modèle et random")
     print("Taux d'apprentissage :", options["learning_rate"])
     print()
 
@@ -117,21 +118,21 @@ def run_evaluate_santorini_neural_command():
     print("Évaluation du modèle neuronal Santorini")
     print("Fichier : " + str(SANTORINI_NEURAL_MODEL_FILE))
     print("Parties d'évaluation : " + str(games_count))
+    print("Comparaison appairée : mêmes placements de départ pour modèle et random")
     print()
 
     if not model_data:
         print("Aucun modèle Santorini valide trouvé.")
         return
 
-    neural_results = evaluate_santorini_neural_vs_random(
-        model_data=model_data,
+    network = SimpleNeuralNetwork.from_dict(model_data)
+    paired_results = evaluate_santorini_neural_vs_random_paired(
+        network=network,
         games_count=games_count,
         seed=SANTORINI_DATASET_SEED,
     )
-    baseline_results = evaluate_santorini_random_o_vs_random(
-        games_count=games_count,
-        seed=SANTORINI_DATASET_SEED,
-    )
+    neural_results = paired_results["neural_results"]
+    baseline_results = paired_results["baseline_results"]
     neural_summary = summarize_o_results(neural_results)
     baseline_summary = summarize_o_results(baseline_results)
     print(format_o_evaluation_comparison(neural_summary, baseline_summary))
