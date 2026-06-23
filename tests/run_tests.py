@@ -36,6 +36,12 @@ from tests.test_tactical_guard import TESTS as TACTICAL_GUARD_TESTS
 from tests.test_neural_reference_evaluation import TESTS as NEURAL_REFERENCE_EVALUATION_TESTS
 from tests.test_reference_training_dataset import TESTS as REFERENCE_TRAINING_DATASET_TESTS
 from tests.test_neural_reference_diagnostics import TESTS as NEURAL_REFERENCE_DIAGNOSTICS_TESTS
+from tests.test_santorini_coordinates import TESTS as SANTORINI_COORDINATES_TESTS
+from tests.test_santorini_rules import TESTS as SANTORINI_RULES_TESTS
+from tests.test_santorini_action_format import TESTS as SANTORINI_ACTION_FORMAT_TESTS
+from tests.test_santorini_engine import TESTS as SANTORINI_ENGINE_TESTS
+from tests.test_santorini_action_index import TESTS as SANTORINI_ACTION_INDEX_TESTS
+from tests.test_santorini_simulation import TESTS as SANTORINI_SIMULATION_TESTS
 
 
 def get_all_tests():
@@ -67,6 +73,12 @@ def get_all_tests():
         + NEURAL_REFERENCE_EVALUATION_TESTS
         + REFERENCE_TRAINING_DATASET_TESTS
         + NEURAL_REFERENCE_DIAGNOSTICS_TESTS
+        + SANTORINI_COORDINATES_TESTS
+        + SANTORINI_RULES_TESTS
+        + SANTORINI_ACTION_FORMAT_TESTS
+        + SANTORINI_ENGINE_TESTS
+        + SANTORINI_ACTION_INDEX_TESTS
+        + SANTORINI_SIMULATION_TESTS
     )
 
 

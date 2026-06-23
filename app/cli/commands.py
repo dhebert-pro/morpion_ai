@@ -16,6 +16,10 @@ from app.cli.evaluation_commands import (
     run_neural_reference_diagnose_command,
 )
 from app.cli.play_commands import run_play_command
+from app.cli.santorini_commands import (
+    run_play_santorini_command,
+    run_simulate_santorini_random_command,
+)
 from app.cli.test_command import run_test_command
 
 
@@ -37,6 +41,8 @@ def run_cli():
         "diagnose-neural-reference": run_neural_reference_diagnose_command,
         "evaluate": run_evaluate_command,
         "play": run_play_command,
+        "play-santorini": run_play_santorini_command,
+        "simulate-santorini-random": run_simulate_santorini_random_command,
         "test": run_test_command,
     }
 

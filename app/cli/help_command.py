@@ -16,4 +16,6 @@ def print_help():
     print("  python main.py diagnose-neural-reference → détaille les défaites contre tactical")
     print("  python main.py evaluate                → évalue l'ancien modèle tabulaire")
     print("  python main.py play                    → lance une partie avec l'ancien modèle")
+    print("  python main.py play-santorini          → teste une partie Santorini sans pouvoirs")
+    print("  python main.py simulate-santorini-random [n] → simule n parties aléatoires")
     print("  python main.py test                    → lance tous les tests")

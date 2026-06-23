@@ -10,9 +10,12 @@ from app.ai.tactical_evaluation import (
     summarize_tactical_evaluation,
 )
 
+from app.ai.neural_dataset_split import get_effective_validation_error
 from app.ai.neural_checkpoint_reference import (
     evaluate_reference_opponents_if_needed,
     format_reference_summary,
+    get_reference_selection_efficiency,
+    get_reference_selection_survival,
     summarize_reference_evaluations,
 )
 from app.games.morpion.adapter import MORPION_ADAPTER
@@ -108,6 +111,42 @@ def _get_failed_tactical_results(tactical_results):
     return failed_results
 
 
+def is_checkpoint_better(candidate_checkpoint, current_best_checkpoint):
+    if current_best_checkpoint is None:
+        return True
+
+    if candidate_checkpoint["tactical_success_rate"] != current_best_checkpoint["tactical_success_rate"]:
+        return (
+            candidate_checkpoint["tactical_success_rate"]
+            > current_best_checkpoint["tactical_success_rate"]
+        )
+
+    candidate_reference_survival = get_reference_selection_survival(candidate_checkpoint)
+    best_reference_survival = get_reference_selection_survival(current_best_checkpoint)
+
+    if candidate_reference_survival != best_reference_survival:
+        return candidate_reference_survival > best_reference_survival
+
+    candidate_reference_efficiency = get_reference_selection_efficiency(candidate_checkpoint)
+    best_reference_efficiency = get_reference_selection_efficiency(current_best_checkpoint)
+
+    if candidate_reference_efficiency != best_reference_efficiency:
+        return candidate_reference_efficiency > best_reference_efficiency
+
+    if candidate_checkpoint["evaluation_efficiency"] != current_best_checkpoint["evaluation_efficiency"]:
+        return (
+            candidate_checkpoint["evaluation_efficiency"]
+            > current_best_checkpoint["evaluation_efficiency"]
+        )
+
+    candidate_validation_error = get_effective_validation_error(candidate_checkpoint)
+    best_validation_error = get_effective_validation_error(current_best_checkpoint)
+
+    if candidate_validation_error != best_validation_error:
+        return candidate_validation_error < best_validation_error
+
+    return candidate_checkpoint["training_error"] < current_best_checkpoint["training_error"]
+
 
 def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
     tactical_text = (
@@ -149,9 +188,3 @@ def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
 
 def get_checkpoint_table_header():
     return "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Référence | Efficacité | Erreur valid"
-
-# Backward-compatible exports for tests and older imports.
-from app.ai.neural_checkpoint_selection import (  # noqa: E402
-    get_best_checkpoint_from_benchmark_result,
-    is_checkpoint_better,
-)

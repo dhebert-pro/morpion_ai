@@ -1,45 +1,4 @@
-from app.ai.neural_dataset_split import get_effective_validation_error
-from app.ai.neural_checkpoint_reference import (
-    get_reference_selection_efficiency,
-    get_reference_selection_survival,
-)
-
-
-def is_checkpoint_better(candidate_checkpoint, current_best_checkpoint):
-    if current_best_checkpoint is None:
-        return True
-
-    if candidate_checkpoint["tactical_success_rate"] != current_best_checkpoint["tactical_success_rate"]:
-        return (
-            candidate_checkpoint["tactical_success_rate"]
-            > current_best_checkpoint["tactical_success_rate"]
-        )
-
-    candidate_survival = get_reference_selection_survival(candidate_checkpoint)
-    best_survival = get_reference_selection_survival(current_best_checkpoint)
-
-    if candidate_survival != best_survival:
-        return candidate_survival > best_survival
-
-    candidate_reference_score = get_reference_selection_efficiency(candidate_checkpoint)
-    best_reference_score = get_reference_selection_efficiency(current_best_checkpoint)
-
-    if candidate_reference_score != best_reference_score:
-        return candidate_reference_score > best_reference_score
-
-    if candidate_checkpoint["evaluation_efficiency"] != current_best_checkpoint["evaluation_efficiency"]:
-        return (
-            candidate_checkpoint["evaluation_efficiency"]
-            > current_best_checkpoint["evaluation_efficiency"]
-        )
-
-    candidate_validation_error = get_effective_validation_error(candidate_checkpoint)
-    best_validation_error = get_effective_validation_error(current_best_checkpoint)
-
-    if candidate_validation_error != best_validation_error:
-        return candidate_validation_error < best_validation_error
-
-    return candidate_checkpoint["training_error"] < current_best_checkpoint["training_error"]
+from app.ai.neural_checkpoint import is_checkpoint_better
 
 
 def get_best_checkpoint_from_benchmark_result(benchmark_result):
@@ -51,26 +10,15 @@ def get_best_checkpoint_from_benchmark_result(benchmark_result):
     checkpoints = benchmark_result.get("checkpoints", [])
 
     if checkpoints:
-        return _get_best_from_checkpoints(checkpoints, benchmark_result)
+        return _get_best_from_checkpoints(
+            checkpoints,
+            benchmark_result.get("best_checkpoint_index"),
+        )
 
-    training_error = benchmark_result.get(
-        "best_training_error",
-        benchmark_result.get(
-            "final_training_error",
-            benchmark_result.get("final_error", 0.0),
-        ),
-    )
-    validation_error = benchmark_result.get(
-        "best_validation_error",
-        benchmark_result.get("final_validation_error", training_error),
-    )
-
-    return _build_legacy_checkpoint(benchmark_result, training_error, validation_error)
+    return _build_legacy_checkpoint(benchmark_result)
 
 
-def _get_best_from_checkpoints(checkpoints, benchmark_result):
-    best_checkpoint_index = benchmark_result.get("best_checkpoint_index")
-
+def _get_best_from_checkpoints(checkpoints, best_checkpoint_index):
     if best_checkpoint_index is not None:
         for checkpoint in checkpoints:
             if checkpoint["checkpoint_index"] == best_checkpoint_index:
@@ -85,7 +33,20 @@ def _get_best_from_checkpoints(checkpoints, benchmark_result):
     return best_checkpoint
 
 
-def _build_legacy_checkpoint(benchmark_result, training_error, validation_error):
+def _build_legacy_checkpoint(benchmark_result):
+    training_error = benchmark_result.get(
+        "best_training_error",
+        benchmark_result.get(
+            "final_training_error",
+            benchmark_result.get("final_error", 0.0),
+        ),
+    )
+
+    validation_error = benchmark_result.get(
+        "best_validation_error",
+        benchmark_result.get("final_validation_error", training_error),
+    )
+
     return {
         "checkpoint_index": benchmark_result.get(
             "best_checkpoint_index",

@@ -1,8 +1,8 @@
 from app.ai.neural_checkpoint import (
     evaluate_network_checkpoint,
+    is_checkpoint_better,
     format_checkpoint_line,
 )
-from app.ai.neural_checkpoint_selection import is_checkpoint_better
 
 
 def evaluate_and_store_checkpoint(
