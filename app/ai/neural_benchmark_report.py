@@ -1,8 +1,8 @@
 from app.ai.neural_checkpoint import (
     format_checkpoint_line,
     get_checkpoint_table_header,
-    get_best_checkpoint_from_benchmark_result,
 )
+from app.ai.neural_checkpoint_selection import get_best_checkpoint_from_benchmark_result
 from app.ai.neural_benchmark_diagnostics import build_benchmark_diagnostic_lines
 
 
@@ -135,13 +135,30 @@ def _format_best_reference(best_checkpoint):
     if efficiency is None:
         return []
 
-    name = best_checkpoint.get("reference_worst_name", "?")
+    survival = best_checkpoint.get("reference_worst_survival_rate")
+    efficiency_name = best_checkpoint.get("reference_worst_efficiency_name")
+    survival_name = best_checkpoint.get("reference_worst_survival_name")
+
+    if efficiency_name is None:
+        efficiency_name = best_checkpoint.get("reference_worst_name", "?")
+
+    if survival is None:
+        return [
+            "Référence du meilleur modèle : "
+            + str(round(efficiency, 2))
+            + " % au pire contre "
+            + str(efficiency_name)
+        ]
 
     return [
-        "Référence du meilleur modèle : "
+        "Survie référence du meilleur modèle : "
+        + str(round(survival, 2))
+        + " % au pire contre "
+        + str(survival_name),
+        "Score référence du meilleur modèle : "
         + str(round(efficiency, 2))
         + " % au pire contre "
-        + str(name)
+        + str(efficiency_name),
     ]
 
 

@@ -10,11 +10,9 @@ from app.ai.tactical_evaluation import (
     summarize_tactical_evaluation,
 )
 
-from app.ai.neural_dataset_split import get_effective_validation_error
 from app.ai.neural_checkpoint_reference import (
     evaluate_reference_opponents_if_needed,
-    format_reference_efficiency,
-    get_reference_selection_efficiency,
+    format_reference_summary,
     summarize_reference_evaluations,
 )
 from app.games.morpion.adapter import MORPION_ADAPTER
@@ -82,7 +80,10 @@ def evaluate_network_checkpoint(
         "evaluation_efficiency": evaluation_summary["efficiency"],
         "reference_evaluations": reference_evaluations,
         "reference_worst_efficiency": reference_summary["worst_efficiency"],
-        "reference_worst_name": reference_summary["worst_name"],
+        "reference_worst_efficiency_name": reference_summary["worst_efficiency_name"],
+        "reference_worst_survival_rate": reference_summary["worst_survival_rate"],
+        "reference_worst_survival_name": reference_summary["worst_survival_name"],
+        "reference_worst_name": reference_summary["worst_efficiency_name"],
         "tactical_passed_count": tactical_summary["passed_count"],
         "tactical_total_count": tactical_summary["total_count"],
         "tactical_success_rate": tactical_summary["success_rate"],
@@ -107,36 +108,6 @@ def _get_failed_tactical_results(tactical_results):
     return failed_results
 
 
-def is_checkpoint_better(candidate_checkpoint, current_best_checkpoint):
-    if current_best_checkpoint is None:
-        return True
-
-    if candidate_checkpoint["tactical_success_rate"] != current_best_checkpoint["tactical_success_rate"]:
-        return (
-            candidate_checkpoint["tactical_success_rate"]
-            > current_best_checkpoint["tactical_success_rate"]
-        )
-
-    candidate_reference_efficiency = get_reference_selection_efficiency(candidate_checkpoint)
-    best_reference_efficiency = get_reference_selection_efficiency(current_best_checkpoint)
-
-    if candidate_reference_efficiency != best_reference_efficiency:
-        return candidate_reference_efficiency > best_reference_efficiency
-
-    if candidate_checkpoint["evaluation_efficiency"] != current_best_checkpoint["evaluation_efficiency"]:
-        return (
-            candidate_checkpoint["evaluation_efficiency"]
-            > current_best_checkpoint["evaluation_efficiency"]
-        )
-
-    candidate_validation_error = get_effective_validation_error(candidate_checkpoint)
-    best_validation_error = get_effective_validation_error(current_best_checkpoint)
-
-    if candidate_validation_error != best_validation_error:
-        return candidate_validation_error < best_validation_error
-
-    return candidate_checkpoint["training_error"] < current_best_checkpoint["training_error"]
-
 
 def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
     tactical_text = (
@@ -148,7 +119,7 @@ def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
         + " %)"
     )
 
-    reference_text = format_reference_efficiency(checkpoint)
+    reference_text = format_reference_summary(checkpoint)
 
     line = (
         str(checkpoint["checkpoint_index"])
@@ -179,67 +150,8 @@ def format_checkpoint_line(checkpoint, is_best_checkpoint=False):
 def get_checkpoint_table_header():
     return "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Référence | Efficacité | Erreur valid"
 
-
-def get_best_checkpoint_from_benchmark_result(benchmark_result):
-    best_checkpoint = benchmark_result.get("best_checkpoint")
-
-    if best_checkpoint:
-        return best_checkpoint
-
-    checkpoints = benchmark_result.get("checkpoints", [])
-
-    if checkpoints:
-        best_checkpoint_index = benchmark_result.get("best_checkpoint_index")
-
-        if best_checkpoint_index is not None:
-            for checkpoint in checkpoints:
-                if checkpoint["checkpoint_index"] == best_checkpoint_index:
-                    return checkpoint
-
-        best_checkpoint = None
-
-        for checkpoint in checkpoints:
-            if is_checkpoint_better(checkpoint, best_checkpoint):
-                best_checkpoint = checkpoint
-
-        return best_checkpoint
-
-    training_error = benchmark_result.get(
-        "best_training_error",
-        benchmark_result.get(
-            "final_training_error",
-            benchmark_result.get("final_error", 0.0),
-        ),
-    )
-
-    validation_error = benchmark_result.get(
-        "best_validation_error",
-        benchmark_result.get("final_validation_error", training_error),
-    )
-
-    return {
-        "checkpoint_index": benchmark_result.get(
-            "best_checkpoint_index",
-            benchmark_result.get("checkpoints_count", 0),
-        ),
-        "total_epochs": benchmark_result.get(
-            "best_total_epochs",
-            benchmark_result.get("total_epochs", 0),
-        ),
-        "elapsed_seconds": benchmark_result.get("elapsed_seconds", 0.0),
-        "training_error": training_error,
-        "validation_error": validation_error,
-        "evaluation_efficiency": benchmark_result.get(
-            "best_evaluation_efficiency",
-            benchmark_result.get("final_evaluation_efficiency", 0.0),
-        ),
-        "reference_worst_efficiency": benchmark_result.get("best_reference_worst_efficiency"),
-        "reference_worst_name": benchmark_result.get("best_reference_worst_name"),
-        "reference_evaluations": benchmark_result.get("best_reference_evaluations", []),
-        "tactical_passed_count": benchmark_result.get("tactical_passed_count", 0),
-        "tactical_total_count": benchmark_result.get("tactical_total_count", 0),
-        "tactical_success_rate": benchmark_result.get(
-            "best_tactical_success_rate",
-            benchmark_result.get("final_tactical_success_rate", 0.0),
-        ),
-    }
+# Backward-compatible exports for tests and older imports.
+from app.ai.neural_checkpoint_selection import (  # noqa: E402
+    get_best_checkpoint_from_benchmark_result,
+    is_checkpoint_better,
+)

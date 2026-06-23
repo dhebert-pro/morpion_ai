@@ -1,4 +1,4 @@
-from app.ai.neural_checkpoint import get_best_checkpoint_from_benchmark_result
+from app.ai.neural_checkpoint_selection import get_best_checkpoint_from_benchmark_result
 from app.games.morpion.adapter import MORPION_ADAPTER
 
 
@@ -54,6 +54,9 @@ def create_training_summary_from_benchmark_result(benchmark_result):
             - benchmark_result.get("initial_evaluation_efficiency", 0.0)
         ),
         "final_reference_worst_efficiency": best_checkpoint.get("reference_worst_efficiency"),
+        "final_reference_worst_efficiency_name": best_checkpoint.get("reference_worst_efficiency_name"),
+        "final_reference_worst_survival_rate": best_checkpoint.get("reference_worst_survival_rate"),
+        "final_reference_worst_survival_name": best_checkpoint.get("reference_worst_survival_name"),
         "final_reference_worst_name": best_checkpoint.get("reference_worst_name"),
         "initial_tactical_success_rate": benchmark_result.get("initial_tactical_success_rate", 0.0),
         "final_tactical_success_rate": best_checkpoint["tactical_success_rate"],
@@ -108,6 +111,10 @@ def create_benchmark_summary(benchmark_result, best_checkpoint):
         "best_training_error": best_checkpoint["training_error"],
         "best_validation_error": best_checkpoint.get("validation_error", best_checkpoint["training_error"]),
         "best_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
+        "best_reference_worst_efficiency": best_checkpoint.get("reference_worst_efficiency"),
+        "best_reference_worst_efficiency_name": best_checkpoint.get("reference_worst_efficiency_name"),
+        "best_reference_worst_survival_rate": best_checkpoint.get("reference_worst_survival_rate"),
+        "best_reference_worst_survival_name": best_checkpoint.get("reference_worst_survival_name"),
         "best_tactical_success_rate": best_checkpoint["tactical_success_rate"],
         "final_checkpoint_is_best": benchmark_result.get("final_checkpoint_is_best", True),
         "stopped_early": benchmark_result.get("stopped_early", False),

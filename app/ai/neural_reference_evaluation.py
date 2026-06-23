@@ -120,14 +120,33 @@ def summarize_reference_evaluation_results(
         game_adapter.trained_player,
     )
 
+    trained_wins = results[game_adapter.trained_player]
+    opponent_wins = results[game_adapter.opponent_player]
+    draws = results["draw"]
+
+    if total_games == 0:
+        win_rate = 0.0
+        draw_rate = 0.0
+        loss_rate = 0.0
+        survival_rate = 0.0
+    else:
+        win_rate = trained_wins * 100 / total_games
+        draw_rate = draws * 100 / total_games
+        loss_rate = opponent_wins * 100 / total_games
+        survival_rate = (trained_wins + draws) * 100 / total_games
+
     return {
         "reference_name": reference_name,
         "total_games": total_games,
         "trained_player": game_adapter.trained_player,
         "opponent_player": game_adapter.opponent_player,
-        "trained_player_wins": results[game_adapter.trained_player],
-        "opponent_player_wins": results[game_adapter.opponent_player],
-        "draws": results["draw"],
+        "trained_player_wins": trained_wins,
+        "opponent_player_wins": opponent_wins,
+        "draws": draws,
+        "win_rate": win_rate,
+        "draw_rate": draw_rate,
+        "loss_rate": loss_rate,
+        "survival_rate": survival_rate,
         "efficiency": efficiency,
     }
 
@@ -154,6 +173,16 @@ def format_neural_reference_evaluation_report(evaluations):
             + str(evaluation["trained_player_wins"])
         )
         lines.append("Matchs nuls : " + str(evaluation["draws"]))
+        lines.append(
+            "Taux de survie : "
+            + str(round(evaluation.get("survival_rate", 0.0), 2))
+            + " %"
+        )
+        lines.append(
+            "Taux de victoire : "
+            + str(round(evaluation.get("win_rate", 0.0), 2))
+            + " %"
+        )
         lines.append(
             "Score d'efficacité : "
             + str(round(evaluation["efficiency"], 2))

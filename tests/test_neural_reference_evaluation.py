@@ -137,6 +137,10 @@ def test_format_reference_evaluation_report_contains_all_blocks():
             "trained_player_wins": 7,
             "opponent_player_wins": 1,
             "draws": 2,
+            "win_rate": 70.0,
+            "draw_rate": 20.0,
+            "loss_rate": 10.0,
+            "survival_rate": 90.0,
             "efficiency": 80.0,
         },
         {
@@ -147,6 +151,10 @@ def test_format_reference_evaluation_report_contains_all_blocks():
             "trained_player_wins": 4,
             "opponent_player_wins": 2,
             "draws": 4,
+            "win_rate": 40.0,
+            "draw_rate": 40.0,
+            "loss_rate": 20.0,
+            "survival_rate": 80.0,
             "efficiency": 60.0,
         },
     ]
@@ -156,6 +164,8 @@ def test_format_reference_evaluation_report_contains_all_blocks():
     assert_true("adversaires de référence" in text)
     assert_true("Adversaire : random" in text)
     assert_true("Adversaire : tactical" in text)
+    assert_true("Taux de survie : 90.0 %" in text)
+    assert_true("Taux de victoire : 70.0 %" in text)
     assert_true("Score d'efficacité : 80.0 %" in text)
 
 

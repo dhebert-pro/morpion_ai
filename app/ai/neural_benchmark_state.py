@@ -1,8 +1,8 @@
 from app.ai.neural_checkpoint import (
     evaluate_network_checkpoint,
-    is_checkpoint_better,
     format_checkpoint_line,
 )
+from app.ai.neural_checkpoint_selection import is_checkpoint_better
 
 
 def evaluate_and_store_checkpoint(
@@ -149,6 +149,9 @@ def create_benchmark_result(
         "best_validation_error": best_checkpoint.get("validation_error", 0.0),
         "best_evaluation_efficiency": best_checkpoint["evaluation_efficiency"],
         "best_reference_worst_efficiency": best_checkpoint.get("reference_worst_efficiency"),
+        "best_reference_worst_efficiency_name": best_checkpoint.get("reference_worst_efficiency_name"),
+        "best_reference_worst_survival_rate": best_checkpoint.get("reference_worst_survival_rate"),
+        "best_reference_worst_survival_name": best_checkpoint.get("reference_worst_survival_name"),
         "best_reference_worst_name": best_checkpoint.get("reference_worst_name"),
         "best_reference_evaluations": best_checkpoint.get("reference_evaluations", []),
         "best_tactical_success_rate": best_checkpoint["tactical_success_rate"],

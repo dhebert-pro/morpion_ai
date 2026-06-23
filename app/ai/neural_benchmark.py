@@ -6,7 +6,8 @@ from app.ai.neural_training_session import (
     create_or_load_neural_network_for_training,
 )
 from app.ai.neural_dataset_split import split_encoded_examples
-from app.ai.neural_checkpoint import get_checkpoint_table_header, is_checkpoint_better
+from app.ai.neural_checkpoint import get_checkpoint_table_header
+from app.ai.neural_checkpoint_selection import is_checkpoint_better
 from app.ai.neural_benchmark_state import (
     evaluate_and_store_checkpoint as _evaluate_and_store_checkpoint,
     should_stop_early as _should_stop_early,
