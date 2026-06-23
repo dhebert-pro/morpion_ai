@@ -56,6 +56,8 @@ def summarize_santorini_dataset(dataset):
     examples = dataset.get("examples", [])
     scored_moves_count = sum(len(example.get("move_scores", [])) for example in examples)
     best_scores = [example["best_score"] for example in examples if example["best_score"] is not None]
+    spreads = [_score_spread(example) for example in examples]
+    decisive_count = len([spread for spread in spreads if spread >= 0.25])
 
     if examples:
         average_legal_moves = scored_moves_count / len(examples)
@@ -67,6 +69,11 @@ def summarize_santorini_dataset(dataset):
     else:
         average_best_score = 0.0
 
+    if spreads:
+        average_score_spread = sum(spreads) / len(spreads)
+    else:
+        average_score_spread = 0.0
+
     return {
         "game": dataset.get("game"),
         "examples_count": len(examples),
@@ -74,4 +81,15 @@ def summarize_santorini_dataset(dataset):
         "scored_moves_count": scored_moves_count,
         "average_legal_moves": round(average_legal_moves, 2),
         "average_best_score": round(average_best_score, 3),
+        "average_score_spread": round(average_score_spread, 3),
+        "decisive_examples_count": decisive_count,
     }
+
+
+def _score_spread(example):
+    scores = [move_score["score"] for move_score in example.get("move_scores", [])]
+
+    if not scores:
+        return 0.0
+
+    return max(scores) - min(scores)

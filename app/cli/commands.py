@@ -21,6 +21,8 @@ from app.cli.santorini_commands import (
     run_simulate_santorini_random_command,
     run_inspect_santorini_io_command,
     run_build_santorini_dataset_command,
+)
+from app.cli.santorini_neural_commands import (
     run_train_santorini_neural_command,
     run_evaluate_santorini_neural_command,
 )

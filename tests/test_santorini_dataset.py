@@ -45,6 +45,8 @@ def test_santorini_dataset_summary_counts_moves():
     assert_equal(summary["examples_count"], 2)
     assert_true(summary["scored_moves_count"] >= 2)
     assert_true(summary["average_legal_moves"] > 0)
+    assert_true("average_score_spread" in summary)
+    assert_true("decisive_examples_count" in summary)
 
 
 def test_santorini_dataset_report_is_readable():
@@ -58,6 +60,7 @@ def test_santorini_dataset_report_is_readable():
     assert_true("Dataset Santorini Monte-Carlo" in report)
     assert_true("Exemple 1" in report)
     assert_true("sortie réseau" in report)
+    assert_true("Écart moyen meilleur-pire coup" in report)
 
 
 TESTS = [

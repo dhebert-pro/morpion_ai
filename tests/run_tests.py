@@ -48,6 +48,8 @@ from tests.test_santorini_network_report import TESTS as SANTORINI_NETWORK_REPOR
 from tests.test_santorini_dataset import TESTS as SANTORINI_DATASET_TESTS
 from tests.test_santorini_neural_dataset import TESTS as SANTORINI_NEURAL_DATASET_TESTS
 from tests.test_santorini_neural_training import TESTS as SANTORINI_NEURAL_TRAINING_TESTS
+from tests.test_santorini_neural_evaluation_comparison import TESTS as SANTORINI_NEURAL_EVALUATION_COMPARISON_TESTS
+from tests.test_santorini_neural_watch import TESTS as SANTORINI_NEURAL_WATCH_TESTS
 
 
 def get_all_tests():
@@ -91,6 +93,8 @@ def get_all_tests():
         + SANTORINI_DATASET_TESTS
         + SANTORINI_NEURAL_DATASET_TESTS
         + SANTORINI_NEURAL_TRAINING_TESTS
+        + SANTORINI_NEURAL_EVALUATION_COMPARISON_TESTS
+        + SANTORINI_NEURAL_WATCH_TESTS
     )
 
 

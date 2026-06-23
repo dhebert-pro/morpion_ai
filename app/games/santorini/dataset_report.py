@@ -12,6 +12,8 @@ def format_santorini_dataset_report(dataset, examples_limit=3, moves_limit=5):
     lines.append("Coups scorés : " + str(summary["scored_moves_count"]))
     lines.append("Coups légaux moyens : " + str(summary["average_legal_moves"]))
     lines.append("Score moyen du meilleur coup : " + str(summary["average_best_score"]))
+    lines.append("Écart moyen meilleur-pire coup : " + str(summary["average_score_spread"]))
+    lines.append("Exemples réellement discriminants : " + str(summary["decisive_examples_count"]))
     lines.append("")
     lines.append("Exemples inspectables :")
 

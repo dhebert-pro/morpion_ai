@@ -94,6 +94,8 @@ def create_santorini_training_summary(
         "scored_moves_count": summary["scored_moves_count"],
         "average_legal_moves": summary["average_legal_moves"],
         "average_best_score": summary["average_best_score"],
+        "average_score_spread": summary["average_score_spread"],
+        "decisive_examples_count": summary["decisive_examples_count"],
         "input_size": training_result["input_size"],
         "hidden_size": hidden_size,
         "output_size": training_result["output_size"],
@@ -129,6 +131,8 @@ def format_santorini_training_summary(summary):
     lines.append("Coups scorés : " + str(summary["scored_moves_count"]))
     lines.append("Coups légaux moyens : " + str(summary["average_legal_moves"]))
     lines.append("Score moyen du meilleur coup : " + str(summary["average_best_score"]))
+    lines.append("Écart moyen meilleur-pire coup : " + str(summary["average_score_spread"]))
+    lines.append("Exemples réellement discriminants : " + str(summary["decisive_examples_count"]))
     lines.append("Taille entrée : " + str(summary["input_size"]))
     lines.append("Taille couche cachée : " + str(summary["hidden_size"]))
     lines.append("Taille sortie : " + str(summary["output_size"]))

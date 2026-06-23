@@ -21,5 +21,6 @@ def print_help():
     print("  python main.py inspect-santorini-io  → inspecte entrées/sorties réseau Santorini")
     print("  python main.py build-santorini-dataset [parties] [exemples] [simulations] → crée un dataset Santorini inspectable")
     print("  python main.py train-santorini-neural [parties] [exemples] [simulations] [hidden] [époques] [lr] → entraîne un modèle Santorini séparé")
+    print("  python main.py train-santorini-neural --watch → sauvegarde le meilleur palier réel")
     print("  python main.py evaluate-santorini-neural [n] → évalue le modèle Santorini contre random")
     print("  python main.py test                    → lance tous les tests")
