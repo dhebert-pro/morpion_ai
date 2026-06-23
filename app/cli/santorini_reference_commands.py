@@ -18,6 +18,10 @@ from app.games.santorini.neural_training import (
 from app.games.santorini.reference_evaluation import (
     evaluate_santorini_neural_vs_references_paired,
 )
+from app.games.santorini.reference_diagnostics import (
+    diagnose_santorini_neural_vs_reference,
+    format_santorini_reference_diagnostic,
+)
 
 
 def run_evaluate_santorini_reference_command():
@@ -81,3 +85,37 @@ def _read_int_arg(position, default_value):
         return default_value
 
     return max(1, value)
+
+
+def run_diagnose_santorini_reference_command():
+    opponent_name = _read_text_arg(2, "climber")
+    games_count = _read_int_arg(3, SANTORINI_NEURAL_EVALUATION_GAMES_COUNT)
+    package = load_santorini_model_package(SANTORINI_NEURAL_MODEL_FILE)
+    model_data = get_santorini_model_data(package)
+
+    print("Diagnostic Santorini contre adversaire de référence")
+    print("Fichier : " + str(SANTORINI_NEURAL_MODEL_FILE))
+    print("Adversaire : " + opponent_name)
+    print("Parties analysées : " + str(games_count))
+    print()
+
+    if not model_data:
+        print("Aucun modèle Santorini valide trouvé.")
+        return
+
+    network = SimpleNeuralNetwork.from_dict(model_data)
+    report = diagnose_santorini_neural_vs_reference(
+        network=network,
+        opponent_name=opponent_name,
+        games_count=games_count,
+        seed=SANTORINI_DATASET_SEED,
+    )
+    print(format_santorini_reference_diagnostic(report))
+
+
+def _read_text_arg(position, default_value):
+    if len(sys.argv) <= position:
+        return default_value
+
+    value = sys.argv[position].strip().lower()
+    return value or default_value

@@ -39,7 +39,7 @@ def test_guard_keeps_immediate_winning_actions_first():
     assert_true(all(action["to"] == 7 for action in filtered))
 
 
-def test_neural_choice_uses_guard_before_prediction_score():
+def test_neural_choice_is_pure_by_default_before_prediction_score():
     game = _play_game({"X": [6, 24], "O": [12, 18]})
     game["heights"][6] = 2
     game["heights"][7] = 3
@@ -49,6 +49,22 @@ def test_neural_choice_uses_guard_before_prediction_score():
     chosen = choose_santorini_neural_action_from_network(
         game,
         FakeNetwork(bad_action["output_index"]),
+    )
+
+    assert_equal(chosen["output_index"], bad_action["output_index"])
+
+
+def test_neural_choice_can_use_guard_in_explicit_diagnostic_mode():
+    game = _play_game({"X": [6, 24], "O": [12, 18]})
+    game["heights"][6] = 2
+    game["heights"][7] = 3
+    actions = get_indexed_legal_actions(game, "O")
+    bad_action = _find_action_giving_opponent_win(game, actions)
+
+    chosen = choose_santorini_neural_action_from_network(
+        game,
+        FakeNetwork(bad_action["output_index"]),
+        use_tactical_guard=True,
     )
     copied = copy_game(game)
     apply_action(copied, chosen)
@@ -68,5 +84,6 @@ def _find_action_giving_opponent_win(game, actions):
 
 TESTS = [
     ("Santorini garde tactique prend une victoire immédiate", test_guard_keeps_immediate_winning_actions_first),
-    ("Santorini réseau filtré évite victoire immédiate adverse", test_neural_choice_uses_guard_before_prediction_score),
+    ("Santorini réseau pur suit le score avant la garde", test_neural_choice_is_pure_by_default_before_prediction_score),
+    ("Santorini garde disponible seulement en mode explicite", test_neural_choice_can_use_guard_in_explicit_diagnostic_mode),
 ]

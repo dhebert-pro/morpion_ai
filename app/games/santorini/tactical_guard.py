@@ -1,4 +1,5 @@
 from app.games.santorini.rules import apply_action, copy_game, get_game_result, get_legal_actions
+from app.games.santorini.tactical_risk import santorini_action_risk_key
 
 
 def filter_santorini_tactical_actions(game, actions):
@@ -18,7 +19,7 @@ def filter_santorini_tactical_actions(game, actions):
     if winning_actions:
         return winning_actions
 
-    risks = [(_opponent_immediate_wins_after(game, action), action) for action in candidate_actions]
+    risks = [(santorini_action_risk_key(game, action), action) for action in candidate_actions]
     lowest_risk = min(risk for risk, _action in risks)
     return [action for risk, action in risks if risk == lowest_risk]
 

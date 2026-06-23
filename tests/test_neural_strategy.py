@@ -139,7 +139,7 @@ def test_choose_neural_move_uses_fallback_without_model():
     assert_equal(move, 1)
 
 
-def test_choose_neural_move_plays_immediate_win_before_prediction():
+def test_choose_neural_move_is_pure_by_default_on_immediate_win():
     game = create_game_with_board([
         "X", None, None,
         "O", "O", None,
@@ -154,10 +154,32 @@ def test_choose_neural_move_plays_immediate_win_before_prediction():
 
     move = choose_neural_move(game, model_data)
 
+    assert_equal(move, 1)
+
+
+def test_choose_neural_move_can_use_guard_as_explicit_diagnostic_mode():
+    game = create_game_with_board([
+        "X", None, None,
+        "O", "O", None,
+        "X", None, None,
+    ])
+
+    model_data = create_deterministic_model([
+        0.0, 5.0, 4.0,
+        0.0, 0.0, 0.1,
+        0.0, 3.0, 2.0,
+    ])
+
+    move = choose_neural_move(
+        game,
+        model_data,
+        use_tactical_guard=True,
+    )
+
     assert_equal(move, 5)
 
 
-def test_choose_neural_move_blocks_immediate_loss_before_prediction():
+def test_choose_neural_move_is_pure_by_default_on_immediate_loss():
     game = create_game_with_board([
         "O", None, None,
         "X", "X", None,
@@ -172,7 +194,7 @@ def test_choose_neural_move_blocks_immediate_loss_before_prediction():
 
     move = choose_neural_move(game, model_data)
 
-    assert_equal(move, 5)
+    assert_equal(move, 1)
 
 
 TESTS = [
@@ -182,6 +204,7 @@ TESTS = [
     ("La stratégie neuronale ignore les prédictions illégales", test_choose_neural_move_ignores_illegal_highest_prediction),
     ("La stratégie neuronale retourne None sur plateau terminé", test_choose_neural_move_returns_none_on_finished_board),
     ("La stratégie neuronale utilise un fallback sans modèle", test_choose_neural_move_uses_fallback_without_model),
-    ("La garde tactique joue une victoire immédiate avant le réseau", test_choose_neural_move_plays_immediate_win_before_prediction),
-    ("La garde tactique bloque une défaite immédiate avant le réseau", test_choose_neural_move_blocks_immediate_loss_before_prediction),
+    ("La stratégie neuronale pure ne force pas une victoire immédiate", test_choose_neural_move_is_pure_by_default_on_immediate_win),
+    ("La garde morpion reste disponible en mode explicite", test_choose_neural_move_can_use_guard_as_explicit_diagnostic_mode),
+    ("La stratégie neuronale pure ne force pas un blocage immédiat", test_choose_neural_move_is_pure_by_default_on_immediate_loss),
 ]

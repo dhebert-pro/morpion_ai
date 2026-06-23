@@ -2,7 +2,6 @@ from app.ai.neural_network import SimpleNeuralNetwork
 from app.games.santorini.agents import choose_random_action, choose_random_placement
 from app.games.santorini.encoding import encode_santorini_state
 from app.games.santorini.indexed_actions import get_indexed_legal_actions
-from app.games.santorini.tactical_guard import filter_santorini_tactical_actions
 from app.games.santorini.evaluation_summary import summarize_o_results, format_o_evaluation_summary
 from app.games.santorini.rules import (
     apply_action,
@@ -16,15 +15,25 @@ TRAINED_PLAYER = "O"
 OPPONENT_PLAYER = "X"
 
 
-def choose_santorini_neural_action(game, model_data, rng=None):
+def choose_santorini_neural_action(game, model_data, rng=None, use_tactical_guard=False):
     if not model_data:
         return choose_random_action(game, rng)
 
     network = SimpleNeuralNetwork.from_dict(model_data)
-    return choose_santorini_neural_action_from_network(game, network, rng)
+    return choose_santorini_neural_action_from_network(
+        game,
+        network,
+        rng,
+        use_tactical_guard=use_tactical_guard,
+    )
 
 
-def choose_santorini_neural_action_from_network(game, network, rng=None):
+def choose_santorini_neural_action_from_network(
+    game,
+    network,
+    rng=None,
+    use_tactical_guard=False,
+):
     legal_actions = get_indexed_legal_actions(game, TRAINED_PLAYER)
 
     if not legal_actions:
@@ -39,9 +48,14 @@ def choose_santorini_neural_action_from_network(game, network, rng=None):
     best_action = None
     best_score = None
 
-    tactical_actions = filter_santorini_tactical_actions(game, legal_actions)
+    candidate_actions = legal_actions
 
-    for action in tactical_actions:
+    if use_tactical_guard:
+        from app.games.santorini.tactical_guard import filter_santorini_tactical_actions
+
+        candidate_actions = filter_santorini_tactical_actions(game, legal_actions)
+
+    for action in candidate_actions:
         score = predictions[action["output_index"]]
 
         if best_score is None or score > best_score:

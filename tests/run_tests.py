@@ -54,6 +54,8 @@ from tests.test_santorini_paired_evaluation import TESTS as SANTORINI_PAIRED_EVA
 from tests.test_santorini_reference_agents import TESTS as SANTORINI_REFERENCE_AGENTS_TESTS
 from tests.test_santorini_reference_evaluation import TESTS as SANTORINI_REFERENCE_EVALUATION_TESTS
 from tests.test_santorini_tactical_guard import TESTS as SANTORINI_TACTICAL_GUARD_TESTS
+from tests.test_santorini_tactical_risk import TESTS as SANTORINI_TACTICAL_RISK_TESTS
+from tests.test_santorini_reference_diagnostics import TESTS as SANTORINI_REFERENCE_DIAGNOSTICS_TESTS
 
 
 def get_all_tests():
@@ -103,6 +105,8 @@ def get_all_tests():
         + SANTORINI_REFERENCE_AGENTS_TESTS
         + SANTORINI_REFERENCE_EVALUATION_TESTS
         + SANTORINI_TACTICAL_GUARD_TESTS
+        + SANTORINI_TACTICAL_RISK_TESTS
+        + SANTORINI_REFERENCE_DIAGNOSTICS_TESTS
     )
 
 

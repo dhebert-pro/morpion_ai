@@ -23,4 +23,6 @@ def print_help():
     print("  python main.py train-santorini-neural [parties] [exemples] [simulations] [hidden] [époques] [lr] → entraîne un modèle Santorini séparé")
     print("  python main.py train-santorini-neural --watch → sauvegarde le meilleur palier réel")
     print("  python main.py evaluate-santorini-neural [n] → évalue le modèle Santorini contre random")
+    print("  python main.py evaluate-santorini-reference [n] → évalue Santorini contre références")
+    print("  python main.py diagnose-santorini-reference [adversaire] [n] → détaille les défaites Santorini")
     print("  python main.py test                    → lance tous les tests")
