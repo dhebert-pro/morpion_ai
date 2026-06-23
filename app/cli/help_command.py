@@ -19,4 +19,5 @@ def print_help():
     print("  python main.py play-santorini          → teste une partie Santorini sans pouvoirs")
     print("  python main.py simulate-santorini-random [n] → simule n parties aléatoires")
     print("  python main.py inspect-santorini-io  → inspecte entrées/sorties réseau Santorini")
+    print("  python main.py build-santorini-dataset [parties] [exemples] [simulations] → crée un dataset Santorini inspectable")
     print("  python main.py test                    → lance tous les tests")

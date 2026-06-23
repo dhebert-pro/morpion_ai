@@ -6,6 +6,14 @@ from app.games.santorini.engine import play_input
 from app.games.santorini.rules import create_new_game
 from app.games.santorini.simulation import run_random_matches
 from app.games.santorini.network_report import format_santorini_network_report
+from app.games.santorini.dataset import build_santorini_move_score_dataset
+from app.games.santorini.dataset_report import format_santorini_dataset_report
+from app.config import (
+    SANTORINI_DATASET_GAMES_COUNT,
+    SANTORINI_DATASET_SIMULATIONS_PER_MOVE,
+    SANTORINI_DATASET_MAX_EXAMPLES,
+    SANTORINI_DATASET_SEED,
+)
 
 
 def print_santorini_help():
@@ -79,3 +87,36 @@ def read_match_count():
 
 def run_inspect_santorini_io_command():
     print(format_santorini_network_report())
+
+
+def run_build_santorini_dataset_command():
+    options = read_santorini_dataset_options()
+    dataset = build_santorini_move_score_dataset(
+        games_count=options["games_count"],
+        simulations_per_move=options["simulations_per_move"],
+        max_examples=options["max_examples"],
+        seed=SANTORINI_DATASET_SEED,
+        show_progress=True,
+    )
+    print()
+    print(format_santorini_dataset_report(dataset))
+
+
+def read_santorini_dataset_options():
+    return {
+        "games_count": _read_int_arg(2, SANTORINI_DATASET_GAMES_COUNT),
+        "max_examples": _read_int_arg(3, SANTORINI_DATASET_MAX_EXAMPLES),
+        "simulations_per_move": _read_int_arg(4, SANTORINI_DATASET_SIMULATIONS_PER_MOVE),
+    }
+
+
+def _read_int_arg(position, default_value):
+    if len(sys.argv) <= position:
+        return default_value
+
+    try:
+        value = int(sys.argv[position])
+    except ValueError:
+        return default_value
+
+    return max(1, value)

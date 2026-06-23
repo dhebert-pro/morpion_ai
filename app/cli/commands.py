@@ -20,6 +20,7 @@ from app.cli.santorini_commands import (
     run_play_santorini_command,
     run_simulate_santorini_random_command,
     run_inspect_santorini_io_command,
+    run_build_santorini_dataset_command,
 )
 from app.cli.test_command import run_test_command
 
@@ -45,6 +46,7 @@ def run_cli():
         "play-santorini": run_play_santorini_command,
         "simulate-santorini-random": run_simulate_santorini_random_command,
         "inspect-santorini-io": run_inspect_santorini_io_command,
+        "build-santorini-dataset": run_build_santorini_dataset_command,
         "test": run_test_command,
     }
 

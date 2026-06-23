@@ -45,6 +45,7 @@ from tests.test_santorini_simulation import TESTS as SANTORINI_SIMULATION_TESTS
 from tests.test_santorini_encoding import TESTS as SANTORINI_ENCODING_TESTS
 from tests.test_santorini_adapter import TESTS as SANTORINI_ADAPTER_TESTS
 from tests.test_santorini_network_report import TESTS as SANTORINI_NETWORK_REPORT_TESTS
+from tests.test_santorini_dataset import TESTS as SANTORINI_DATASET_TESTS
 
 
 def get_all_tests():
@@ -85,6 +86,7 @@ def get_all_tests():
         + SANTORINI_ENCODING_TESTS
         + SANTORINI_ADAPTER_TESTS
         + SANTORINI_NETWORK_REPORT_TESTS
+        + SANTORINI_DATASET_TESTS
     )
 
 
