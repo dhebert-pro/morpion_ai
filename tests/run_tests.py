@@ -1,12 +1,13 @@
-import os
+from pathlib import Path
 import sys
+import traceback
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-from tests.test_helpers import run_test
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 from tests.test_rules import TESTS as RULES_TESTS
 from tests.test_engine import TESTS as ENGINE_TESTS
@@ -15,6 +16,12 @@ from tests.test_training import TESTS as TRAINING_TESTS
 from tests.test_evaluation import TESTS as EVALUATION_TESTS
 from tests.test_storage import TESTS as STORAGE_TESTS
 from tests.test_progress import TESTS as PROGRESS_TESTS
+from tests.test_game_adapter import TESTS as GAME_ADAPTER_TESTS
+from tests.test_move_scoring import TESTS as MOVE_SCORING_TESTS
+from tests.test_training_dataset import TESTS as TRAINING_DATASET_TESTS
+from tests.test_neural_encoding import TESTS as NEURAL_ENCODING_TESTS
+from tests.test_neural_network import TESTS as NEURAL_NETWORK_TESTS
+from tests.test_neural_training_session import TESTS as NEURAL_TRAINING_SESSION_TESTS
 
 
 def get_all_tests():
@@ -26,26 +33,42 @@ def get_all_tests():
         + EVALUATION_TESTS
         + STORAGE_TESTS
         + PROGRESS_TESTS
+        + GAME_ADAPTER_TESTS
+        + MOVE_SCORING_TESTS
+        + TRAINING_DATASET_TESTS
+        + NEURAL_ENCODING_TESTS
+        + NEURAL_NETWORK_TESTS
+        + NEURAL_TRAINING_SESSION_TESTS
     )
+
+
+def run_single_test(test_name, test_function):
+    try:
+        test_function()
+        print("OK  -", test_name)
+        return True
+    except AssertionError as error:
+        print("NON -", test_name)
+        print("Erreur d'assertion :", error)
+        return False
+    except Exception:
+        print("NON -", test_name)
+        traceback.print_exc()
+        return False
 
 
 def run_all_tests():
     tests = get_all_tests()
     passed_count = 0
 
-    print("Lancement des tests...")
-    print()
-
-    for name, test_function in tests:
-        if run_test(name, test_function):
+    for test_name, test_function in tests:
+        if run_single_test(test_name, test_function):
             passed_count += 1
 
-    total_count = len(tests)
-
     print()
-    print("Résumé :", passed_count, "/", total_count, "tests passés.")
+    print("Résumé :", passed_count, "/", len(tests), "tests passés.")
 
-    if passed_count != total_count:
+    if passed_count != len(tests):
         raise SystemExit(1)
 
 

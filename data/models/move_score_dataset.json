@@ -1,0 +1,5410 @@
+{
+  "game": "morpion",
+  "trained_player": "O",
+  "opponent_player": "X",
+  "training_games_count": 300,
+  "simulations_per_move": 30,
+  "examples_count": 200,
+  "examples": [
+    {
+      "state_key": "........X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.45
+        },
+        {
+          "move": 5,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.35
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".......X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 3,
+          "score": 0.35
+        },
+        {
+          "move": 4,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.3333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "......X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.25
+        },
+        {
+          "move": 4,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        },
+        {
+          "move": 8,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".....O.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.1
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".....OXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.3
+        },
+        {
+          "move": 3,
+          "score": 0.2
+        },
+        {
+          "move": 4,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".....X...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 3,
+          "score": 0.4
+        },
+        {
+          "move": 4,
+          "score": 0.35
+        },
+        {
+          "move": 6,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.45
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".....X.OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 1,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 3,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.25
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".....X.XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.4
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 3,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 4,
+          "score": 0.6166666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".....XO.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 4,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".....XOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 4,
+          "score": 0.55
+        },
+        {
+          "move": 8,
+          "score": 0.3333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".....XX.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.35
+        },
+        {
+          "move": 2,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "....O.X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.35
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 3,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 5,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "....OX..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 2,
+          "score": 0.75
+        },
+        {
+          "move": 3,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.45
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "....X....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 5,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.25
+        },
+        {
+          "move": 7,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "....X..OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.15
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "....X..XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 3,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 5,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.18333333333333332
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "....X.O.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "....X.OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.15
+        },
+        {
+          "move": 8,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "....X.X.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.05
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "....XO..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.0
+        },
+        {
+          "move": 6,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "....XO.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.2
+        },
+        {
+          "move": 8,
+          "score": 0.4
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "....XOX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.15
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.55
+        },
+        {
+          "move": 3,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.43333333333333335
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "....XX..O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.15
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 6,
+          "score": 0.4
+        },
+        {
+          "move": 7,
+          "score": 0.18333333333333332
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "....XXO..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.15
+        },
+        {
+          "move": 2,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.45
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": "...O...XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...O..X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 4,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...O..XX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.45
+        },
+        {
+          "move": 5,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.4166666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...O.X.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 4,
+          "score": 0.4
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.48333333333333334
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "...O.XX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 4,
+          "score": 0.45
+        },
+        {
+          "move": 7,
+          "score": 0.15
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...OX..X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.2
+        },
+        {
+          "move": 5,
+          "score": 0.03333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.3
+        },
+        {
+          "move": 8,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...OX.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        },
+        {
+          "move": 7,
+          "score": 0.15
+        },
+        {
+          "move": 8,
+          "score": 0.1
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...OX.XXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...OXOX.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.0
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...OXX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 1,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 2,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "...OXX.OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.15
+        },
+        {
+          "move": 6,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...OXXO.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.2
+        },
+        {
+          "move": 7,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...OXXX.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 2,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.06666666666666667
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...X.....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.35
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.45
+        },
+        {
+          "move": 5,
+          "score": 0.4
+        },
+        {
+          "move": 6,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        },
+        {
+          "move": 8,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...X..OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 1,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.55
+        },
+        {
+          "move": 5,
+          "score": 0.35
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...X..X.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.6
+        },
+        {
+          "move": 4,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.06666666666666667
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...X..XO.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 4,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...X.O..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 4,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 7,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...X.OX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 1,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.2
+        },
+        {
+          "move": 8,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...X.X..O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.6
+        },
+        {
+          "move": 6,
+          "score": 0.45
+        },
+        {
+          "move": 7,
+          "score": 0.5
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...X.XO..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.6166666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.5666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "...XO.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 2,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.65
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "...XOOX.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.0
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "...XOX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.8
+        },
+        {
+          "move": 6,
+          "score": 0.7833333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.7
+        },
+        {
+          "move": 8,
+          "score": 0.8333333333333334
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "...XOXOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.7
+        },
+        {
+          "move": 1,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 2,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.8666666666666667
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "...XX...O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.15
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.6
+        },
+        {
+          "move": 6,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": "...XX.OOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.15
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.0
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "...XX.XOO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.2
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": "..O...X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.35
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..O..X.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.7666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..O..XX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.45
+        },
+        {
+          "move": 1,
+          "score": 0.4
+        },
+        {
+          "move": 3,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 4,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 8,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..O.X...X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.25
+        },
+        {
+          "move": 5,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.18333333333333332
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..O.X..X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.65
+        },
+        {
+          "move": 3,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.38333333333333336
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..O.X.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 8,
+          "score": 0.5666666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..O.X.XOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.7
+        },
+        {
+          "move": 1,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.2
+        },
+        {
+          "move": 5,
+          "score": 0.18333333333333332
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..O.XX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.35
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.1
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..O.XX.OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..OO.XXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 4,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 8,
+          "score": 0.4166666666666667
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..OOX.X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        },
+        {
+          "move": 7,
+          "score": 0.21666666666666667
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..OOX.XX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.03333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 5,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.38333333333333336
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..OOXXOXX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..OOXXXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.5
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..OX.XO.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        },
+        {
+          "move": 7,
+          "score": 0.5
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..OXX....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.35
+        },
+        {
+          "move": 1,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.5
+        },
+        {
+          "move": 6,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 8,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": "..OXX..XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 1.0
+        },
+        {
+          "move": 6,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": "..X......",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.5166666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..X...OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 3,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 8,
+          "score": 0.3
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": "..X...X.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 1,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 3,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.3333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..X..O..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.5
+        },
+        {
+          "move": 4,
+          "score": 0.45
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": "..X..O.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 3,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 4,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..X..X.O.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..X..XO..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.35
+        },
+        {
+          "move": 7,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 8,
+          "score": 0.5666666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..X.O..X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 8,
+          "score": 0.4166666666666667
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..X.O.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 3,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.6
+        },
+        {
+          "move": 7,
+          "score": 0.55
+        },
+        {
+          "move": 8,
+          "score": 0.5833333333333334
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": "..X.OO.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 3,
+          "score": 1.0
+        },
+        {
+          "move": 6,
+          "score": 0.7
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": "..X.OOXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 3,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.7666666666666667
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": "..X.OX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.2
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.7166666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..X.X...O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..X.X.O..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 3,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.6
+        },
+        {
+          "move": 8,
+          "score": 0.5166666666666667
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "..X.X.OXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..X.XO...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.08333333333333333
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XO....X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.4
+        },
+        {
+          "move": 7,
+          "score": 0.06666666666666667
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XO...X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 1,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 6,
+          "score": 0.35
+        },
+        {
+          "move": 8,
+          "score": 0.4166666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..XO..X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 1,
+          "score": 0.2
+        },
+        {
+          "move": 4,
+          "score": 0.6833333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..XO.OXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 1,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.43333333333333335
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..XO.X...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 1,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.4
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.38333333333333336
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XO.XOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 8,
+          "score": 0.55
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..XOO.X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 1,
+          "score": 0.4
+        },
+        {
+          "move": 5,
+          "score": 1.0
+        },
+        {
+          "move": 7,
+          "score": 0.5
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": "..XOOXX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 8,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..XOOXXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 1,
+          "score": 0.5
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..XOX....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 1,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.1
+        },
+        {
+          "move": 8,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XOXO..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        },
+        {
+          "move": 6,
+          "score": 0.5
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XX....O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XX...O.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.5666666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..XX..O..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 7,
+          "score": 0.6
+        },
+        {
+          "move": 8,
+          "score": 0.5833333333333334
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "..XX..XOO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 4,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": "..XX.O...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 1,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 4,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.21666666666666667
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": "..XXO....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.45
+        },
+        {
+          "move": 1,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..XXO.OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.45
+        },
+        {
+          "move": 1,
+          "score": 0.25
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": "..XXO.XO.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.95
+        },
+        {
+          "move": 1,
+          "score": 1.0
+        },
+        {
+          "move": 5,
+          "score": 0.35
+        },
+        {
+          "move": 8,
+          "score": 0.5666666666666667
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..XXOO..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 1,
+          "score": 0.45
+        },
+        {
+          "move": 6,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.45
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": "..XXOOX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 1,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..XXOOXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 1,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": "..XXX.O.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 1,
+          "score": 0.35
+        },
+        {
+          "move": 5,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 7,
+          "score": 1.0
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": "..XXXOOXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 1,
+          "score": 0.5
+        }
+      ],
+      "best_move": 1
+    },
+    {
+      "state_key": ".O.....XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.35
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.2
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O....X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 3,
+          "score": 0.2
+        },
+        {
+          "move": 4,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.4
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".O....XX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.38333333333333336
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".O...X.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 4,
+          "score": 0.3
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O...XX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 2,
+          "score": 0.35
+        },
+        {
+          "move": 3,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 4,
+          "score": 0.6
+        },
+        {
+          "move": 7,
+          "score": 0.4
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".O..OXXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6
+        },
+        {
+          "move": 2,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 3,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.48333333333333334
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O..X...X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 3,
+          "score": 0.03333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 6,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 7,
+          "score": 0.03333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O..X..X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 3,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 6,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O..X.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 2,
+          "score": 0.45
+        },
+        {
+          "move": 3,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O..XO.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 2,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.0
+        },
+        {
+          "move": 6,
+          "score": 0.21666666666666667
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O..XX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 7,
+          "score": 0.03333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.03333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O..XX.XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O..XXX.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 2,
+          "score": 0.3
+        },
+        {
+          "move": 3,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O.OX.XX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.13333333333333333
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O.OXX.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 6,
+          "score": 0.5
+        },
+        {
+          "move": 8,
+          "score": 0.3
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O.OXXXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O.X....X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.55
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 4,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 6,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.43333333333333335
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".O.X...X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.6
+        },
+        {
+          "move": 4,
+          "score": 0.4
+        },
+        {
+          "move": 5,
+          "score": 0.25
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 8,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O.X..XOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".O.XOX.X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.7333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 8,
+          "score": 0.48333333333333334
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O.XX..OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        },
+        {
+          "move": 6,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".O.XX.OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.3
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 5
+    },
+    {
+      "state_key": ".O.XXOX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".O.XXOXOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OO.X.X.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 3,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 7,
+          "score": 0.4
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OO.XXXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 3,
+          "score": 0.5
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OOXOXXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OOXX.XOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OOXXO.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 6,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OOXXOXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 1.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OX.....X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 5,
+          "score": 0.25
+        },
+        {
+          "move": 6,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.2
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OX....X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 8,
+          "score": 0.21666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OX...X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.15
+        },
+        {
+          "move": 4,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.25
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OX...XXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 3,
+          "score": 0.25
+        },
+        {
+          "move": 4,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 0.0
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OX..X...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 3,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 7,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 8,
+          "score": 0.6166666666666667
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OX..XOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.08333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OX.X....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.06666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 6,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 8,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OX.X..XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 3,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 6,
+          "score": 0.2833333333333333
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".OX.X.OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 3,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": ".OX.XX..O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 3,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".OX.XXO..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.1
+        },
+        {
+          "move": 3,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": ".OXO..XX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 4,
+          "score": 0.25
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 8,
+          "score": 0.15
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OXOOXXX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OXX...XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 4,
+          "score": 0.5
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 6,
+          "score": 0.3
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OXX.OXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 4,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".OXX.XO..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 4,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".OXX.XOXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 4,
+          "score": 0.5
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".OXXO..X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.35
+        },
+        {
+          "move": 8,
+          "score": 0.55
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OXXO.X..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 7,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".OXXOX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 6,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 7,
+          "score": 1.0
+        },
+        {
+          "move": 8,
+          "score": 0.75
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".OXXOXOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".OXXX...O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 7,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".OXXXOOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.......",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 2,
+          "score": 0.45
+        },
+        {
+          "move": 3,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 6,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.25
+        },
+        {
+          "move": 8,
+          "score": 0.48333333333333334
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.....OX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 3,
+          "score": 0.25
+        },
+        {
+          "move": 4,
+          "score": 0.25
+        },
+        {
+          "move": 5,
+          "score": 0.18333333333333332
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.....XO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 2,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.7166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X....O.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5833333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.6
+        },
+        {
+          "move": 5,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.31666666666666665
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X....OX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 4,
+          "score": 0.7166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X....X.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.65
+        },
+        {
+          "move": 3,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 4,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.3
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X....XO.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 8,
+          "score": 0.2
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X...O..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.11666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.4
+        },
+        {
+          "move": 4,
+          "score": 0.6666666666666666
+        },
+        {
+          "move": 6,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 7,
+          "score": 0.2
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X...OX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.3
+        },
+        {
+          "move": 4,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.4
+        },
+        {
+          "move": 8,
+          "score": 0.5
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X...OXXO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 2,
+          "score": 1.0
+        },
+        {
+          "move": 3,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X...X.O.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 4,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.5
+        },
+        {
+          "move": 8,
+          "score": 0.35
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".X..O...X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 3,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 6,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.2833333333333333
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X..O.OXX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.7833333333333333
+        },
+        {
+          "move": 2,
+          "score": 1.0
+        },
+        {
+          "move": 3,
+          "score": 1.0
+        },
+        {
+          "move": 5,
+          "score": 0.8
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X..OO.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4
+        },
+        {
+          "move": 2,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 3,
+          "score": 1.0
+        },
+        {
+          "move": 6,
+          "score": 0.8166666666666667
+        }
+      ],
+      "best_move": 3
+    },
+    {
+      "state_key": ".X..OX...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.55
+        },
+        {
+          "move": 2,
+          "score": 0.7666666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 6,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.55
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X..OXOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 2,
+          "score": 1.0
+        },
+        {
+          "move": 3,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.6
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X..X...O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 3,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.2
+        },
+        {
+          "move": 6,
+          "score": 0.4
+        },
+        {
+          "move": 7,
+          "score": 0.6333333333333333
+        }
+      ],
+      "best_move": 7
+    },
+    {
+      "state_key": ".X..X.O..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.5
+        },
+        {
+          "move": 2,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 3,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 5,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.4
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X..XOXO.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 3,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.3
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X.O....X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 2,
+          "score": 0.4
+        },
+        {
+          "move": 4,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 5,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 6,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 7,
+          "score": 0.3333333333333333
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.O...X.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.4
+        },
+        {
+          "move": 6,
+          "score": 0.4
+        },
+        {
+          "move": 8,
+          "score": 0.3
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.O..OXX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 1.0
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        },
+        {
+          "move": 5,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.O.O.XX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 4,
+          "score": 1.0
+        },
+        {
+          "move": 6,
+          "score": 0.4666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.O.X...",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.55
+        },
+        {
+          "move": 2,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 4,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 6,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 8,
+          "score": 0.36666666666666664
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.O.XX.O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 4,
+          "score": 0.48333333333333334
+        },
+        {
+          "move": 7,
+          "score": 0.11666666666666667
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.O.XXO.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 4,
+          "score": 0.15
+        },
+        {
+          "move": 8,
+          "score": 0.18333333333333332
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X.OOX..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.6833333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.5
+        },
+        {
+          "move": 7,
+          "score": 0.1
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X.OOXXOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        }
+      ],
+      "best_move": 2
+    },
+    {
+      "state_key": ".X.OX....",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2833333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.1
+        },
+        {
+          "move": 6,
+          "score": 0.3
+        },
+        {
+          "move": 7,
+          "score": 0.21666666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.2833333333333333
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".X.OXO..X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.2
+        },
+        {
+          "move": 2,
+          "score": 0.0
+        },
+        {
+          "move": 6,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        }
+      ],
+      "best_move": 0
+    },
+    {
+      "state_key": ".X.OXOX..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.0
+        },
+        {
+          "move": 2,
+          "score": 0.13333333333333333
+        },
+        {
+          "move": 7,
+          "score": 0.0
+        },
+        {
+          "move": 8,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 8
+    },
+    {
+      "state_key": ".X.OXX.O.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.36666666666666664
+        },
+        {
+          "move": 2,
+          "score": 0.3333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 8,
+          "score": 0.4
+        }
+      ],
+      "best_move": 6
+    },
+    {
+      "state_key": ".X.X....O",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 2,
+          "score": 0.6333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.7333333333333333
+        },
+        {
+          "move": 5,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 6,
+          "score": 0.5666666666666667
+        },
+        {
+          "move": 7,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.X..O..",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.4166666666666667
+        },
+        {
+          "move": 2,
+          "score": 0.5333333333333333
+        },
+        {
+          "move": 4,
+          "score": 0.6166666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.43333333333333335
+        },
+        {
+          "move": 8,
+          "score": 0.5333333333333333
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.X..OOX",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.15
+        },
+        {
+          "move": 2,
+          "score": 0.23333333333333334
+        },
+        {
+          "move": 4,
+          "score": 0.26666666666666666
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.X..XOO",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.3
+        },
+        {
+          "move": 2,
+          "score": 0.1
+        },
+        {
+          "move": 4,
+          "score": 0.4666666666666667
+        },
+        {
+          "move": 5,
+          "score": 0.16666666666666666
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.X.OO.X",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.31666666666666665
+        },
+        {
+          "move": 2,
+          "score": 0.2
+        },
+        {
+          "move": 4,
+          "score": 0.38333333333333336
+        },
+        {
+          "move": 7,
+          "score": 0.23333333333333334
+        }
+      ],
+      "best_move": 4
+    },
+    {
+      "state_key": ".X.X.OOX.",
+      "player": "O",
+      "move_scores": [
+        {
+          "move": 0,
+          "score": 0.16666666666666666
+        },
+        {
+          "move": 2,
+          "score": 0.5
+        },
+        {
+          "move": 4,
+          "score": 0.5166666666666667
+        },
+        {
+          "move": 8,
+          "score": 0.26666666666666666
+        }
+      ],
+      "best_move": 4
+    }
+  ]
+}

@@ -11,6 +11,8 @@ from app.config import (
     SIMULATIONS_PER_MOVE,
     EVALUATION_GAMES_COUNT,
     SHOW_PROGRESS_DURING_TRAINING,
+    MOVE_SCORE_DATASET_FILE,
+    MOVE_SCORE_DATASET_MAX_EXAMPLES,
 )
 
 from app.storage.model_storage import load_model, save_model
@@ -29,6 +31,40 @@ from app.games.morpion.rules import (
     parse_human_input,
 )
 
+from app.storage.json_storage import save_json
+
+from app.ai.training_dataset import (
+    build_move_score_dataset,
+    summarize_move_score_dataset,
+)
+
+def run_build_dataset_command():
+    print("Création du dataset d'apprentissage :")
+    print("Parties simulées pour collecter les états :", TRAINING_GAMES_COUNT)
+    print("Simulations par coup :", SIMULATIONS_PER_MOVE)
+    print("Nombre maximal d'exemples :", MOVE_SCORE_DATASET_MAX_EXAMPLES)
+    print()
+
+    dataset = build_move_score_dataset(
+        training_games_count=TRAINING_GAMES_COUNT,
+        simulations_per_move=SIMULATIONS_PER_MOVE,
+        max_examples=MOVE_SCORE_DATASET_MAX_EXAMPLES,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+    )
+
+    save_json(dataset, MOVE_SCORE_DATASET_FILE)
+
+    summary = summarize_move_score_dataset(dataset)
+
+    print("Dataset créé.")
+    print("Fichier sauvegardé dans :", MOVE_SCORE_DATASET_FILE)
+    print()
+    print("Résumé :")
+    print("Jeu :", summary["game"])
+    print("Exemples :", summary["examples_count"])
+    print("Coups scorés :", summary["scored_moves_count"])
+    print("Nombre moyen de coups légaux :", summary["average_legal_moves"])
+    print("Score moyen du meilleur coup :", summary["average_best_score"])
 
 def run_training_command():
     print("Paramètres d'entraînement :")
@@ -134,6 +170,7 @@ def print_help():
     print("  python main.py evaluate   → évalue le modèle entraîné")
     print("  python main.py play       → lance une partie avec le modèle sauvegardé")
     print("  python main.py test       → lance tous les tests")
+    print("  python main.py build-dataset    → crée le dataset d'apprentissage Monte-Carlo")
 
 
 def run_cli():
@@ -151,6 +188,8 @@ def run_cli():
         run_play_command()
     elif command == "test":
         run_test_command()
+    elif command == "build-dataset":
+      run_build_dataset_command()
     else:
         print("Commande inconnue :", command)
         print_help()

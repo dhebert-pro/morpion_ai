@@ -7,7 +7,10 @@ DATA_DIR = PROJECT_ROOT / "data"
 MODELS_DIR = DATA_DIR / "models"
 
 MODEL_FILE = MODELS_DIR / "trained_model.json"
+MOVE_SCORE_DATASET_FILE = MODELS_DIR / "move_score_dataset.json"
 TEST_FILE = PROJECT_ROOT / "tests" / "run_tests.py"
+
+MOVE_SCORE_DATASET_MAX_EXAMPLES = 200
 
 # Nombre de parties aléatoires utilisées pour découvrir des états à apprendre.
 TRAINING_GAMES_COUNT = 300

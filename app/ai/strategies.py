@@ -1,11 +1,6 @@
 import random
 
-from app.games.morpion.rules import (
-    copy_game,
-    encode_game_state,
-    get_legal_moves,
-    get_winner,
-)
+from app.games.morpion.adapter import MORPION_ADAPTER
 
 random.seed(0)
 
@@ -17,39 +12,44 @@ TRAINED_MODEL = {
 }
 
 
-def find_winning_move(game, player):
-    legal_moves = get_legal_moves(game)
+def find_winning_move(game, player, game_adapter=MORPION_ADAPTER):
+    legal_moves = game_adapter.get_legal_moves(game)
 
     for move in legal_moves:
-        simulated_game = copy_game(game)
-        simulated_game["board"][move] = player
+        simulated_game = game_adapter.copy_game(game)
+        game_adapter.apply_move(simulated_game, move, player)
 
-        if get_winner(simulated_game) == player:
+        if game_adapter.get_winner(simulated_game) == player:
             return move
 
     return None
 
 
-def choose_random_move(game):
-    legal_moves = get_legal_moves(game)
+def choose_random_move(game, game_adapter=MORPION_ADAPTER):
+    legal_moves = game_adapter.get_legal_moves(game)
     return random.choice(legal_moves)
 
 
-def choose_fallback_move(game):
-    winning_move = find_winning_move(game, "O")
+def choose_fallback_move(game, game_adapter=MORPION_ADAPTER):
+    winning_move = find_winning_move(game, game_adapter.trained_player, game_adapter)
     if winning_move is not None:
         return winning_move
 
-    blocking_move = find_winning_move(game, "X")
+    blocking_move = find_winning_move(game, game_adapter.opponent_player, game_adapter)
     if blocking_move is not None:
         return blocking_move
 
-    return choose_random_move(game)
+    return choose_random_move(game, game_adapter)
 
 
-def choose_model_move(game, model, fallback_strategy=choose_fallback_move):
-    state_key = encode_game_state(game)
-    legal_moves = get_legal_moves(game)
+def choose_model_move(
+    game,
+    model,
+    fallback_strategy=choose_fallback_move,
+    game_adapter=MORPION_ADAPTER,
+):
+    state_key = game_adapter.encode_game_state(game)
+    legal_moves = game_adapter.get_legal_moves(game)
 
     if state_key in model:
         model_move = model[state_key]
@@ -57,8 +57,16 @@ def choose_model_move(game, model, fallback_strategy=choose_fallback_move):
         if model_move in legal_moves:
             return model_move
 
+    if fallback_strategy == choose_fallback_move:
+        return choose_fallback_move(game, game_adapter)
+
     return fallback_strategy(game)
 
 
-def choose_ai_move(game):
-    return choose_model_move(game, TRAINED_MODEL)
+def choose_ai_move(game, game_adapter=MORPION_ADAPTER):
+    return choose_model_move(
+        game,
+        TRAINED_MODEL,
+        fallback_strategy=choose_fallback_move,
+        game_adapter=game_adapter,
+    )
