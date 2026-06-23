@@ -1,10 +1,10 @@
-import os
 import subprocess
 import sys
 
 import app.ai.strategies as strategies
 
 from app.config import (
+    PROJECT_ROOT,
     MODEL_FILE,
     TEST_FILE,
     TRAINING_GAMES_COUNT,
@@ -73,11 +73,14 @@ def run_evaluate_command():
 
 
 def run_test_command():
-    if not os.path.exists(TEST_FILE):
+    if not TEST_FILE.exists():
         print("Fichier de tests introuvable :", TEST_FILE)
         return
 
-    completed_process = subprocess.run([sys.executable, TEST_FILE])
+    completed_process = subprocess.run(
+        [sys.executable, str(TEST_FILE)],
+        cwd=PROJECT_ROOT,
+    )
 
     if completed_process.returncode != 0:
         raise SystemExit(completed_process.returncode)

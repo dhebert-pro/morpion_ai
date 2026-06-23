@@ -1,19 +1,24 @@
 import json
-import os
+from pathlib import Path
 
 from app.config import MODEL_FILE
 
 
 def save_model(model, file_path=MODEL_FILE):
-    with open(file_path, "w", encoding="utf-8") as file:
+    path = Path(file_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    with path.open("w", encoding="utf-8") as file:
         json.dump(model, file, ensure_ascii=False, indent=2)
 
 
 def load_model(file_path=MODEL_FILE):
-    if not os.path.exists(file_path):
+    path = Path(file_path)
+
+    if not path.exists():
         return {}
 
-    with open(file_path, "r", encoding="utf-8") as file:
+    with path.open("r", encoding="utf-8") as file:
         data = json.load(file)
 
     model = {}

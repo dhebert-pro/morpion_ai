@@ -1,5 +1,4 @@
 from app.ai.strategies import choose_ai_move
-from app.games.morpion.rules import is_valid_move, get_game_result
 
 from app.games.morpion.rules import (
     is_valid_move,
