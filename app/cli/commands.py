@@ -22,6 +22,15 @@ from app.config import (
     NEURAL_EPOCHS,
     NEURAL_LEARNING_RATE,
     NEURAL_EVALUATION_GAMES_COUNT,
+    NEURAL_BENCHMARK_TRAINING_GAMES_COUNT,
+    NEURAL_BENCHMARK_SIMULATIONS_PER_MOVE,
+    NEURAL_BENCHMARK_MAX_EXAMPLES,
+    NEURAL_BENCHMARK_TACTICAL_REPEAT_COUNT,
+    NEURAL_BENCHMARK_HIDDEN_SIZE,
+    NEURAL_BENCHMARK_CHECKPOINTS_COUNT,
+    NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT,
+    NEURAL_BENCHMARK_LEARNING_RATE,
+    NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
 )
 
 from app.storage.model_storage import load_model, save_model
@@ -48,11 +57,17 @@ from app.ai.neural_model_service import (
     train_and_save_neural_model,
     train_and_save_neural_model_from_package,
     load_neural_model_package,
+    get_model_data_from_package,
     evaluate_saved_neural_model_package,
 )
 
 from app.ai.neural_evaluation import (
     format_neural_evaluation_summary,
+)
+
+from app.ai.neural_benchmark import (
+    run_neural_training_benchmark,
+    format_neural_benchmark_report,
 )
 
 from app.games.morpion.engine import play_turn
@@ -233,6 +248,61 @@ def run_neural_reset_command():
     print_neural_training_result(model_package)
 
 
+def run_neural_benchmark_command(start_from_saved_model):
+    print("Benchmark du modèle neuronal")
+    print("Aucune sauvegarde ne sera effectuée.")
+    print("Parties simulées pour collecter les états :", NEURAL_BENCHMARK_TRAINING_GAMES_COUNT)
+    print("Simulations par coup :", NEURAL_BENCHMARK_SIMULATIONS_PER_MOVE)
+    print("Nombre maximal d'exemples Monte-Carlo :", NEURAL_BENCHMARK_MAX_EXAMPLES)
+    print("Répétitions tactiques :", NEURAL_BENCHMARK_TACTICAL_REPEAT_COUNT)
+    print("Taille couche cachée :", NEURAL_BENCHMARK_HIDDEN_SIZE)
+    print("Paliers :", NEURAL_BENCHMARK_CHECKPOINTS_COUNT)
+    print("Époques par palier :", NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT)
+    print("Taux d'apprentissage :", NEURAL_BENCHMARK_LEARNING_RATE)
+    print("Parties d'évaluation par palier :", NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT)
+    print()
+
+    initial_model_data = None
+
+    if start_from_saved_model:
+        existing_model_package = load_neural_model_package(
+            NEURAL_MODEL_FILE,
+        )
+        initial_model_data = get_model_data_from_package(
+            existing_model_package,
+        )
+
+        if initial_model_data:
+            print("Modèle existant trouvé :", NEURAL_MODEL_FILE)
+            print("Le benchmark mesure l'amélioration à partir de ce modèle.")
+        else:
+            print("Aucun modèle existant trouvé.")
+            print("Le benchmark partira de zéro.")
+    else:
+        print("Mode : benchmark depuis zéro.")
+        print("Le modèle sauvegardé est ignoré.")
+
+    print()
+
+    benchmark_result = run_neural_training_benchmark(
+        training_games_count=NEURAL_BENCHMARK_TRAINING_GAMES_COUNT,
+        simulations_per_move=NEURAL_BENCHMARK_SIMULATIONS_PER_MOVE,
+        max_examples=NEURAL_BENCHMARK_MAX_EXAMPLES,
+        tactical_repeat_count=NEURAL_BENCHMARK_TACTICAL_REPEAT_COUNT,
+        hidden_size=NEURAL_BENCHMARK_HIDDEN_SIZE,
+        checkpoints_count=NEURAL_BENCHMARK_CHECKPOINTS_COUNT,
+        epochs_per_checkpoint=NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT,
+        learning_rate=NEURAL_BENCHMARK_LEARNING_RATE,
+        evaluation_games_count=NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
+        initial_model_data=initial_model_data,
+    )
+
+    print()
+    print(format_neural_benchmark_report(benchmark_result))
+
+
 def run_neural_evaluate_command():
     model_package = load_neural_model_package(
         NEURAL_MODEL_FILE,
@@ -334,15 +404,17 @@ def run_play_command():
 
 def print_help():
     print("Commandes disponibles :")
-    print("  python main.py train            → entraîne l'ancien modèle tabulaire")
-    print("  python main.py build-dataset    → crée le dataset d'apprentissage Monte-Carlo")
-    print("  python main.py neural-demo      → teste le moteur neuronal en mémoire")
-    print("  python main.py train-neural     → continue l'entraînement neuronal si possible")
-    print("  python main.py reset-neural     → réinitialise et réentraîne le modèle neuronal")
-    print("  python main.py evaluate-neural  → évalue le modèle neuronal sauvegardé")
-    print("  python main.py evaluate         → évalue l'ancien modèle tabulaire")
-    print("  python main.py play             → lance une partie avec l'ancien modèle sauvegardé")
-    print("  python main.py test             → lance tous les tests")
+    print("  python main.py train                   → entraîne l'ancien modèle tabulaire")
+    print("  python main.py build-dataset           → crée le dataset d'apprentissage Monte-Carlo")
+    print("  python main.py neural-demo             → teste le moteur neuronal en mémoire")
+    print("  python main.py train-neural            → continue l'entraînement neuronal si possible")
+    print("  python main.py reset-neural            → réinitialise et réentraîne le modèle neuronal")
+    print("  python main.py neural-benchmark        → mesure l'amélioration depuis le modèle sauvegardé")
+    print("  python main.py neural-benchmark-reset  → mesure l'amélioration depuis zéro")
+    print("  python main.py evaluate-neural         → évalue le modèle neuronal sauvegardé")
+    print("  python main.py evaluate                → évalue l'ancien modèle tabulaire")
+    print("  python main.py play                    → lance une partie avec l'ancien modèle sauvegardé")
+    print("  python main.py test                    → lance tous les tests")
 
 
 def run_cli():
@@ -362,6 +434,10 @@ def run_cli():
         run_neural_training_command()
     elif command == "reset-neural":
         run_neural_reset_command()
+    elif command == "neural-benchmark":
+        run_neural_benchmark_command(start_from_saved_model=True)
+    elif command == "neural-benchmark-reset":
+        run_neural_benchmark_command(start_from_saved_model=False)
     elif command == "evaluate-neural":
         run_neural_evaluate_command()
     elif command == "evaluate":

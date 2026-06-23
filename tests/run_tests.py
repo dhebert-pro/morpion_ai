@@ -22,13 +22,14 @@ from tests.test_training_dataset import TESTS as TRAINING_DATASET_TESTS
 from tests.test_neural_encoding import TESTS as NEURAL_ENCODING_TESTS
 from tests.test_neural_pipeline import TESTS as NEURAL_PIPELINE_TESTS
 from tests.test_neural_training_session import TESTS as NEURAL_TRAINING_SESSION_TESTS
+from tests.test_neural_network import TESTS as NEURAL_NETWORK_TESTS
 from tests.test_neural_strategy import TESTS as NEURAL_STRATEGY_TESTS
 from tests.test_neural_evaluation import TESTS as NEURAL_EVALUATION_TESTS
 from tests.test_neural_diagnostics import TESTS as NEURAL_DIAGNOSTICS_TESTS
 from tests.test_neural_model_service import TESTS as NEURAL_MODEL_SERVICE_TESTS
+from tests.test_neural_benchmark import TESTS as NEURAL_BENCHMARK_TESTS
 from tests.test_tactical_evaluation import TESTS as TACTICAL_EVALUATION_TESTS
 from tests.test_tactical_training import TESTS as TACTICAL_TRAINING_TESTS
-from tests.test_neural_network import TESTS as NEURAL_NETWORK_TESTS
 
 
 def get_all_tests():
@@ -51,6 +52,7 @@ def get_all_tests():
         + NEURAL_EVALUATION_TESTS
         + NEURAL_DIAGNOSTICS_TESTS
         + NEURAL_MODEL_SERVICE_TESTS
+        + NEURAL_BENCHMARK_TESTS
         + TACTICAL_EVALUATION_TESTS
         + TACTICAL_TRAINING_TESTS
     )
