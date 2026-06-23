@@ -68,6 +68,7 @@ from app.ai.neural_evaluation import (
 from app.ai.neural_benchmark import (
     run_neural_training_benchmark,
     format_neural_benchmark_report,
+    create_model_package_from_benchmark_result,
 )
 
 from app.games.morpion.engine import play_turn
@@ -76,6 +77,10 @@ from app.games.morpion.rules import (
     create_new_game,
     parse_human_input,
 )
+
+
+def has_flag(flag_name):
+    return flag_name in sys.argv[2:]
 
 
 def run_training_command():
@@ -190,6 +195,14 @@ def print_neural_training_result(model_package):
 
 
 def run_neural_training_command():
+    use_watch_mode = has_flag("--watch")
+
+    if use_watch_mode:
+        run_neural_training_with_watch_command(
+            start_from_saved_model=True,
+        )
+        return
+
     print("Entraînement du modèle neuronal")
     print("Mode : continuer le modèle existant si disponible")
     print_neural_training_parameters()
@@ -226,6 +239,14 @@ def run_neural_training_command():
 
 
 def run_neural_reset_command():
+    use_watch_mode = has_flag("--watch")
+
+    if use_watch_mode:
+        run_neural_training_with_watch_command(
+            start_from_saved_model=False,
+        )
+        return
+
     print("Réinitialisation du modèle neuronal")
     print("Mode : repartir de zéro et écraser le modèle sauvegardé")
     print_neural_training_parameters()
@@ -246,6 +267,64 @@ def run_neural_reset_command():
     )
 
     print_neural_training_result(model_package)
+
+
+def run_neural_training_with_watch_command(start_from_saved_model):
+    print("Entraînement surveillé du modèle neuronal")
+    print("Mode : affichage de l'amélioration par paliers")
+    print("Le modèle final sera sauvegardé.")
+    print()
+
+    initial_model_data = None
+
+    if start_from_saved_model:
+        existing_model_package = load_neural_model_package(
+            NEURAL_MODEL_FILE,
+        )
+        initial_model_data = get_model_data_from_package(
+            existing_model_package,
+        )
+
+        if initial_model_data:
+            print("Modèle existant trouvé :", NEURAL_MODEL_FILE)
+            print("L'entraînement surveillé va continuer depuis ce modèle.")
+        else:
+            print("Aucun modèle existant trouvé.")
+            print("L'entraînement surveillé démarre de zéro.")
+    else:
+        print("Réinitialisation demandée.")
+        print("L'entraînement surveillé repart de zéro.")
+
+    print()
+
+    benchmark_result = run_neural_training_benchmark(
+        training_games_count=NEURAL_BENCHMARK_TRAINING_GAMES_COUNT,
+        simulations_per_move=NEURAL_BENCHMARK_SIMULATIONS_PER_MOVE,
+        max_examples=NEURAL_BENCHMARK_MAX_EXAMPLES,
+        tactical_repeat_count=NEURAL_BENCHMARK_TACTICAL_REPEAT_COUNT,
+        hidden_size=NEURAL_BENCHMARK_HIDDEN_SIZE,
+        checkpoints_count=NEURAL_BENCHMARK_CHECKPOINTS_COUNT,
+        epochs_per_checkpoint=NEURAL_BENCHMARK_EPOCHS_PER_CHECKPOINT,
+        learning_rate=NEURAL_BENCHMARK_LEARNING_RATE,
+        evaluation_games_count=NEURAL_BENCHMARK_EVALUATION_GAMES_COUNT,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
+        initial_model_data=initial_model_data,
+    )
+
+    model_package = create_model_package_from_benchmark_result(
+        benchmark_result,
+    )
+
+    save_json(
+        model_package,
+        NEURAL_MODEL_FILE,
+    )
+
+    print()
+    print(format_neural_benchmark_report(benchmark_result))
+    print()
+    print("Modèle neuronal final sauvegardé dans :", NEURAL_MODEL_FILE)
 
 
 def run_neural_benchmark_command(start_from_saved_model):
@@ -408,9 +487,11 @@ def print_help():
     print("  python main.py build-dataset           → crée le dataset d'apprentissage Monte-Carlo")
     print("  python main.py neural-demo             → teste le moteur neuronal en mémoire")
     print("  python main.py train-neural            → continue l'entraînement neuronal si possible")
+    print("  python main.py train-neural --watch    → continue et affiche l'amélioration par paliers")
     print("  python main.py reset-neural            → réinitialise et réentraîne le modèle neuronal")
-    print("  python main.py neural-benchmark        → mesure l'amélioration depuis le modèle sauvegardé")
-    print("  python main.py neural-benchmark-reset  → mesure l'amélioration depuis zéro")
+    print("  python main.py reset-neural --watch    → réinitialise avec suivi par paliers")
+    print("  python main.py neural-benchmark        → mesure l'amélioration sans sauvegarder")
+    print("  python main.py neural-benchmark-reset  → mesure l'amélioration depuis zéro sans sauvegarder")
     print("  python main.py evaluate-neural         → évalue le modèle neuronal sauvegardé")
     print("  python main.py evaluate                → évalue l'ancien modèle tabulaire")
     print("  python main.py play                    → lance une partie avec l'ancien modèle sauvegardé")

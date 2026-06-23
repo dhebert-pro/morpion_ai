@@ -4,6 +4,8 @@ from app.ai.neural_network import SimpleNeuralNetwork
 
 from app.ai.neural_benchmark import (
     run_neural_training_benchmark,
+    create_training_summary_from_benchmark_result,
+    create_model_package_from_benchmark_result,
     format_neural_benchmark_report,
 )
 
@@ -82,10 +84,107 @@ def test_neural_benchmark_can_start_from_existing_model():
     assert_equal(len(result["checkpoints"]), 2)
 
 
+def test_training_summary_can_be_created_from_benchmark_result():
+    result = {
+        "game": "morpion",
+        "training_games_count": 10,
+        "simulations_per_move": 1,
+        "max_examples": 3,
+        "tactical_repeat_count": 2,
+        "base_examples_count": 3,
+        "extra_examples_count": 8,
+        "examples_count": 11,
+        "input_size": 18,
+        "hidden_size": 8,
+        "output_size": 9,
+        "total_epochs": 10,
+        "learning_rate": 0.2,
+        "started_from_existing_model": True,
+        "checkpoints_count": 2,
+        "epochs_per_checkpoint": 5,
+        "evaluation_games_count": 3,
+        "initial_training_error": 0.5,
+        "final_training_error": 0.2,
+        "training_error_improvement": 0.3,
+        "initial_evaluation_efficiency": 40.0,
+        "final_evaluation_efficiency": 60.0,
+        "evaluation_efficiency_improvement": 20.0,
+        "initial_tactical_success_rate": 25.0,
+        "final_tactical_success_rate": 75.0,
+        "tactical_success_rate_improvement": 50.0,
+    }
+
+    summary = create_training_summary_from_benchmark_result(result)
+
+    assert_equal(summary["game"], "morpion")
+    assert_equal(summary["examples_count"], 11)
+    assert_equal(summary["epochs"], 10)
+    assert_equal(summary["started_from_existing_model"], True)
+    assert_equal(summary["initial_error"], 0.5)
+    assert_equal(summary["final_error"], 0.2)
+    assert_equal(summary["error_improvement"], 0.3)
+
+
+def test_model_package_can_be_created_from_benchmark_result():
+    network = SimpleNeuralNetwork(
+        input_size=18,
+        hidden_size=8,
+        output_size=9,
+        learning_rate=0.2,
+        seed=0,
+    )
+
+    result = {
+        "game": "morpion",
+        "trained_player": "O",
+        "opponent_player": "X",
+        "training_games_count": 10,
+        "simulations_per_move": 1,
+        "max_examples": 3,
+        "tactical_repeat_count": 2,
+        "base_examples_count": 3,
+        "extra_examples_count": 8,
+        "examples_count": 11,
+        "input_size": 18,
+        "hidden_size": 8,
+        "output_size": 9,
+        "total_epochs": 10,
+        "learning_rate": 0.2,
+        "started_from_existing_model": True,
+        "checkpoints_count": 2,
+        "epochs_per_checkpoint": 5,
+        "evaluation_games_count": 3,
+        "initial_training_error": 0.5,
+        "final_training_error": 0.2,
+        "training_error_improvement": 0.3,
+        "initial_evaluation_efficiency": 40.0,
+        "final_evaluation_efficiency": 60.0,
+        "evaluation_efficiency_improvement": 20.0,
+        "initial_tactical_success_rate": 25.0,
+        "final_tactical_success_rate": 75.0,
+        "tactical_success_rate_improvement": 50.0,
+        "final_model_data": network.to_dict(),
+        "checkpoints": [],
+    }
+
+    package = create_model_package_from_benchmark_result(result)
+
+    assert_equal(package["type"], "neural_model_package")
+    assert_equal(package["game"], "morpion")
+    assert_equal(package["trained_player"], "O")
+    assert_equal(package["opponent_player"], "X")
+    assert_true("model_data" in package)
+    assert_true("training_summary" in package)
+    assert_true("benchmark_summary" in package)
+    assert_equal(package["training_summary"]["epochs"], 10)
+
+
 def test_format_neural_benchmark_report_contains_key_information():
     result = {
         "game": "morpion",
         "started_from_existing_model": True,
+        "base_examples_count": 200,
+        "extra_examples_count": 100,
         "examples_count": 300,
         "tactical_repeat_count": 25,
         "hidden_size": 18,
@@ -124,6 +223,9 @@ def test_format_neural_benchmark_report_contains_key_information():
     assert_contains(text, "Benchmark entraînement neuronal")
     assert_contains(text, "Jeu : morpion")
     assert_contains(text, "Départ depuis modèle existant : True")
+    assert_contains(text, "Exemples Monte-Carlo : 200")
+    assert_contains(text, "Exemples tactiques : 100")
+    assert_contains(text, "Exemples totaux : 300")
     assert_contains(text, "Palier | Époques | Temps (s) | Erreur dataset | Tactique | Efficacité")
     assert_contains(text, "Gain erreur dataset : 0.05")
     assert_contains(text, "Gain efficacité : 7.5 points")
@@ -133,5 +235,7 @@ def test_format_neural_benchmark_report_contains_key_information():
 TESTS = [
     ("Le benchmark neuronal retourne des checkpoints", test_neural_benchmark_returns_checkpoints),
     ("Le benchmark neuronal peut partir d'un modèle existant", test_neural_benchmark_can_start_from_existing_model),
+    ("Un résumé d'entraînement peut être créé depuis un benchmark", test_training_summary_can_be_created_from_benchmark_result),
+    ("Un package de modèle peut être créé depuis un benchmark", test_model_package_can_be_created_from_benchmark_result),
     ("Le rapport de benchmark neuronal contient les informations clés", test_format_neural_benchmark_report_contains_key_information),
 ]

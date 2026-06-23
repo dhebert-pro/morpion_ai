@@ -179,13 +179,26 @@ def run_neural_training_benchmark(
     first_checkpoint = checkpoints[0]
     last_checkpoint = checkpoints[-1]
 
+    base_examples_count = raw_dataset.get(
+        "base_examples_count",
+        raw_dataset.get("examples_count", 0),
+    )
+    extra_examples_count = raw_dataset.get(
+        "extra_examples_count",
+        0,
+    )
+
     return {
         "game": game_adapter.name,
+        "trained_player": game_adapter.trained_player,
+        "opponent_player": game_adapter.opponent_player,
         "started_from_existing_model": initial_model_data is not None,
         "training_games_count": training_games_count,
         "simulations_per_move": simulations_per_move,
         "max_examples": max_examples,
         "tactical_repeat_count": tactical_repeat_count,
+        "base_examples_count": base_examples_count,
+        "extra_examples_count": extra_examples_count,
         "examples_count": encoded_dataset["encoded_examples_count"],
         "input_size": encoded_dataset["input_size"],
         "hidden_size": hidden_size,
@@ -218,6 +231,68 @@ def run_neural_training_benchmark(
     }
 
 
+def create_training_summary_from_benchmark_result(benchmark_result):
+    return {
+        "game": benchmark_result["game"],
+        "training_games_count": benchmark_result["training_games_count"],
+        "simulations_per_move": benchmark_result["simulations_per_move"],
+        "max_examples": benchmark_result["max_examples"],
+        "tactical_repeat_count": benchmark_result["tactical_repeat_count"],
+        "base_examples_count": benchmark_result["base_examples_count"],
+        "extra_examples_count": benchmark_result["extra_examples_count"],
+        "examples_count": benchmark_result["examples_count"],
+        "scored_moves_count": None,
+        "average_legal_moves": None,
+        "average_best_score": None,
+        "input_size": benchmark_result["input_size"],
+        "hidden_size": benchmark_result["hidden_size"],
+        "output_size": benchmark_result["output_size"],
+        "epochs": benchmark_result["total_epochs"],
+        "learning_rate": benchmark_result["learning_rate"],
+        "started_from_existing_model": benchmark_result["started_from_existing_model"],
+        "initial_error": benchmark_result["initial_training_error"],
+        "final_error": benchmark_result["final_training_error"],
+        "error_improvement": benchmark_result["training_error_improvement"],
+        "benchmark_checkpoints_count": benchmark_result["checkpoints_count"],
+        "benchmark_epochs_per_checkpoint": benchmark_result["epochs_per_checkpoint"],
+        "benchmark_evaluation_games_count": benchmark_result["evaluation_games_count"],
+        "initial_evaluation_efficiency": benchmark_result["initial_evaluation_efficiency"],
+        "final_evaluation_efficiency": benchmark_result["final_evaluation_efficiency"],
+        "evaluation_efficiency_improvement": benchmark_result["evaluation_efficiency_improvement"],
+        "initial_tactical_success_rate": benchmark_result["initial_tactical_success_rate"],
+        "final_tactical_success_rate": benchmark_result["final_tactical_success_rate"],
+        "tactical_success_rate_improvement": benchmark_result["tactical_success_rate_improvement"],
+    }
+
+
+def create_model_package_from_benchmark_result(
+    benchmark_result,
+    game_adapter=MORPION_ADAPTER,
+):
+    return {
+        "type": "neural_model_package",
+        "game": game_adapter.name,
+        "trained_player": game_adapter.trained_player,
+        "opponent_player": game_adapter.opponent_player,
+        "model_data": benchmark_result["final_model_data"],
+        "training_summary": create_training_summary_from_benchmark_result(
+            benchmark_result,
+        ),
+        "benchmark_summary": {
+            "checkpoints": benchmark_result["checkpoints"],
+            "initial_training_error": benchmark_result["initial_training_error"],
+            "final_training_error": benchmark_result["final_training_error"],
+            "training_error_improvement": benchmark_result["training_error_improvement"],
+            "initial_evaluation_efficiency": benchmark_result["initial_evaluation_efficiency"],
+            "final_evaluation_efficiency": benchmark_result["final_evaluation_efficiency"],
+            "evaluation_efficiency_improvement": benchmark_result["evaluation_efficiency_improvement"],
+            "initial_tactical_success_rate": benchmark_result["initial_tactical_success_rate"],
+            "final_tactical_success_rate": benchmark_result["final_tactical_success_rate"],
+            "tactical_success_rate_improvement": benchmark_result["tactical_success_rate_improvement"],
+        },
+    }
+
+
 def format_neural_benchmark_report(benchmark_result):
     lines = []
 
@@ -227,7 +302,9 @@ def format_neural_benchmark_report(benchmark_result):
         "Départ depuis modèle existant : "
         + str(benchmark_result["started_from_existing_model"])
     )
-    lines.append("Exemples : " + str(benchmark_result["examples_count"]))
+    lines.append("Exemples Monte-Carlo : " + str(benchmark_result["base_examples_count"]))
+    lines.append("Exemples tactiques : " + str(benchmark_result["extra_examples_count"]))
+    lines.append("Exemples totaux : " + str(benchmark_result["examples_count"]))
     lines.append(
         "Répétitions tactiques : "
         + str(benchmark_result["tactical_repeat_count"])
