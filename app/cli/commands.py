@@ -45,6 +45,7 @@ from app.ai.neural_diagnostics import (
 
 from app.ai.neural_model_service import (
     train_and_save_neural_model,
+    train_and_save_neural_model_from_package,
     load_neural_model_package,
     evaluate_saved_neural_model_package,
 )
@@ -139,32 +140,21 @@ def run_neural_demo_command():
     print(format_neural_diagnostic_report(diagnostic_result))
 
 
-def run_neural_training_command():
-    print("Entraînement du modèle neuronal")
+def print_neural_training_parameters():
     print("Parties simulées pour collecter les états :", NEURAL_TRAINING_GAMES_COUNT)
     print("Simulations par coup :", NEURAL_SIMULATIONS_PER_MOVE)
     print("Nombre maximal d'exemples :", NEURAL_MAX_EXAMPLES)
     print("Taille couche cachée :", NEURAL_HIDDEN_SIZE)
     print("Époques :", NEURAL_EPOCHS)
     print("Taux d'apprentissage :", NEURAL_LEARNING_RATE)
-    print()
 
-    model_package = train_and_save_neural_model(
-        file_path=NEURAL_MODEL_FILE,
-        training_games_count=NEURAL_TRAINING_GAMES_COUNT,
-        simulations_per_move=NEURAL_SIMULATIONS_PER_MOVE,
-        max_examples=NEURAL_MAX_EXAMPLES,
-        hidden_size=NEURAL_HIDDEN_SIZE,
-        epochs=NEURAL_EPOCHS,
-        learning_rate=NEURAL_LEARNING_RATE,
-        show_progress=SHOW_PROGRESS_DURING_TRAINING,
-        seed=0,
-    )
 
+def print_neural_training_result(model_package):
     training_summary = model_package["training_summary"]
 
     print()
     print("Modèle neuronal sauvegardé dans :", NEURAL_MODEL_FILE)
+    print("Reprise d'un modèle existant :", training_summary["started_from_existing_model"])
     print("Exemples utilisés :", training_summary["examples_count"])
     print("Erreur initiale :", round(training_summary["initial_error"], 6))
     print("Erreur finale :", round(training_summary["final_error"], 6))
@@ -178,6 +168,63 @@ def run_neural_training_command():
     )
 
     print(format_neural_evaluation_summary(evaluation["summary"]))
+
+
+def run_neural_training_command():
+    print("Entraînement du modèle neuronal")
+    print("Mode : continuer le modèle existant si disponible")
+    print_neural_training_parameters()
+    print()
+
+    existing_model_package = load_neural_model_package(
+        NEURAL_MODEL_FILE,
+    )
+
+    if existing_model_package:
+        print("Modèle existant trouvé :", NEURAL_MODEL_FILE)
+        print("L'entraînement va continuer depuis ce modèle.")
+    else:
+        print("Aucun modèle existant trouvé.")
+        print("L'entraînement démarre de zéro.")
+
+    print()
+
+    model_package = train_and_save_neural_model_from_package(
+        file_path=NEURAL_MODEL_FILE,
+        existing_model_package=existing_model_package,
+        training_games_count=NEURAL_TRAINING_GAMES_COUNT,
+        simulations_per_move=NEURAL_SIMULATIONS_PER_MOVE,
+        max_examples=NEURAL_MAX_EXAMPLES,
+        hidden_size=NEURAL_HIDDEN_SIZE,
+        epochs=NEURAL_EPOCHS,
+        learning_rate=NEURAL_LEARNING_RATE,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
+    )
+
+    print_neural_training_result(model_package)
+
+
+def run_neural_reset_command():
+    print("Réinitialisation du modèle neuronal")
+    print("Mode : repartir de zéro et écraser le modèle sauvegardé")
+    print_neural_training_parameters()
+    print()
+
+    model_package = train_and_save_neural_model(
+        file_path=NEURAL_MODEL_FILE,
+        training_games_count=NEURAL_TRAINING_GAMES_COUNT,
+        simulations_per_move=NEURAL_SIMULATIONS_PER_MOVE,
+        max_examples=NEURAL_MAX_EXAMPLES,
+        hidden_size=NEURAL_HIDDEN_SIZE,
+        epochs=NEURAL_EPOCHS,
+        learning_rate=NEURAL_LEARNING_RATE,
+        show_progress=SHOW_PROGRESS_DURING_TRAINING,
+        seed=0,
+        initial_model_data=None,
+    )
+
+    print_neural_training_result(model_package)
 
 
 def run_neural_evaluate_command():
@@ -284,7 +331,8 @@ def print_help():
     print("  python main.py train            → entraîne l'ancien modèle tabulaire")
     print("  python main.py build-dataset    → crée le dataset d'apprentissage Monte-Carlo")
     print("  python main.py neural-demo      → teste le moteur neuronal en mémoire")
-    print("  python main.py train-neural     → entraîne et sauvegarde le modèle neuronal")
+    print("  python main.py train-neural     → continue l'entraînement neuronal si possible")
+    print("  python main.py reset-neural     → réinitialise et réentraîne le modèle neuronal")
     print("  python main.py evaluate-neural  → évalue le modèle neuronal sauvegardé")
     print("  python main.py evaluate         → évalue l'ancien modèle tabulaire")
     print("  python main.py play             → lance une partie avec l'ancien modèle sauvegardé")
@@ -306,6 +354,8 @@ def run_cli():
         run_neural_demo_command()
     elif command == "train-neural":
         run_neural_training_command()
+    elif command == "reset-neural":
+        run_neural_reset_command()
     elif command == "evaluate-neural":
         run_neural_evaluate_command()
     elif command == "evaluate":

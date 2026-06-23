@@ -47,11 +47,15 @@ def train_and_save_neural_model(
     show_progress=False,
     seed=0,
     game_adapter=MORPION_ADAPTER,
+    initial_model_data=None,
 ):
     """Entraîne un modèle neuronal puis le sauvegarde.
 
-    Cette fonction ne fait pas l'évaluation complète.
-    Elle se concentre sur la création du fichier neural_model.json.
+    Si initial_model_data est fourni :
+    - l'entraînement continue depuis les poids existants.
+
+    Si initial_model_data vaut None :
+    - l'entraînement repart de zéro.
     """
 
     training_result = train_neural_model_in_memory(
@@ -64,6 +68,7 @@ def train_and_save_neural_model(
         show_progress=show_progress,
         seed=seed,
         game_adapter=game_adapter,
+        initial_model_data=initial_model_data,
     )
 
     model_package = create_neural_model_package(
@@ -93,6 +98,46 @@ def get_model_data_from_package(model_package):
         return {}
 
     return model_package.get("model_data", {})
+
+
+def train_and_save_neural_model_from_package(
+    file_path,
+    existing_model_package,
+    training_games_count,
+    simulations_per_move,
+    max_examples,
+    hidden_size,
+    epochs,
+    learning_rate,
+    show_progress=False,
+    seed=0,
+    game_adapter=MORPION_ADAPTER,
+):
+    """Continue l'entraînement depuis un package existant.
+
+    Si le package est vide ou invalide, l'entraînement repart de zéro.
+    """
+
+    initial_model_data = get_model_data_from_package(
+        existing_model_package,
+    )
+
+    if not initial_model_data:
+        initial_model_data = None
+
+    return train_and_save_neural_model(
+        file_path=file_path,
+        training_games_count=training_games_count,
+        simulations_per_move=simulations_per_move,
+        max_examples=max_examples,
+        hidden_size=hidden_size,
+        epochs=epochs,
+        learning_rate=learning_rate,
+        show_progress=show_progress,
+        seed=seed,
+        game_adapter=game_adapter,
+        initial_model_data=initial_model_data,
+    )
 
 
 def evaluate_saved_neural_model_package(

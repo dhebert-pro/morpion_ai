@@ -22,17 +22,14 @@ def train_neural_model_in_memory(
     show_progress=False,
     seed=0,
     game_adapter=MORPION_ADAPTER,
+    initial_model_data=None,
 ):
     """Construit et entraîne un modèle neuronal complet en mémoire.
 
     Cette fonction ne sauvegarde rien.
-    Elle sert à valider toute la chaîne IA :
 
-    1. collecter des états ;
-    2. scorer les coups par Monte-Carlo ;
-    3. encoder les exemples ;
-    4. entraîner le réseau ;
-    5. retourner un résumé exploitable.
+    Si initial_model_data est fourni, l'entraînement continue depuis les poids
+    existants. Sinon, un nouveau réseau est créé.
     """
 
     raw_dataset = build_move_score_dataset(
@@ -55,6 +52,7 @@ def train_neural_model_in_memory(
         learning_rate=learning_rate,
         show_progress=show_progress,
         seed=seed,
+        initial_model_data=initial_model_data,
     )
 
     raw_dataset_summary = summarize_move_score_dataset(raw_dataset)
@@ -80,6 +78,7 @@ def train_neural_model_in_memory(
             "output_size": training_result["output_size"],
             "epochs": training_result["epochs"],
             "learning_rate": training_result["learning_rate"],
+            "started_from_existing_model": training_result["started_from_existing_model"],
             "initial_error": training_result["initial_error"],
             "final_error": training_result["final_error"],
             "error_improvement": training_result["initial_error"] - training_result["final_error"],
@@ -89,6 +88,11 @@ def train_neural_model_in_memory(
 
 def format_neural_training_summary(summary):
     """Prépare un résumé lisible d'un entraînement neuronal en mémoire."""
+
+    started_from_existing_model = summary.get(
+        "started_from_existing_model",
+        False,
+    )
 
     lines = []
 
@@ -105,6 +109,7 @@ def format_neural_training_summary(summary):
     lines.append("Taille sortie : " + str(summary["output_size"]))
     lines.append("Époques : " + str(summary["epochs"]))
     lines.append("Taux d'apprentissage : " + str(summary["learning_rate"]))
+    lines.append("Reprise d'un modèle existant : " + str(started_from_existing_model))
     lines.append("Erreur initiale : " + str(round(summary["initial_error"], 6)))
     lines.append("Erreur finale : " + str(round(summary["final_error"], 6)))
     lines.append("Amélioration erreur : " + str(round(summary["error_improvement"], 6)))
