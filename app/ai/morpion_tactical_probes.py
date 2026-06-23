@@ -110,16 +110,18 @@ def _create_board_with_line_threat(line, player, filler_player):
 
 def _find_safe_filler_cells(board, forbidden_cells, filler_player):
     filler_cells = []
+    working_board = board.copy()
 
     for index in range(9):
         if index in forbidden_cells:
             continue
 
-        candidate_board = board.copy()
+        candidate_board = working_board.copy()
         candidate_board[index] = filler_player
 
         if not _has_two_on_open_line(candidate_board, filler_player):
             filler_cells.append(index)
+            working_board[index] = filler_player
 
         if len(filler_cells) == 2:
             return filler_cells
