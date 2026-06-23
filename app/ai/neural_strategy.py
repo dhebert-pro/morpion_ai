@@ -4,6 +4,7 @@ from app.ai.neural_encoding import (
 )
 
 from app.ai.neural_network import SimpleNeuralNetwork
+from app.ai.tactical_guard import find_tactical_guard_move
 
 from app.games.morpion.adapter import MORPION_ADAPTER
 
@@ -65,17 +66,27 @@ def choose_neural_move(
     model_data,
     game_adapter=MORPION_ADAPTER,
     fallback_strategy=None,
+    use_tactical_guard=True,
 ):
     """Choisit un coup avec le réseau neuronal.
 
     Si aucun modèle n'est fourni, on peut utiliser une stratégie de secours.
     Si aucun coup légal n'existe, retourne None.
+
+    Par défaut, une garde tactique interdit les erreurs forcées simples :
+    gagner immédiatement ou bloquer une victoire immédiate adverse.
     """
 
     legal_moves = game_adapter.get_legal_moves(game)
 
     if len(legal_moves) == 0:
         return None
+
+    if use_tactical_guard:
+        tactical_move = find_tactical_guard_move(game, game_adapter)
+
+        if tactical_move is not None:
+            return tactical_move
 
     if not model_data:
         if fallback_strategy is None:

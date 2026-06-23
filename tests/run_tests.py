@@ -32,6 +32,7 @@ from tests.test_neural_model_compatibility import TESTS as NEURAL_MODEL_COMPATIB
 from tests.test_neural_benchmark import TESTS as NEURAL_BENCHMARK_TESTS
 from tests.test_tactical_evaluation import TESTS as TACTICAL_EVALUATION_TESTS
 from tests.test_tactical_training import TESTS as TACTICAL_TRAINING_TESTS
+from tests.test_tactical_guard import TESTS as TACTICAL_GUARD_TESTS
 
 
 def get_all_tests():
@@ -59,6 +60,7 @@ def get_all_tests():
         + NEURAL_BENCHMARK_TESTS
         + TACTICAL_EVALUATION_TESTS
         + TACTICAL_TRAINING_TESTS
+        + TACTICAL_GUARD_TESTS
     )
 
 

@@ -139,6 +139,42 @@ def test_choose_neural_move_uses_fallback_without_model():
     assert_equal(move, 1)
 
 
+def test_choose_neural_move_plays_immediate_win_before_prediction():
+    game = create_game_with_board([
+        "X", None, None,
+        "O", "O", None,
+        "X", None, None,
+    ])
+
+    model_data = create_deterministic_model([
+        0.0, 5.0, 4.0,
+        0.0, 0.0, 0.1,
+        0.0, 3.0, 2.0,
+    ])
+
+    move = choose_neural_move(game, model_data)
+
+    assert_equal(move, 5)
+
+
+def test_choose_neural_move_blocks_immediate_loss_before_prediction():
+    game = create_game_with_board([
+        "O", None, None,
+        "X", "X", None,
+        "O", None, None,
+    ])
+
+    model_data = create_deterministic_model([
+        0.0, 5.0, 4.0,
+        0.0, 0.0, 0.1,
+        0.0, 3.0, 2.0,
+    ])
+
+    move = choose_neural_move(game, model_data)
+
+    assert_equal(move, 5)
+
+
 TESTS = [
     ("La stratégie neuronale prédit seulement les coups légaux", test_predict_legal_move_scores_returns_only_legal_moves),
     ("La stratégie choisit le score prédit le plus élevé", test_choose_best_predicted_move_returns_highest_score),
@@ -146,4 +182,6 @@ TESTS = [
     ("La stratégie neuronale ignore les prédictions illégales", test_choose_neural_move_ignores_illegal_highest_prediction),
     ("La stratégie neuronale retourne None sur plateau terminé", test_choose_neural_move_returns_none_on_finished_board),
     ("La stratégie neuronale utilise un fallback sans modèle", test_choose_neural_move_uses_fallback_without_model),
+    ("La garde tactique joue une victoire immédiate avant le réseau", test_choose_neural_move_plays_immediate_win_before_prediction),
+    ("La garde tactique bloque une défaite immédiate avant le réseau", test_choose_neural_move_blocks_immediate_loss_before_prediction),
 ]
