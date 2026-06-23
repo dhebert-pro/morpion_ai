@@ -66,8 +66,52 @@ def test_default_morpion_tactical_probes_have_required_fields():
         assert_true("name" in probe)
         assert_true("board" in probe)
         assert_true("expected_move" in probe)
+        assert_true("expected_moves" in probe)
         assert_true("description" in probe)
         assert_equal(len(probe["board"]), 9)
+
+
+def test_create_tactical_probe_accepts_multiple_expected_moves():
+    probe = create_tactical_probe(
+        name="multiple_good_moves",
+        board=[
+            None, None, None,
+            None, "X", None,
+            None, None, None,
+        ],
+        expected_moves=[0, 2, 6, 8],
+        description="O peut jouer un coin.",
+    )
+
+    assert_equal(probe["expected_move"], 0)
+    assert_equal(probe["expected_moves"], [0, 2, 6, 8])
+
+
+def test_run_tactical_probe_accepts_any_expected_move():
+    probe = create_tactical_probe(
+        name="corner_answer",
+        board=[
+            None, None, None,
+            None, "X", None,
+            None, None, None,
+        ],
+        expected_moves=[0, 2, 6, 8],
+        description="O peut jouer un coin.",
+    )
+
+    model_data = create_deterministic_model([
+        0.0, 0.1, 0.2,
+        0.3, 0.4, 0.5,
+        3.0, 0.7, 0.8,
+    ])
+
+    result = run_tactical_probe(
+        probe,
+        model_data,
+    )
+
+    assert_equal(result["chosen_move"], 6)
+    assert_equal(result["passed"], True)
 
 
 def test_run_tactical_probe_detects_success():
@@ -191,6 +235,8 @@ def test_format_tactical_evaluation_report_contains_details():
 TESTS = [
     ("La création d'un jeu depuis un plateau copie le plateau", test_create_game_from_board_copies_board),
     ("Les probes tactiques par défaut ont les champs nécessaires", test_default_morpion_tactical_probes_have_required_fields),
+    ("Une probe tactique accepte plusieurs coups attendus", test_create_tactical_probe_accepts_multiple_expected_moves),
+    ("Un test tactique accepte n'importe quel bon coup", test_run_tactical_probe_accepts_any_expected_move),
     ("Un test tactique détecte une réussite", test_run_tactical_probe_detects_success),
     ("L'évaluation tactique exécute toutes les probes", test_run_tactical_evaluation_runs_all_probes),
     ("Le résumé tactique compte les réussites", test_summarize_tactical_evaluation_counts_successes),

@@ -16,65 +16,57 @@ def create_game_from_board(board, game_adapter=MORPION_ADAPTER):
     return game
 
 
-def create_tactical_probe(name, board, expected_move, description):
+def create_tactical_probe(
+    name,
+    board,
+    expected_move=None,
+    description="",
+    expected_moves=None,
+):
+    moves = _normalize_expected_moves(expected_move, expected_moves)
+
     return {
         "name": name,
         "board": board,
-        "expected_move": expected_move,
+        "expected_move": moves[0],
+        "expected_moves": moves,
         "description": description,
     }
 
 
+def _normalize_expected_moves(expected_move, expected_moves):
+    if expected_moves is None:
+        if expected_move is None:
+            raise ValueError("Un test tactique doit avoir au moins un coup attendu.")
+
+        return [expected_move]
+
+    moves = list(expected_moves)
+
+    if len(moves) == 0:
+        raise ValueError("Un test tactique doit avoir au moins un coup attendu.")
+
+    return moves
+
+
+def get_expected_moves_from_probe(probe):
+    if "expected_moves" in probe:
+        moves = list(probe["expected_moves"])
+    else:
+        moves = [probe["expected_move"]]
+
+    if len(moves) == 0:
+        raise ValueError("Un test tactique doit avoir au moins un coup attendu.")
+
+    return moves
+
+
 def get_default_morpion_tactical_probes():
-    """Retourne les positions tactiques de base pour le morpion.
+    """Retourne les positions tactiques de base pour le morpion."""
 
-    Ces positions servent à détecter les erreurs grossières :
-    - rater une victoire immédiate ;
-    - ne pas bloquer une victoire immédiate adverse.
-    """
+    from app.ai.morpion_tactical_probes import create_default_morpion_tactical_probes
 
-    return [
-        create_tactical_probe(
-            name="win_top_row",
-            board=[
-                "O", "O", None,
-                "X", "X", None,
-                None, None, None,
-            ],
-            expected_move=2,
-            description="O doit gagner immédiatement sur la ligne du haut.",
-        ),
-        create_tactical_probe(
-            name="win_diagonal",
-            board=[
-                "O", "X", None,
-                "X", "O", None,
-                None, None, None,
-            ],
-            expected_move=8,
-            description="O doit gagner immédiatement sur la diagonale.",
-        ),
-        create_tactical_probe(
-            name="block_top_row",
-            board=[
-                "X", "X", None,
-                "O", None, None,
-                None, "O", None,
-            ],
-            expected_move=2,
-            description="O doit bloquer la victoire immédiate de X sur la ligne du haut.",
-        ),
-        create_tactical_probe(
-            name="block_diagonal",
-            board=[
-                "X", "O", None,
-                "O", "X", None,
-                None, None, None,
-            ],
-            expected_move=8,
-            description="O doit bloquer la victoire immédiate de X sur la diagonale.",
-        ),
-    ]
+    return create_default_morpion_tactical_probes()
 
 
 def run_tactical_probe(
@@ -93,14 +85,15 @@ def run_tactical_probe(
         game_adapter=game_adapter,
     )
 
-    expected_move = probe["expected_move"]
+    expected_moves = get_expected_moves_from_probe(probe)
 
     return {
         "name": probe["name"],
         "description": probe["description"],
-        "expected_move": expected_move,
+        "expected_move": expected_moves[0],
+        "expected_moves": expected_moves,
         "chosen_move": chosen_move,
-        "passed": chosen_move == expected_move,
+        "passed": chosen_move in expected_moves,
     }
 
 
@@ -177,10 +170,22 @@ def format_tactical_evaluation_report(results):
             + " - "
             + result["name"]
             + " | attendu : "
-            + str(result["expected_move"])
+            + _format_expected_moves(result)
             + " | choisi : "
             + str(result["chosen_move"])
         )
         lines.append("     " + result["description"])
 
     return "\n".join(lines)
+
+
+def _format_expected_moves(result):
+    expected_moves = result.get("expected_moves")
+
+    if expected_moves is None:
+        return str(result["expected_move"])
+
+    if len(expected_moves) == 1:
+        return str(expected_moves[0])
+
+    return ", ".join(str(move) for move in expected_moves)

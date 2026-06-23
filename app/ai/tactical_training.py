@@ -1,6 +1,7 @@
 from app.ai.tactical_evaluation import (
     get_default_morpion_tactical_probes,
     create_game_from_board,
+    get_expected_moves_from_probe,
 )
 
 from app.games.morpion.adapter import MORPION_ADAPTER
@@ -25,21 +26,22 @@ def create_move_score_example_from_tactical_probe(
         game_adapter,
     )
 
-    expected_move = probe["expected_move"]
+    expected_moves = get_expected_moves_from_probe(probe)
     legal_moves = game_adapter.get_legal_moves(game)
 
-    if expected_move not in legal_moves:
-        raise ValueError(
-            "Le coup tactique attendu n'est pas légal : "
-            + str(expected_move)
-            + " pour "
-            + str(probe["name"])
-        )
+    for expected_move in expected_moves:
+        if expected_move not in legal_moves:
+            raise ValueError(
+                "Un coup tactique attendu n'est pas légal : "
+                + str(expected_move)
+                + " pour "
+                + str(probe["name"])
+            )
 
     move_scores = []
 
     for move in legal_moves:
-        if move == expected_move:
+        if move in expected_moves:
             score = 1.0
         else:
             score = 0.0
@@ -53,7 +55,8 @@ def create_move_score_example_from_tactical_probe(
         "state_key": game_adapter.encode_game_state(game),
         "player": game_adapter.trained_player,
         "move_scores": move_scores,
-        "best_move": expected_move,
+        "best_move": expected_moves[0],
+        "best_moves": expected_moves,
         "source": "tactical_probe",
         "probe_name": probe["name"],
         "description": probe["description"],

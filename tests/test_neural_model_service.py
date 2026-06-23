@@ -10,6 +10,7 @@ from app.ai.neural_model_service import (
     get_model_data_from_package,
     evaluate_saved_neural_model_package,
 )
+from app.ai.tactical_evaluation import get_default_morpion_tactical_probes
 
 
 def test_train_and_save_neural_model_creates_file():
@@ -65,7 +66,9 @@ def test_train_and_save_neural_model_can_include_tactical_examples():
 
         assert_true(file_path.exists())
         assert_equal(training_summary["tactical_repeat_count"], 2)
-        assert_equal(training_summary["extra_examples_count"], 8)
+        expected_extra_count = len(get_default_morpion_tactical_probes()) * 2
+
+        assert_equal(training_summary["extra_examples_count"], expected_extra_count)
         assert_equal(
             training_summary["examples_count"],
             training_summary["base_examples_count"] + training_summary["extra_examples_count"],

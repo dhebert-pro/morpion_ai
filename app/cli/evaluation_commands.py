@@ -5,6 +5,11 @@ from app.ai.neural_evaluation import format_neural_evaluation_summary
 from app.ai.neural_model_service import (
     load_neural_model_package,
     evaluate_saved_neural_model_package,
+    get_model_data_from_package,
+)
+from app.ai.tactical_evaluation import (
+    run_default_morpion_tactical_evaluation,
+    format_tactical_evaluation_report,
 )
 
 
@@ -43,3 +48,26 @@ def run_neural_evaluate_command():
         games_count=NEURAL_EVALUATION_GAMES_COUNT,
     )
     print(format_neural_evaluation_summary(evaluation["summary"]))
+
+
+def run_neural_tactical_evaluate_command():
+    model_package = load_neural_model_package(NEURAL_MODEL_FILE)
+
+    if not model_package:
+        print("Aucun modèle neuronal sauvegardé trouvé.")
+        print("Lance d'abord : python main.py train-neural --watch")
+        return
+
+    model_data = get_model_data_from_package(model_package)
+
+    if not model_data:
+        print("Le fichier neuronal existe, mais ne contient pas de modèle exploitable.")
+        print("Relance : python main.py reset-neural --watch")
+        return
+
+    results = run_default_morpion_tactical_evaluation(model_data)
+
+    print("Évaluation tactique du modèle neuronal sauvegardé")
+    print("Fichier :", NEURAL_MODEL_FILE)
+    print()
+    print(format_tactical_evaluation_report(results))

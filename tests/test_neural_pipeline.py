@@ -7,6 +7,7 @@ from app.ai.neural_pipeline import (
     train_neural_model_in_memory,
     format_neural_training_summary,
 )
+from app.ai.tactical_evaluation import get_default_morpion_tactical_probes
 
 
 def assert_contains(text, expected_part):
@@ -48,7 +49,9 @@ def test_build_augmented_dataset_with_tactics_adds_tactical_examples():
     assert_equal(dataset["game"], "morpion")
     assert_true(dataset["base_examples_count"] > 0)
     assert_true(dataset["base_examples_count"] <= 5)
-    assert_equal(dataset["extra_examples_count"], 8)
+    expected_extra_count = len(get_default_morpion_tactical_probes()) * 2
+
+    assert_equal(dataset["extra_examples_count"], expected_extra_count)
     assert_equal(dataset["tactical_repeat_count"], 2)
     assert_equal(
         dataset["examples_count"],
@@ -110,7 +113,9 @@ def test_train_neural_model_in_memory_can_use_tactical_examples():
     summary = result["summary"]
 
     assert_equal(summary["tactical_repeat_count"], 2)
-    assert_equal(summary["extra_examples_count"], 8)
+    expected_extra_count = len(get_default_morpion_tactical_probes()) * 2
+
+    assert_equal(summary["extra_examples_count"], expected_extra_count)
     assert_equal(
         summary["examples_count"],
         summary["base_examples_count"] + summary["extra_examples_count"],

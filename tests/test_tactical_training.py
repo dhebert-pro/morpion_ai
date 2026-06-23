@@ -45,6 +45,35 @@ def test_create_move_score_example_from_tactical_probe_scores_expected_move():
             assert_equal(score, 0.0)
 
 
+def test_create_move_score_example_scores_all_expected_moves():
+    probe = create_tactical_probe(
+        name="corner_answer",
+        board=[
+            None, None, None,
+            None, "X", None,
+            None, None, None,
+        ],
+        expected_moves=[0, 2, 6, 8],
+        description="O peut jouer un coin.",
+    )
+
+    example = create_move_score_example_from_tactical_probe(probe)
+
+    assert_equal(example["best_move"], 0)
+    assert_equal(example["best_moves"], [0, 2, 6, 8])
+
+    scores_by_move = {}
+
+    for score_data in example["move_scores"]:
+        scores_by_move[score_data["move"]] = score_data["score"]
+
+    for move in [0, 2, 6, 8]:
+        assert_equal(scores_by_move[move], 1.0)
+
+    for move in [1, 3, 5, 7]:
+        assert_equal(scores_by_move[move], 0.0)
+
+
 def test_create_move_score_example_rejects_illegal_expected_move():
     probe = create_tactical_probe(
         name="illegal_probe",
@@ -171,6 +200,7 @@ def test_merge_move_score_datasets_concatenates_examples():
 
 TESTS = [
     ("Un exemple tactique donne 1 au coup attendu", test_create_move_score_example_from_tactical_probe_scores_expected_move),
+    ("Un exemple tactique donne 1 à tous les coups attendus", test_create_move_score_example_scores_all_expected_moves),
     ("Un exemple tactique refuse un coup attendu illégal", test_create_move_score_example_rejects_illegal_expected_move),
     ("Le dataset tactique répète les exemples", test_create_tactical_move_score_dataset_repeats_examples),
     ("Le dataset tactique par défaut utilise les probes du morpion", test_create_default_morpion_tactical_dataset_uses_default_probes),

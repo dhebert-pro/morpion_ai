@@ -8,7 +8,11 @@ from app.cli.neural_commands import (
     run_neural_reset_command,
 )
 from app.cli.neural_watch_commands import run_neural_benchmark_command
-from app.cli.evaluation_commands import run_evaluate_command, run_neural_evaluate_command
+from app.cli.evaluation_commands import (
+    run_evaluate_command,
+    run_neural_evaluate_command,
+    run_neural_tactical_evaluate_command,
+)
 from app.cli.play_commands import run_play_command
 from app.cli.test_command import run_test_command
 
@@ -26,6 +30,7 @@ def run_cli():
         "train-neural": run_neural_training_command,
         "reset-neural": run_neural_reset_command,
         "evaluate-neural": run_neural_evaluate_command,
+        "evaluate-neural-tactical": run_neural_tactical_evaluate_command,
         "evaluate": run_evaluate_command,
         "play": run_play_command,
         "test": run_test_command,
